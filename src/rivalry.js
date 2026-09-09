@@ -23,7 +23,7 @@ rivalOpportunity=function(l){const e=state.enterprise,share=competitionStrength(
 rivalDailyProfit=function(){const r=ensureRivalry();if(r.defeated)return 0;const campaign=r.until>=state.day?(r.mode==='price'?7000:r.mode==='advertise'?8000:0):0;return Math.round(state.npc.owned.reduce((n,id)=>n+rivalOpportunity(LOCATIONS[id])*LOCATIONS[id].cost-2500,0)-15000*(1+state.difficulty*.15)-campaign);};
 function rivalTurn(){
  const r=ensureRivalry(),e=state.enterprise;if(r.turnDay>=state.day||r.defeated)return;r.turnDay=state.day;
- r.lastProfit=r.pendingProfit??rivalDailyProfit();r.pendingProfit=null;state.npc.cash+=r.lastProfit;r.losses=r.lastProfit<0?r.losses+1:0;r.insolvency=state.npc.cash<0?r.insolvency+1:0;
+ r.lastProfit=r.pendingProfit??0;r.pendingProfit=null;r.losses=r.lastProfit<0?r.losses+1:0;r.insolvency=state.npc.cash<0?r.insolvency+1:0;
  if(state.npc.cash<30000&&state.npc.owned.length>1){const id=[...state.npc.owned].sort((a,b)=>rivalOpportunity(LOCATIONS[a])-rivalOpportunity(LOCATIONS[b]))[0];state.npc.owned=state.npc.owned.filter(x=>x!==id);state.npc.cash+=Math.round(LOCATIONS[id].cost*.5);if(state.npc.cash>=0)r.insolvency=0;rivalryLog(`경쟁사 자금난: ${LOCATIONS[id].name[0]} 기기를 처분했습니다. 빈 입지에 출점할 수 있습니다.`,`競合の資金難：${LOCATIONS[id].name[1]}の機械を処分。空いた立地に出店できます。`);}
  if(r.insolvency>=5){r.defeated=true;r.plan=null;r.mode='closed';state.npc.owned=[];state.npc.cash=0;state.offer=null;rivalryLog('경쟁사가 사업 철수를 발표했습니다. 회사 운영은 계속됩니다.','競合が事業撤退を発表しました。会社経営は続きます。');return;}
  if(state.npc.cash<80000){r.plan=null;r.mode='retreat';r.until=state.day+1;e.rivalPrices=e.rivalPrices.map(()=>1750);if(r.insolvency===1)rivalryLog('경쟁사가 신규 투자를 중단하고 보유 입지 처분을 검토합니다.','競合が新規投資を中断し、保有立地の処分を検討しています。');return;}

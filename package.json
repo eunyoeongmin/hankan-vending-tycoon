@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "build": "python build.py",
-    "test": "node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs"
+    "test": "node tests/market.cjs && node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs"
   },
-  "devDependencies": { "jsdom": "30.0.1" }
+  "devDependencies": {
+    "jsdom": "30.0.1"
+  }
 }

@@ -43,7 +43,7 @@ assert.equal(ev('state.live.elapsed'), elapsed);
 doc.querySelector('#scene-pause').click(); frame();
 doc.querySelector('#game-menu').click(); frame(); run(60000);
 assert.equal(ev('state.live.elapsed'), elapsed, 'menu cannot skip a day');
-doc.querySelector('#menu-load').click(); frame();
+doc.querySelector('#game-menu-close').click(); frame();
 dom.window.document.hidden = true;
 dom.window.document.dispatchEvent(new dom.window.Event('visibilitychange'));
 run(60000);

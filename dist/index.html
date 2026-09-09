@@ -276,7 +276,7 @@ function paintDistrict(){const layer=$('district-scenery');if(!layer)return;docu
  layer.innerHTML=art;
 }
 function paintScene(time){paintSceneBase(time);if(!$('scene-npc'))return;$('scene-npc').innerHTML=state.npc.owned.filter(id=>LOCATIONS[id].map===selectedMap).map(id=>{const [x,y]=STOPS[id%6];return `<g transform="translate(${x} ${y})"><rect x="-10" y="-20" width="21" height="35" rx="3" fill="#73647e"/><rect x="-7" y="-16" width="12" height="18" fill="#c5d3d1"/><text x="0" y="-3" font-size="11" text-anchor="middle" fill="#695271">◆</text><rect x="-5" y="7" width="9" height="4" fill="#3f3845"/></g>`;}).join('');$('scene-workers').innerHTML=state.jobs.filter(j=>LOCATIONS[j.loc].map===selectedMap).map((j,i)=>{const pt=pathPoint(customerPath(j.loc,i),1-j.remaining/j.duration);return `<g>${personSvg(...pt,5,time,false,state.weather===2&&sceneSeason()!==3,sceneSeason()===3)}<text x="${pt[0]}" y="${pt[1]-29}" font-size="10" text-anchor="middle" fill="#28684e">${j.type==='collect'?'$':'▣'}</text></g>`;}).join('');}
-function initWorld(){menuOpen=true;openModal('menu');$('reset').onclick=()=>{menuOpen=true;openModal('menu');};$('game-menu').onclick=()=>state.ended?openModal('end'):openModal('menu');$('scene-report').onclick=()=>{if(state.report)openModal('report');};$('modal').addEventListener('cancel',e=>{if(['menu','newrun','tutorialOffer','tutorial','settings'].includes(modalView)){e.preventDefault();}});}
+function initWorld(){menuOpen=true;openModal('menu');$('reset').onclick=()=>{menuOpen=true;openModal('menu');};$('game-menu').onclick=()=>{menuOpen=true;openModal('menu');};$('scene-report').onclick=()=>{if(state.report)openModal('report');};$('modal').addEventListener('cancel',e=>{if(['menu','newrun','tutorialOffer','tutorial','settings'].includes(modalView)){e.preventDefault();}});}
 document.addEventListener('change',e=>{if(e.target.id==='run-duration')chosenDuration=Number(e.target.value);if(e.target.id==='menu-language')changeLanguage(e.target.value);});
 document.addEventListener('click',e=>{const el=e.target.closest('button');if(!el)return;if(el.dataset.map!==undefined)chooseMap(Number(el.dataset.map));if(el.dataset.staff)hire(el.dataset.staff,Number(el.dataset.delta));if(el.dataset.bank)bankAction(el.dataset.bank);if(el.dataset.job)dispatch(el.dataset.job,Number(el.dataset.loc));if(el.dataset.complaint)respondComplaint(Number(el.dataset.complaint));if(el.dataset.acquire)acquireNpc(Number(el.dataset.acquire));switch(el.id){case'menu-new':openModal('newrun');break;case'menu-load':if(state.started){menuOpen=false;closeModal();livePaused=false;if(state.ended)openModal('end');else if(!state.live)startBusiness();render();}break;case'menu-settings':openModal('settings');break;case'menu-back':openModal('menu');break;case'launch-new':launchNew();break;case'tutorial-start':tutorialStep=0;openModal('tutorial');break;case'tutorial-next':if(tutorialStep<5){tutorialStep++;drawModal();}else completeTutorial();break;case'tutorial-skip':completeTutorial();break;case'world-pr':worldPr();break;case'accept-offer':acceptOffer();break;}});
 
@@ -326,8 +326,8 @@ function paintSceneBase(time){
  $('scene-machines').innerHTML=visibleMachines().map(m=>{const [x,y]=STOPS[m.loc%6];return `<g class="scene-vender" transform="translate(${x} ${y})"><ellipse cy="16" rx="13" ry="4" fill="#28423220"/><rect x="-10" y="-20" width="21" height="35" rx="3" fill="${product(m).color}"/><path d="M7-18v31" stroke="#263c3130" stroke-width="4"/><rect x="-7" y="-16" width="12" height="19" rx="1" fill="#d9e9d6" stroke="#405d57" stroke-width="1.7"/><path d="M-4-12v4m5-4v4m-5 3v4m5-4v4" stroke="${m.stock?'#edb856':'#95a5a0'}" stroke-width="3"/><rect x="-6" y="7" width="10" height="4" rx="1" fill="#344c45"/><circle cx="8" cy="3" r="1.5" fill="${m.stock?'#c9f79a':'#fa856c'}"/>${!m.stock?'<path d="M-5-11l8 8m0-8l-8 8" stroke="#c65b4b" stroke-width="1.5"/>':''}</g>`;}).join('');
  const people=[],bubbles=[];
  if(sceneMotion){for(let i=0;i<7;i++){const progress=((time/23000+i/7)%1),route=i%2?[[280,-25],[280,180],[825,180]]:[[-25,180],[510,180],[510,365]],pt=pathPoint(route,progress);people.push({y:pt[1],svg:personSvg(...pt,i,clock,false,raining,si===3)});}}
- if(l){const total=l.rows.reduce((n,r)=>n+r.n,0),stride=Math.max(1,Math.ceil(total/150));for(const r of l.rows.filter(r=>LOCATIONS[r.loc].map===selectedMap)){for(let i=0;i<r.n;i++){if(i%stride!==0&&i!==r.n-1)continue;const due=saleTime(r,i),age=clock-due;if(age< -3000||age>2200)continue;const seed=r.loc*43+i,route=customerPath(r.loc,seed),t=age<0?(age+3000)/3000:age<650?1:1-(age-650)/1550,pt=pathPoint(route,sceneMotion?t:1);people.push({y:pt[1],svg:personSvg(...pt,seed,clock,age>=0&&age<650,raining,si===3)});if(age>=0&&age<1200&&r.bought?.some(b=>b.i===i)){bubbles[r.loc]=(`<g transform="translate(${STOPS[r.loc%6][0]} ${STOPS[r.loc%6][1]-30-(sceneMotion?age/60:0)})" opacity="${Math.max(0,1-age/1200)}"><rect x="-28" y="-12" width="56" height="18" rx="8" fill="#fffef4"/><text text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="700" fill="#37765c">+${money(r.bought.find(b=>b.i===i).price)}</text></g>`);}}
- if(r.attempted>r.served&&clock>21000&&clock<23200){const pt=pathPoint(customerPath(r.loc,r.loc),Math.min(1,(clock-21000)/1100));people.push({y:pt[1],svg:personSvg(...pt,r.loc,clock,false,raining,si===3)});bubbles[r.loc]=(`<text x="${STOPS[r.loc%6][0]}" y="${STOPS[r.loc%6][1]-27}" text-anchor="middle" fill="#aa4d3d" font-size="10" font-family="sans-serif">${T('품절','売り切れ')}</text>`);}
+ if(l){const total=l.rows.reduce((n,r)=>n+r.n,0),stride=Math.max(1,Math.ceil(total/150));for(const r of sceneCustomerRows(l).filter(r=>LOCATIONS[r.loc].map===selectedMap)){for(let i=0;i<r.n;i++){if(state.enterprise.operations?.market&&!state.enterprise.operations.market.legacy&&!r.bought.some(b=>b.i===i))continue;if(i%stride!==0&&i!==r.n-1)continue;const due=sceneCustomerDue(r,i),age=clock-due;if(age< -3000||age>2200)continue;const seed=r.loc*43+i,route=customerPath(r.loc,seed),t=age<0?(age+3000)/3000:age<650?1:1-(age-650)/1550,pt=pathPoint(route,sceneMotion?t:1);people.push({y:pt[1],svg:personSvg(...pt,seed,clock,age>=0&&age<650,raining,si===3)});if(age>=0&&age<1200&&r.bought?.some(b=>b.i===i)){bubbles[r.loc]=(`<g transform="translate(${STOPS[r.loc%6][0]} ${STOPS[r.loc%6][1]-30-(sceneMotion?age/60:0)})" opacity="${Math.max(0,1-age/1200)}"><rect x="-28" y="-12" width="56" height="18" rx="8" fill="#fffef4"/><text text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="700" fill="#37765c">+${money(r.bought.find(b=>b.i===i).price)}</text></g>`);}}
+ if(r.lost?.stock>0&&clock>21000&&clock<23200){const pt=pathPoint(customerPath(r.loc,r.loc),Math.min(1,(clock-21000)/1100));people.push({y:pt[1],svg:personSvg(...pt,r.loc,clock,false,raining,si===3)});bubbles[r.loc]=(`<text x="${STOPS[r.loc%6][0]}" y="${STOPS[r.loc%6][1]-27}" text-anchor="middle" fill="#aa4d3d" font-size="10" font-family="sans-serif">${T('품절','売り切れ')}</text>`);}
  }}
  $('scene-people').innerHTML=people.sort((a,b)=>a.y-b.y).slice(0,65).map(p=>p.svg).join('');$('scene-bubbles').innerHTML=bubbles.slice(-22).join('');
  const afternoon=l?Math.max(0,(clock/DAY_MS-.5)*2):0;$('scene-tint').setAttribute('fill',wi===2?'#43566f':afternoon>.55?'#694e80':'#efaa65');$('scene-tint').setAttribute('opacity',String(wi===2?.14:afternoon*.20));
@@ -556,7 +556,7 @@ const oldWorldEventsEnterprise=worldEvents;
 worldEvents=function(){const e=state.enterprise;state.weather=e.forecast??0;e.forecast=Math.floor(enterpriseRandom()*4);if(sceneSeason()===3&&e.forecast===1)e.forecast=3;e.index=Math.max(.75,Math.min(1.4,e.index+(enterpriseRandom()-.5)*.08));for(let map=0;map<4;map++){e.brand[map]=Math.max(5,e.brand[map]-.3);if(e.ads[map]>0){e.ads[map]--;e.brand[map]=Math.min(100,e.brand[map]+4);}const pressure=state.machines.filter(m=>LOCATIONS[m.loc].map===map).length;/* Rival prices are set by its funded strategy. */}oldWorldEventsEnterprise();if(e.autoOrder)for(let p=0;p<PRODUCTS.length;p++){if(!state.machines.some(m=>m.slots?.some(s=>s.product===p)))continue;if(e.warehouse[p].qty<40&&!e.orders.some(o=>o.product===p))orderGoods(p,Math.max(100,SUPPLIERS[e.supplier].min));}};
 finishBusiness=function(){
  const l=state.live;if(!l||l.elapsed<DAY_MS||l.settled||l.day!==state.day)return;
- l.settled=true;const e=state.enterprise,day=l.day,t=liveTotals();
+ settleRivalOperations();l.settled=true;const e=state.enterprise,day=l.day,t=liveTotals();
  const snapshot=l.rows.map(r=>({loc:r.loc,sold:r.served,revenue:r.revenue,cost:r.cost,rent:r.rent,lost:r.lost||{},products:r.products||[]}));
  const rent=l.rows.reduce((n,r)=>n+r.rent,0),payroll=Math.round(l.payroll||0),interest=Math.round(state.bank.principal*interestRate()),overhead=enterpriseDailyCost();
  state.cash-=rent+payroll+overhead;
@@ -568,7 +568,7 @@ finishBusiness=function(){
  state.profit=net;state.totalProfit+=net;state.history.push(net);state.history=state.history.slice(-90);
  state.report={day,...t,rent,net,payroll,interest,overhead,extraExpense,rows:snapshot.map(r=>({loc:r.loc,n:r.sold,revenue:r.revenue,out:(r.lost.stock||0)>0}))};
  state.live=null;state.effects=state.effects.map(x=>({...x,remaining:x.remaining-1})).filter(x=>x.remaining>0);
- ensureRivalry().pendingProfit=rivalDailyProfit();e.lastClosed=day;e.reports.unshift({day,revenue:t.revenue,net,cash:state.cash,extra:extraExpense,overhead,rows:snapshot});e.reports=e.reports.slice(0,60);
+ ensureRivalry().pendingProfit=state.enterprise.operations.lastProfit;e.lastClosed=day;e.reports.unshift({day,revenue:t.revenue,net,cash:state.cash,extra:extraExpense,overhead,rows:snapshot});e.reports=e.reports.slice(0,60);
  log(B(`${day}일 결산 · ${t.sold}개 판매 · 순이익 ${money(net)}`,`${day}日目決算・${t.sold}本販売・純利益 ${money(net)}`),day);
  if(checkEnding(true))return;
  state.day++;e.expenseDay=state.day;e.expenseToday=0;const beforeEvents=assets();worldEvents();e.expenseToday+=beforeEvents-assets();
@@ -618,7 +618,7 @@ document.addEventListener('click',event=>{const tab=event.target.closest('[data-
 document.addEventListener('change',event=>{const el=event.target;if(el.dataset.slot!==undefined)enterpriseSlotProduct(Number(el.dataset.slot),Number(el.value));if(el.id==='supplier'){state.enterprise.supplier=Number(el.value);save();renderEnterprise();}if(el.id==='emergency'||el.id==='auto-order'){state.enterprise[el.id==='emergency'?'emergency':'autoOrder']=el.checked;save();render();}});
 function validEnterprise(e,s){
  const nonnegative=x=>finite(x)&&x>=0;
- return e.version===1&&(!e.rivalry||validRivalry(e.rivalry))&&int(e.rng,0,4294967295)&&Array.isArray(e.warehouse)&&e.warehouse.length===PRODUCTS.length&&e.warehouse.every(w=>w&&int(w.qty,0,100000)&&nonnegative(w.value))&&Array.isArray(e.orders)&&e.orders.length<=1000&&e.orders.every(o=>int(o.id,1,1e9)&&int(o.product,0,PRODUCTS.length-1)&&int(o.qty,1,1000)&&nonnegative(o.value)&&finite(o.remaining)&&o.remaining>0&&finite(o.duration)&&o.duration>0)&&int(e.nextOrder,1,1e9)&&e.tech&&['quality','logistics'].every(k=>int(e.tech[k],0,3))&&['brand','ads','rivalPrices'].every(k=>Array.isArray(e[k])&&e[k].length===4&&e[k].every(nonnegative))&&finite(e.index)&&e.index>=.75&&e.index<=1.4&&typeof e.emergency==='boolean'&&typeof e.autoOrder==='boolean'&&int(e.supplier,0,2)&&finite(e.expenseToday)&&int(e.expenseDay,1,1000000)&&nonnegative(e.capital)&&int(e.lastClosed,0,1000000)&&Array.isArray(e.reports)&&e.reports.length<=60&&e.reports.every(r=>int(r.day,1,1000000)&&finite(r.net)&&finite(r.cash)&&nonnegative(r.revenue)&&Array.isArray(r.rows))&&Array.isArray(e.ledger)&&e.ledger.length<=60&&e.ledger.every(x=>int(x.day,1,1000000)&&['purchase','delivery','emergency','collection','investment','advertising','maintenance'].includes(x.kind)&&finite(x.amount))&&s.machines.every(m=>!m.slots||(Array.isArray(m.slots)&&m.slots.length===4&&m.slots.every(x=>int(x.product,0,PRODUCTS.length-1)&&int(x.stock,0,10000)&&int(x.price,800,4000)&&nonnegative(x.value)&&typeof x.label==='boolean')&&m.slots.reduce((n,x)=>n+x.stock,0)===m.stock&&finite(m.condition)&&m.condition>=0&&m.condition<=100));
+ return e.version===1&&(!e.operations||validOperations(e.operations,s))&&(!e.rivalry||validRivalry(e.rivalry))&&int(e.rng,0,4294967295)&&Array.isArray(e.warehouse)&&e.warehouse.length===PRODUCTS.length&&e.warehouse.every(w=>w&&int(w.qty,0,100000)&&nonnegative(w.value))&&Array.isArray(e.orders)&&e.orders.length<=1000&&e.orders.every(o=>int(o.id,1,1e9)&&int(o.product,0,PRODUCTS.length-1)&&int(o.qty,1,1000)&&nonnegative(o.value)&&finite(o.remaining)&&o.remaining>0&&finite(o.duration)&&o.duration>0)&&int(e.nextOrder,1,1e9)&&e.tech&&['quality','logistics'].every(k=>int(e.tech[k],0,3))&&['brand','ads','rivalPrices'].every(k=>Array.isArray(e[k])&&e[k].length===4&&e[k].every(nonnegative))&&finite(e.index)&&e.index>=.75&&e.index<=1.4&&typeof e.emergency==='boolean'&&typeof e.autoOrder==='boolean'&&int(e.supplier,0,2)&&finite(e.expenseToday)&&int(e.expenseDay,1,1000000)&&nonnegative(e.capital)&&int(e.lastClosed,0,1000000)&&Array.isArray(e.reports)&&e.reports.length<=60&&e.reports.every(r=>int(r.day,1,1000000)&&finite(r.net)&&finite(r.cash)&&nonnegative(r.revenue)&&Array.isArray(r.rows))&&Array.isArray(e.ledger)&&e.ledger.length<=60&&e.ledger.every(x=>int(x.day,1,1000000)&&['purchase','delivery','emergency','collection','investment','advertising','maintenance'].includes(x.kind)&&finite(x.amount))&&s.machines.every(m=>!m.slots||(Array.isArray(m.slots)&&m.slots.length===4&&m.slots.every(x=>int(x.product,0,PRODUCTS.length-1)&&int(x.stock,0,10000)&&int(x.price,800,4000)&&nonnegative(x.value)&&typeof x.label==='boolean')&&m.slots.reduce((n,x)=>n+x.stock,0)===m.stock&&finite(m.condition)&&m.condition>=0&&m.condition<=100));
 }
 function rivalOpportunity(l){const price=state.enterprise.rivalPrices[l.map],visits=demand({loc:l.id,level:1});const share=1/(1+state.machines.filter(m=>LOCATIONS[m.loc].map===l.map).length*.18);return (visits*.7*share*(price-PRODUCTS[0].cost*state.enterprise.index)-l.rent)/l.cost;}
 function rivalDailyProfit(){return Math.round(state.npc.owned.reduce((n,id)=>n+rivalOpportunity(LOCATIONS[id])*LOCATIONS[id].cost-2500,0)-15000*(1+state.difficulty*.15));}
@@ -657,7 +657,7 @@ rivalOpportunity=function(l){const e=state.enterprise,share=competitionStrength(
 rivalDailyProfit=function(){const r=ensureRivalry();if(r.defeated)return 0;const campaign=r.until>=state.day?(r.mode==='price'?7000:r.mode==='advertise'?8000:0):0;return Math.round(state.npc.owned.reduce((n,id)=>n+rivalOpportunity(LOCATIONS[id])*LOCATIONS[id].cost-2500,0)-15000*(1+state.difficulty*.15)-campaign);};
 function rivalTurn(){
  const r=ensureRivalry(),e=state.enterprise;if(r.turnDay>=state.day||r.defeated)return;r.turnDay=state.day;
- r.lastProfit=r.pendingProfit??rivalDailyProfit();r.pendingProfit=null;state.npc.cash+=r.lastProfit;r.losses=r.lastProfit<0?r.losses+1:0;r.insolvency=state.npc.cash<0?r.insolvency+1:0;
+ r.lastProfit=r.pendingProfit??0;r.pendingProfit=null;r.losses=r.lastProfit<0?r.losses+1:0;r.insolvency=state.npc.cash<0?r.insolvency+1:0;
  if(state.npc.cash<30000&&state.npc.owned.length>1){const id=[...state.npc.owned].sort((a,b)=>rivalOpportunity(LOCATIONS[a])-rivalOpportunity(LOCATIONS[b]))[0];state.npc.owned=state.npc.owned.filter(x=>x!==id);state.npc.cash+=Math.round(LOCATIONS[id].cost*.5);if(state.npc.cash>=0)r.insolvency=0;rivalryLog(`경쟁사 자금난: ${LOCATIONS[id].name[0]} 기기를 처분했습니다. 빈 입지에 출점할 수 있습니다.`,`競合の資金難：${LOCATIONS[id].name[1]}の機械を処分。空いた立地に出店できます。`);}
  if(r.insolvency>=5){r.defeated=true;r.plan=null;r.mode='closed';state.npc.owned=[];state.npc.cash=0;state.offer=null;rivalryLog('경쟁사가 사업 철수를 발표했습니다. 회사 운영은 계속됩니다.','競合が事業撤退を発表しました。会社経営は続きます。');return;}
  if(state.npc.cash<80000){r.plan=null;r.mode='retreat';r.until=state.day+1;e.rivalPrices=e.rivalPrices.map(()=>1750);if(r.insolvency===1)rivalryLog('경쟁사가 신규 투자를 중단하고 보유 입지 처분을 검토합니다.','競合が新規投資を中断し、保有立地の処分を検討しています。');return;}
@@ -728,7 +728,7 @@ launchNew=function(){
 function ruleLabel(field,value){const item=field[2].find(x=>x[0]===value);return typeof item[1]==='string'?item[1]:tr(item[1]);}
 function rulesSummary(r){return RULE_FIELDS.map(f=>`<div class="row"><span>${tr(f[1])}</span><strong>${ruleLabel(f,r[f[0]])}</strong></div>`).join('');}
 const modalBeforeScenario=drawModal;
-drawModal=function(){modalBeforeScenario();if(modalView==='settings'&&!state.started){const exit=document.createElement('button');exit.id='settings-close';exit.className='small';exit.textContent=T('설정 닫기','設定を閉じる');$('modal-body').querySelector('.entry-languages')?.append(exit);}if(modalView==='newrun'){
+drawModal=function(){modalBeforeScenario();if(modalView==='menu'){const exit=document.createElement('button');exit.type='button';exit.id='game-menu-close';exit.className='small';exit.textContent=T('메뉴 닫기','メニューを閉じる');$('modal-body').querySelector('.entry-languages')?.append(exit);}if(modalView==='settings'&&!state.started){const exit=document.createElement('button');exit.id='settings-close';exit.className='small';exit.textContent=T('설정 닫기','設定を閉じる');$('modal-body').querySelector('.entry-languages')?.append(exit);}if(modalView==='newrun'){
  const box=document.createElement('section');box.id='scenario-setup';box.innerHTML=`<h3>${T('시작 난이도','開始難易度')}</h3><label for="scenario-preset">${T('프리셋','プリセット')}</label><select class="full" id="scenario-preset">${Object.entries(PRESET_NAMES).map(([k,n])=>`<option value="${k}" ${setupPreset===k?'selected':''}>${tr(n)}</option>`).join('')}</select><p class="scenario-index">${T('설정 난도 지수','設定難度指数')} <strong>${rulesIndex(setupRules)}</strong> · ${T('표준 100 · 자체 참고 지수','標準100・独自の参考指数')}</p><p class="helper">${T('승률을 측정한 수치가 아닙니다. 4상권·24입지·경쟁사 1곳에서 작동하는 조건만 제공합니다. 설정은 새 게임에 고정 저장됩니다.','勝率を測定した数値ではありません。4商圏・24立地・競合1社で動作する条件のみ提供。設定は新規ゲームに固定保存。')}</p><div class="scenario-fields">${RULE_FIELDS.map(f=>`<label for="rule-${f[0]}"><strong>${tr(f[1])}</strong><select id="rule-${f[0]}" data-rule="${f[0]}" ${disabled(f[0]==='inflation'&&!setupRules.cycle)}>${f[2].map(([v,n])=>`<option value="${v}" ${setupRules[f[0]]===v?'selected':''}>${typeof n==='string'?n:tr(n)}</option>`).join('')}</select><small>${tr(f[3])}</small></label>`).join('')}</div>`;$('modal-body').querySelector('.buttons').before(box);
  }else if(modalView==='settings'&&state.started){const exit=document.createElement('button');exit.id='settings-close';exit.className='small';exit.textContent=T('설정 닫기','設定を閉じる');$('modal-body').querySelector('.entry-languages')?.append(exit);const box=document.createElement('details');box.className='scenario-current';box.innerHTML=`<summary>${T('현재 게임의 시작 조건','現在の開始条件')} · ${state.scenario?tr(PRESET_NAMES[state.scenario.preset]):T('이전 버전 규칙','旧バージョンのルール')}</summary>${state.scenario?rulesSummary(runRules()):`<p>${T('이전 저장에는 초기 조건 목록이 없습니다. 기존 진행과 재도전 단계를 유지하며, 초기 자금 등을 추정해서 표시하지 않습니다.','旧セーブには開始条件の一覧がありません。進行と再挑戦レベルを保持し、初期資金などを推測して表示しません。')}</p>`}<p>${T('이 화면은 조회용입니다. 조건 변경은 새 게임에서 적용됩니다.','この画面は閲覧用です。条件の変更は新規ゲームで適用されます。')}</p>`;$('modal-body').append(box);}
 };
@@ -737,6 +737,131 @@ const enterpriseBeforeScenario=renderEnterprise;
 renderEnterprise=function(force=true){enterpriseBeforeScenario(force);if(enterpriseTab!=='overview')return;let line=$('scenario-run-status');if(!line){line=document.createElement('p');line.id='scenario-run-status';line.className='helper';$('enterprise').querySelector('.enterprise-body')?.append(line);}if(line)line.textContent=state.scenario?T(`설정: ${PRESET_NAMES[state.scenario.preset][0]} · 지수 ${rulesIndex(runRules())} · 경기 수요 ${Math.round(cycleFactor()*100)}% · 비용 물가 ${Math.round(inflationFactor()*100)}%`,`設定：${PRESET_NAMES[state.scenario.preset][1]}・指数 ${rulesIndex(runRules())}・景気需要 ${Math.round(cycleFactor()*100)}%・コスト物価 ${Math.round(inflationFactor()*100)}%`):T('기존 저장: 이전 버전의 시작 조건을 유지합니다.','既存セーブ：旧バージョンの開始条件を保持します。');};
 
 document.addEventListener('click',event=>{if(!event.target.closest('#settings-close'))return;if(state.started&&!state.ended){menuOpen=false;closeModal();if(!state.live&&!livePaused)startBusiness();render();}else{menuOpen=true;openModal('menu');}});
+
+document.addEventListener('click',event=>{if(!event.target.closest('#game-menu-close'))return;menuOpen=false;closeModal();if(state.started&&!state.ended&&!state.live&&!livePaused)startBusiness();render();});
+
+/* One finite district market. Only completed purchases create revenue for either firm. */
+function npcMachine(loc,stock=0){const m={loc,stock,price:1500,level:1,total:0,product:0,vault:0};ensureSlots(m);return m;}
+function ensureOperations(){
+ const e=state.enterprise;
+ if(!e.operations){try{const raw=localStorage.getItem(KEY);if(raw&&!localStorage.getItem(KEY+'-backup-before-market'))localStorage.setItem(KEY+'-backup-before-market',raw);}catch{}e.operations={version:1,machines:state.npc.owned.map(id=>npcMachine(id,60)),warehouse:PRODUCTS.map(()=>({qty:0,value:0})),orders:[],jobs:[],market:null,lastProfit:0,settledDay:0};}
+ const o=e.operations;o.machines=o.machines.filter(m=>state.npc.owned.includes(m.loc));
+ for(const id of state.npc.owned)if(!o.machines.some(m=>m.loc===id))o.machines.push(npcMachine(id));
+ o.jobs=o.jobs.filter(j=>state.npc.owned.includes(j.loc));return o;
+}
+function marketRow(m,n){return {loc:m.loc,n,wanted:n,attempted:0,served:0,revenue:0,cost:0,rent:dailyRent(m),bought:[],lost:{stock:0,condition:0,price:0,competition:0},products:PRODUCTS.map(()=>({sold:0,revenue:0,cost:0}))};}
+function beginMarket(){
+ const l=state.live,o=ensureOperations();if(!l||o.market?.day===l.day)return;
+ // Old in-progress saves finish their existing customer schedule once. Never replay past sales.
+ if(l.elapsed>0){o.market={day:l.day,legacy:true,payroll:0,extra:0,rows:[],districts:[]};return;}
+ const districts=MAPS.map((_,map)=>({n:Math.min(5000,Math.round(LOCATIONS.filter(x=>x.map===map).reduce((n,x)=>n+demand({loc:x.id,level:1}),0))),attempted:0,player:0,rival:0,none:0}));
+ l.rows=state.machines.map(m=>marketRow(m,districts[LOCATIONS[m.loc].map].n));
+ o.market={day:l.day,legacy:false,payroll:0,extra:0,districts,rows:o.machines.map(m=>marketRow(m,districts[LOCATIONS[m.loc].map].n))};
+}
+const startBeforeMarket=startBusiness;
+startBusiness=function(){ensureOperations();startBeforeMarket();beginMarket();save();};
+function recordMarketSale(m,s,r,i,paid,ours){
+ const cost=s.value/s.stock;s.stock--;s.value=Math.max(0,s.value-cost);m.vault+=paid;m.total++;m.condition=Math.max(0,m.condition-.045);
+ r.products??=PRODUCTS.map(()=>({sold:0,revenue:0,cost:0}));const p=r.products[s.product];p.sold++;p.revenue+=paid;p.cost+=cost;
+ r.served++;r.revenue+=paid;r.cost+=cost;r.bought.push({i,price:paid});if(ours)state.totalSold++;syncMachine(m);
+}
+function marketCustomer(map,i){
+ const o=ensureOperations(),market=o.market,d=market.districts[map],e=state.enterprise;
+ const type=Math.floor(enterpriseRandom()*3),season=sceneSeason(),origin=map*6+Math.floor(enterpriseRandom()*6),options=[];
+ for(const ours of [true,false])for(const m of (ours?state.machines:o.machines)){
+  if(LOCATIONS[m.loc].map!==map)continue;
+  const rows=ours?state.live.rows:market.rows,r=rows.find(x=>x.loc===m.loc);if(!r)continue;
+  ensureSlots(m);r.attempted=d.attempted;r.lost??={stock:0,condition:0,price:0,competition:0};
+  if(!m.stock){r.lost.stock++;continue;}if(m.condition<25&&enterpriseRandom()<.5){r.lost.condition++;continue;}
+  for(const s of m.slots.filter(s=>s.stock>0)){
+   const p=PRODUCTS[s.product],paid=ours?campaignPrice(s,map):e.rivalPrices[map];
+   let fit=(p.fit[LOCATIONS[origin].kind]||1)*(type===0&&s.product===0?1.25:type===1&&s.product===1?1.35:type===2&&s.product===3?1.3:1);
+   if(s.product===4)fit*=[1,2,.8,.35][season];if(s.product===5)fit*=[1,.45,1.3,2][season];
+   let score=fit*Math.exp((1-paid/p.price)*[2.3,1.5,.9][type])*(.5+m.condition/200)/(1+Math.abs(m.loc-origin)*.6)/4;
+   if(ours){score*= (1+e.tech.quality*.09+(s.label?e.brand[map]/140:0))*(.65+state.reputation/200);if(activeCampaign(map)?.kind==='loyalty')score*=1.35;}
+   else{score*=rivalSkillFactor();const r=ensureRivalry();if(r.target===map&&r.until>=state.day){let boost=r.mode==='advertise'?.65:r.mode==='price'?.3:0;if(activeCampaign(map)?.kind==='defend')boost*=.3;score*=1+boost;}}
+   options.push({m,s,r,paid,ours,score});
+  }
+ }
+ // Outside option represents another shop or no purchase; no customer buys twice.
+ let pick=enterpriseRandom()*(.45+options.reduce((n,x)=>n+x.score,0)),chosen=null;
+ for(const x of options){pick-=x.score;if(pick<0){chosen=x;break;}}
+ if(chosen){recordMarketSale(chosen.m,chosen.s,chosen.r,i,chosen.paid,chosen.ours);d[chosen.ours?'player':'rival']++;}else d.none++;
+ for(const r of state.live.rows.filter(r=>LOCATIONS[r.loc].map===map)){
+  r.attempted=d.attempted;
+  if(chosen?.r!==r&&machine(r.loc)?.stock>0){r.lost??={stock:0,condition:0,price:0,competition:0};r.lost[chosen?'competition':'price']++;}
+ }
+}
+function npcCrew(){return Math.ceil(state.npc.owned.length/3);}
+function advanceRivalOperations(ms){
+ const o=ensureOperations(),market=o.market;if(!market||market.legacy||ensureRivalry().defeated)return;
+ market.payroll+=npcCrew()*5000*(1+state.difficulty*.1)*inflationFactor()*ms/DAY_MS;
+ for(const order of o.orders)order.remaining-=ms;
+ for(const order of o.orders.filter(x=>x.remaining<=0)){const w=o.warehouse[order.product];w.qty+=order.qty;w.value+=order.value;}
+ o.orders=o.orders.filter(x=>x.remaining>0);
+ for(const j of o.jobs)j.remaining-=ms;
+ for(const j of o.jobs.filter(x=>x.remaining<=0)){
+  const m=o.machines.find(m=>m.loc===j.loc);if(!m)continue;
+  if(j.type==='collect'){state.npc.cash+=m.vault;m.vault=0;}
+  else{for(const s of m.slots){const w=o.warehouse[s.product],n=Math.min(Math.max(0,Math.floor((80+(m.level-1)*40)/4)-s.stock),w.qty),value=w.qty?n*w.value/w.qty:0;w.qty-=n;w.value=Math.max(0,w.value-value);s.stock+=n;s.value+=value;}syncMachine(m);}
+ }
+ o.jobs=o.jobs.filter(x=>x.remaining>0);
+ for(const type of ['collect','restock']){
+  let free=npcCrew()-o.jobs.filter(j=>j.type===type).length;
+  for(const m of [...o.machines].sort((a,b)=>type==='collect'?b.vault-a.vault:a.stock-b.stock)){
+   if(free<=0)break;if(o.jobs.some(j=>j.type===type&&j.loc===m.loc))continue;
+   const need=type==='collect'?m.vault>=10000:m.stock<=28&&m.slots.some(s=>o.warehouse[s.product].qty>0);
+   if(need){o.jobs.push({type,loc:m.loc,remaining:4500+LOCATIONS[m.loc].map*1200});free--;}
+  }
+ }
+ for(let p=0;p<PRODUCTS.length;p++){
+  if(!o.machines.some(m=>m.slots.some(s=>s.product===p))||o.warehouse[p].qty>=40||o.orders.some(x=>x.product===p))continue;
+  const qty=80,value=procurementPrice(p,0)*qty*rivalCostFactor();
+  if(state.npc.cash<value||o.warehouse.reduce((n,w)=>n+w.qty,0)+o.orders.reduce((n,x)=>n+x.qty,0)+qty>1000)continue;
+  let duration=DAY_MS;if(enterpriseRandom()<[0,.1,.35][runRules().supply])duration+=DAY_MS*(runRules().supply===1?.5:1);
+  state.npc.cash-=value;o.orders.push({product:p,qty,value,remaining:duration});
+ }
+ for(const m of o.machines)if(m.condition<30&&state.npc.cash>=15000){state.npc.cash-=15000;market.extra+=15000;m.condition=100;}
+}
+function settleRivalOperations(){
+ const o=ensureOperations(),l=state.live;if(!l||o.settledDay>=l.day)return;beginMarket();const market=o.market;
+ const r=ensureRivalry();if(r.defeated){o.lastProfit=0;o.settledDay=l.day;return;}const campaign=r.until>=l.day?(r.mode==='price'?7000:r.mode==='advertise'?8000:0):0;
+ const rent=market.rows.reduce((n,x)=>n+x.rent,0),payroll=Math.round(market.payroll),overhead=market.legacy?0:1000;
+ state.npc.cash-=rent+payroll+overhead+campaign;
+ o.lastProfit=market.rows.reduce((n,x)=>n+x.revenue-x.cost,0)-rent-payroll-overhead-campaign-market.extra;o.settledDay=l.day;
+}
+const advanceBeforeMarket=advanceBusiness;
+advanceBusiness=function(ms){
+ if(!state.live||!finite(ms)||ms<0)return;ensureEnterprise();beginMarket();const o=ensureOperations();
+ if(o.market.legacy){advanceBeforeMarket(ms);return;}
+ let left=Math.min(ms,DAY_MS-state.live.elapsed);
+ while(left>0&&state.live){const step=Math.min(200,left),l=state.live;l.elapsed+=step;l.payroll=(l.payroll||0)+staffSalary()*step/DAY_MS;left-=step;
+  advanceJobs(step);advanceRivalOperations(step);
+  o.market.districts.forEach((d,map)=>{while(d.attempted<d.n&&saleTime({loc:map*6,n:d.n},d.attempted)<=l.elapsed){const i=d.attempted++;marketCustomer(map,i);}});
+  if(l.elapsed>=DAY_MS){finishBusiness();return;}
+ }save();refreshLiveNumbers();
+};
+// Transfers keep physical inventory, accumulated receipts and condition intact.
+const acquireBeforeOperations=acquireNpc;
+acquireNpc=function(loc){const o=ensureOperations(),m=o.machines.find(m=>m.loc===loc);acquireBeforeOperations(loc);const bought=machine(loc);if(m&&bought){Object.assign(bought,m);o.machines=o.machines.filter(x=>x!==m);o.jobs=o.jobs.filter(j=>j.loc!==loc);save();render();}};
+const offerBeforeOperations=acceptOffer;
+acceptOffer=function(){const o=ensureOperations(),m=state.offer&&machine(state.offer.loc);offerBeforeOperations();if(m&&!machine(m.loc)&&state.npc.owned.includes(m.loc)){o.machines=o.machines.filter(x=>x.loc!==m.loc);o.machines.push(m);save();render();}};
+function validOperations(o,s){
+ const nn=x=>finite(x)&&x>=0,arr=(x,n)=>Array.isArray(x)&&x.length<=n;
+ if(!o||o.version!==1||!arr(o.machines,24)||new Set(o.machines.map(m=>m.loc)).size!==o.machines.length||!o.machines.every(m=>m&&int(m.loc,0,23)&&int(m.level,1,3)&&int(m.total,0,1e12)&&nn(m.vault)&&int(m.stock,0,10000)&&int(m.product,0,5)&&int(m.price,800,4000)&&nn(m.condition)&&m.condition<=100&&arr(m.slots,4)&&m.slots.length===4&&m.slots.every(x=>x&&int(x.product,0,5)&&int(x.stock,0,10000)&&int(x.price,800,4000)&&nn(x.value)&&typeof x.label==='boolean')&&m.slots.reduce((n,x)=>n+x.stock,0)===m.stock))return false;
+ if(!arr(o.warehouse,6)||o.warehouse.length!==6||!o.warehouse.every(w=>w&&int(w.qty,0,100000)&&nn(w.value))||!arr(o.orders,1000)||!o.orders.every(x=>x&&int(x.product,0,5)&&int(x.qty,1,1000)&&nn(x.value)&&nn(x.remaining)&&x.remaining>0)||!arr(o.jobs,48)||!o.jobs.every(x=>x&&['collect','restock'].includes(x.type)&&int(x.loc,0,23)&&nn(x.remaining)&&x.remaining>0)||!finite(o.lastProfit)||!int(o.settledDay,0,1000000))return false;
+ const m=o.market;if(!m)return true;
+ return int(m.day,1,s.day)&&typeof m.legacy==='boolean'&&nn(m.payroll)&&nn(m.extra)&&arr(m.rows,24)&&m.rows.every(r=>validLive({day:s.day,elapsed:0,rows:[r]},{day:s.day,ended:false}))&&arr(m.districts,4)&&(m.legacy?m.districts.length===0:m.districts.length===4&&m.districts.every(d=>d&&int(d.n,0,5000)&&int(d.attempted,0,d.n)&&int(d.player,0,d.attempted)&&int(d.rival,0,d.attempted)&&int(d.none,0,d.attempted)&&d.player+d.rival+d.none===d.attempted));
+}
+// The old estimate remains useful only for location planning, never for cash settlement.
+ensureOperations();
+
+function sceneCustomerRows(l){const m=state.enterprise.operations?.market;return m&&!m.legacy&&m.day===l.day?[...l.rows,...m.rows]:l.rows;}
+function sceneCustomerDue(r,i){const m=state.enterprise.operations?.market;return m&&!m.legacy?saleTime({loc:LOCATIONS[r.loc].map*6,n:r.n},i):saleTime(r,i);}
+const turnBeforeOperations=rivalTurn;
+rivalTurn=function(){const o=ensureOperations(),before=[...o.machines];turnBeforeOperations();if(!ensureRivalry().defeated)for(const m of before.filter(m=>!state.npc.owned.includes(m.loc))){state.npc.cash+=m.vault;for(const s of m.slots){o.warehouse[s.product].qty+=s.stock;o.warehouse[s.product].value+=s.value;}}ensureOperations();};
+const competitionBeforeMarket=competitionBody;
+competitionBody=function(){return `<p class="permit-warning">${T('공통 고객 시장: 한 고객은 한 곳에서만 구매합니다. 경쟁사도 재고를 매입·배송·보충하고, 판매 대금을 회수하며 비용을 지불합니다. 아래 선택률은 추정치입니다.','共通顧客市場：一人の顧客が買うのは一か所のみ。競合も在庫の仕入れ・配送・補充、売上回収と費用支払いを行います。以下の選択率は推定値です。')}</p>`+competitionBeforeMarket();};
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 
