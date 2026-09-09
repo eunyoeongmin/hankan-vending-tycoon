@@ -1,0 +1,10 @@
+{
+  "name": "hankan-enterprise",
+  "version": "6.0.0",
+  "private": true,
+  "scripts": {
+    "build": "python build.py",
+    "test": "node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs"
+  },
+  "devDependencies": { "jsdom": "30.0.1" }
+}

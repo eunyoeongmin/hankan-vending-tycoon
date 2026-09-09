@@ -4,14 +4,14 @@ const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.mess
 const dom=new JSDOM(fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8'),{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;}});
 const w=dom.window,doc=w.document,ev=s=>w.eval(s);
 ev('state=fresh();state.started=true;state.cash=3000000;state.reputation=100;menuOpen=false;closeModal();startBusiness();');
-const selectors=['[data-action="price-up"]','#refill-button','[data-job="collect"]','#product-select','[data-staff="collect"][data-delta="1"]','[data-bank="borrow"]','[data-map="1"]','#world-pr'];
+const selectors=['[data-enterprise="price"][data-param="0:100"]','#refill-button','[data-job="collect"]','#slot-0','[data-staff="collect"][data-delta="1"]','[data-bank="borrow"]','[data-map="1"]','#world-pr'];
 const controls=selectors.map(s=>doc.querySelector(s));controls.forEach(assert.ok);
 const priceButton=controls[0];priceButton.focus();priceButton.dispatchEvent(new w.MouseEvent('mousedown',{bubbles:true}));
 for(let i=0;i<30;i++)ev('advanceBusiness(100);syncScene()');
 selectors.forEach((s,i)=>assert.equal(doc.querySelector(s),controls[i],s+' survives live refresh'));
 assert.equal(doc.activeElement,priceButton);
 const price=ev('machine(0).price');priceButton.click();assert.equal(ev('machine(0).price'),price+100);
-const select=doc.querySelector('#product-select');select.focus();ev('syncScene();refreshLiveNumbers()');assert.equal(doc.activeElement,select);
+const select=doc.querySelector('#slot-0');select.focus();ev('syncScene();refreshLiveNumbers()');assert.equal(doc.activeElement,select);
 const bank=doc.querySelector('[data-bank="borrow"]');ev('refreshLiveNumbers()');bank.click();assert.equal(ev('state.bank.principal'),250000);
 const staff=doc.querySelector('[data-staff="collect"][data-delta="1"]');ev('refreshLiveNumbers()');staff.click();assert.equal(ev('state.staff.collect'),1);
 ev('machine(0).vault=25000;syncScene()');const collect=doc.querySelector('[data-job="collect"]');ev('refreshLiveNumbers()');collect.click();assert.ok(ev('state.jobs.some(j=>!j.staff&&j.type==="collect")'));
