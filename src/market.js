@@ -17,7 +17,7 @@ function beginMarket(){
  o.market={day:l.day,legacy:false,payroll:0,extra:0,districts,rows:o.machines.map(m=>marketRow(m,districts[LOCATIONS[m.loc].map].n))};
 }
 const startBeforeMarket=startBusiness;
-startBusiness=function(){ensureOperations();startBeforeMarket();beginMarket();save();};
+startBusiness=function(){if(state.started&&!state.ended&&!menuOpen)inGameSession=true;ensureOperations();startBeforeMarket();beginMarket();save();};
 function recordMarketSale(m,s,r,i,paid,ours){
  const cost=s.value/s.stock;s.stock--;s.value=Math.max(0,s.value-cost);m.vault+=paid;m.total++;m.condition=Math.max(0,m.condition-.045);
  r.products??=PRODUCTS.map(()=>({sold:0,revenue:0,cost:0}));const p=r.products[s.product];p.sold++;p.revenue+=paid;p.cost+=cost;
@@ -118,5 +118,3 @@ function sceneCustomerRows(l){const m=state.enterprise.operations?.market;return
 function sceneCustomerDue(r,i){const m=state.enterprise.operations?.market;return m&&!m.legacy?saleTime({loc:LOCATIONS[r.loc].map*6,n:r.n},i):saleTime(r,i);}
 const turnBeforeOperations=rivalTurn;
 rivalTurn=function(){const o=ensureOperations(),before=[...o.machines];turnBeforeOperations();if(!ensureRivalry().defeated)for(const m of before.filter(m=>!state.npc.owned.includes(m.loc))){state.npc.cash+=m.vault;for(const s of m.slots){o.warehouse[s.product].qty+=s.stock;o.warehouse[s.product].value+=s.value;}}ensureOperations();};
-const competitionBeforeMarket=competitionBody;
-competitionBody=function(){return `<p class="permit-warning">${T('공통 고객 시장: 한 고객은 한 곳에서만 구매합니다. 경쟁사도 재고를 매입·배송·보충하고, 판매 대금을 회수하며 비용을 지불합니다. 아래 선택률은 추정치입니다.','共通顧客市場：一人の顧客が買うのは一か所のみ。競合も在庫の仕入れ・配送・補充、売上回収と費用支払いを行います。以下の選択率は推定値です。')}</p>`+competitionBeforeMarket();};

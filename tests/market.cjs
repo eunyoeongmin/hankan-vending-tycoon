@@ -3,12 +3,12 @@ const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.ht
 function setup(raw){const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));const d=new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;if(raw)w.localStorage.setItem('hankan-tycoon-v1',raw);}});return {d,ev:s=>d.window.eval(s)};}
 const {d,ev}=setup(),doc=d.window.document;
 // Actual requested menu button, before start and while running/paused/ended, including Japanese.
-doc.getElementById('game-menu-close').click();assert.equal(ev('modalView'),null);assert.equal(ev('state.started'),false);assert.equal(ev('state.live'),null);
+assert.equal(doc.getElementById('game-menu-close'),null);assert.equal(ev('modalView'),'menu');assert.equal(ev('state.started'),false);assert.equal(ev('state.live'),null);
 doc.getElementById('game-menu').click();assert.equal(ev('modalView'),'menu');
 ev('state=fresh();state.started=true;menuOpen=false;closeModal();startBusiness();advanceBusiness(5000)');
 const elapsed=ev('state.live.elapsed'),cash=ev('state.cash');
 for(const paused of [false,true]){ev(`livePaused=${paused}`);doc.getElementById('game-menu').click();doc.getElementById('game-menu-close').click();assert.equal(ev('livePaused'),paused);assert.equal(ev('state.live.elapsed'),elapsed);assert.equal(ev('state.cash'),cash);assert.equal(ev('menuOpen'),false);}
-ev('state.ended=true;state.live=null;openModal("menu");menuOpen=true;changeLanguage("ja")');assert.equal(doc.getElementById('game-menu-close').textContent,'メニューを閉じる');doc.getElementById('game-menu-close').click();assert.equal(ev('state.live'),null);doc.getElementById('game-menu').click();assert.ok(doc.getElementById('game-menu-close'));
+ev('state.ended=true;state.live=null;openModal("pause");menuOpen=true;changeLanguage("ja")');assert.equal(doc.getElementById('game-menu-close').textContent,'メニューを閉じる・ゲームへ');doc.getElementById('game-menu-close').click();assert.equal(ev('state.live'),null);doc.getElementById('game-menu').click();assert.ok(doc.getElementById('game-menu-close'));
 // A finite market does not grow just because another machine is installed.
 ev('state=fresh();state.started=true;state.machines[0].loc=6;selected=6;menuOpen=false;livePaused=true;closeModal();startBusiness();window.pool=state.enterprise.operations.market.districts[1].n');
 ev('state.machines.push(npcMachine(8,60));state.live=null;state.enterprise.operations.market=null;startBusiness()');assert.equal(ev('state.enterprise.operations.market.districts[1].n'),ev('pool'));
