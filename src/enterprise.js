@@ -44,10 +44,10 @@ function restockMachine(m){
  const e=state.enterprise;ensureSlots(m);let moved=0;
  for(const s of m.slots){let need=Math.max(0,Math.floor(capacity(m)/4)-s.stock),w=e.warehouse[s.product];const n=Math.min(need,w.qty),cost=w.qty?n*w.value/w.qty:0;
   w.qty-=n;w.value=Math.max(0,w.value-cost);s.stock+=n;s.value+=cost;need-=n;moved+=n;
-  if(need&&e.emergency){const unit=Math.round(PRODUCTS[s.product].cost*e.index*1.25),q=Math.min(need,Math.max(0,Math.floor(state.cash/unit)));state.cash-=q*unit;s.stock+=q;s.value+=q*unit;moved+=q;if(q)ledger('emergency',-q*unit);}
+  if(need&&e.emergency){const unit=Math.round(PRODUCTS[s.product].cost*e.index*inflationFactor()*1.25),q=Math.min(need,Math.max(0,Math.floor(state.cash/unit)));state.cash-=q*unit;s.stock+=q;s.value+=q*unit;moved+=q;if(q)ledger('emergency',-q*unit);}
  }syncMachine(m);return moved;
 }
-function hasRestock(m){ensureSlots(m);return m.slots.some(s=>s.stock<Math.floor(capacity(m)/4)&&(state.enterprise.warehouse[s.product].qty>0||(state.enterprise.emergency&&state.cash>=PRODUCTS[s.product].cost*state.enterprise.index*1.25)));}
+function hasRestock(m){ensureSlots(m);return m.slots.some(s=>s.stock<Math.floor(capacity(m)/4)&&(state.enterprise.warehouse[s.product].qty>0||(state.enterprise.emergency&&state.cash>=PRODUCTS[s.product].cost*state.enterprise.index*inflationFactor()*1.25)));}
 const oldDispatchEnterprise=dispatch;
 dispatch=function(type,loc,staff=false){
  const m=machine(loc);if(type!=='restock')return oldDispatchEnterprise(type,loc,staff);
