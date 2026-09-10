@@ -12,4 +12,12 @@ ev('state.enterprise.rivalry.history=[{day:1,text:B("경쟁사: 역 앞 할인",
 doc.querySelector('[data-office-feed="complaints"]').click();assert.ok(doc.querySelector('#office-messages').textContent);
 doc.querySelector('[data-office-feed="all"]').click();assert.equal(doc.querySelector('.log').hidden,false);
 ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#office-status').textContent+doc.querySelector('#desk-nav').textContent));
-ev('selectDesk("journal")');assert.ok(doc.querySelector('#enterprise table'));assert.deepEqual(errors,[]);d.window.close();console.log('PASS: fixed status strip, left company menu, expanding work area, debt values, persistent speed control, bottom log channels, Japanese and unchanged start menu.');
+ev('selectDesk("journal")');assert.ok(doc.querySelector('#enterprise table'));// The scene loop and office refresh must never alternate labels or rebuild options.
+ev('syncScene();refreshLiveNumbers();officeUpdate();window.controlObserver=new MutationObserver(()=>{});for(const id of ["scene-pause","scene-speed-label","scene-speed","office-debt"]){controlObserver.observe($(id),{childList:true,subtree:true,characterData:true});}');
+const originals=['scene-pause','scene-speed','scene-speed-label'].map(id=>doc.getElementById(id));
+ev('for(let i=0;i<20;i++){syncScene();officeUpdate();refreshLiveNumbers();}');
+assert.equal(ev('controlObserver.takeRecords().length'),0,'unchanged controls have zero text/option mutations across both render paths');
+originals.forEach(el=>assert.equal(doc.getElementById(el.id),el));
+ev('toggleBusinessPause();syncScene();officeUpdate()');assert.equal(doc.querySelector('#scene-pause').textContent,ev('livePaused?T("재개","再開"):T("정지","停止")'));
+ev('controlObserver.disconnect()');
+assert.deepEqual(errors,[]);d.window.close();console.log('PASS: fixed status strip, left company menu, expanding work area, debt values, persistent speed control, bottom log channels, Japanese and unchanged start menu.');

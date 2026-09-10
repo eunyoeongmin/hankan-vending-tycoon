@@ -12,9 +12,8 @@ function officeUpdate(){
  document.body.classList.add('office');deskLayout.dataset.screen=deskTab;
  deskMap.hidden=!['manage','fleet','market'].includes(deskTab);
  deskNav.dataset.caption=T('회사 메뉴','会社メニュー');document.querySelectorAll('.stat-label')[0].textContent=T('현금','現金');document.querySelectorAll('.stat-label')[1].textContent=T('매출총이익','売上総利益');
- officeDebt.textContent=T('차입금 ','借入金 ')+money(state.bank.principal+state.bank.arrears);
- $('scene-speed-label').textContent=T('속도','速度');for(const option of $('scene-speed').options)option.textContent=option.value+'×';
- $('scene-pause').textContent=livePaused?T('재개','再開'):T('정지','停止');$('help').textContent=T('도움말','ヘルプ');
+ controlText('office-debt',T('차입금 ','借入金 ')+money(state.bank.principal+state.bank.arrears));
+ controlText('help',T('도움말','ヘルプ'));
  officeRegisterTabs.setAttribute('aria-label',T('업무 기록','業務記録'));
  patchPanel(officeRegisterTabs,[['all',T('영업 기록','営業記録')],['rival',T('경쟁사 동향','競合動向')],['complaints',T('민원','相談')]].map(([id,name])=>`<button data-office-feed="${id}" aria-pressed="${officeFeed===id}">${name}</button>`).join(''));
  document.querySelector('.log').hidden=officeFeed!=='all';officeMessages.hidden=officeFeed==='all';
