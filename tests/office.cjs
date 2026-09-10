@@ -1,0 +1,15 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualConsole}=require('jsdom');
+const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
+const d=new JSDOM(fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8'),{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};}}),doc=d.window.document,ev=s=>d.window.eval(s);
+assert.equal(doc.querySelector('#game-menu-close'),null);
+assert.equal(doc.querySelector('#desk-nav').parentElement,doc.querySelector('.layout'));
+assert.ok(doc.querySelector('#office-status #cash'));assert.ok(doc.querySelector('#office-status #scene-speed'));assert.ok(doc.querySelector('#office-register #logs'));
+ev('state=fresh();state.started=true;state.bank.principal=250000;menuOpen=false;closeModal();startBusiness();refreshLiveNumbers()');assert.ok(doc.querySelector('#office-debt').textContent.includes('$250.00'));
+const speed=doc.querySelector('#scene-speed');speed.focus();ev('refreshLiveNumbers()');assert.equal(doc.activeElement,speed);
+doc.querySelector('#desk-nav [data-desk="finance"]').click();assert.equal(doc.querySelector('#desk-map').hidden,true);assert.equal(ev('enterpriseTab'),'reports');
+doc.querySelector('#desk-nav [data-desk="manage"]').click();assert.equal(doc.querySelector('#desk-map').hidden,false);
+ev('state.enterprise.rivalry.history=[{day:1,text:B("경쟁사: 역 앞 할인","競合：駅前で値下げ")}];updateDesk()');doc.querySelector('[data-office-feed="rival"]').click();assert.ok(doc.querySelector('#office-messages').textContent.includes(ev('tr(state.enterprise.rivalry.history[0].text)')));
+doc.querySelector('[data-office-feed="complaints"]').click();assert.ok(doc.querySelector('#office-messages').textContent);
+doc.querySelector('[data-office-feed="all"]').click();assert.equal(doc.querySelector('.log').hidden,false);
+ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#office-status').textContent+doc.querySelector('#desk-nav').textContent));
+ev('selectDesk("journal")');assert.ok(doc.querySelector('#enterprise table'));assert.deepEqual(errors,[]);d.window.close();console.log('PASS: fixed status strip, left company menu, expanding work area, debt values, persistent speed control, bottom log channels, Japanese and unchanged start menu.');

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "python build.py",
-    "test": "node tests/workspace.cjs && node tests/trade.cjs && node tests/menus.cjs && node tests/market.cjs && node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs"
+    "test": "node tests/office.cjs && node tests/workspace.cjs && node tests/trade.cjs && node tests/menus.cjs && node tests/market.cjs && node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs"
   },
   "devDependencies": {
     "jsdom": "30.0.1"
