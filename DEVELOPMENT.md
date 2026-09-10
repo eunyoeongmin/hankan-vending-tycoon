@@ -6,6 +6,7 @@
 
 - 사용자 지정 순서: **핵심 시스템 → 치명적 붕괴 최소 수정 → 전체 연결 → 본격 수치 밸런싱**.
 - 설계 기준: **Capitalism Lab의 산업/조달/연구 구조 + Software Inc.의 직원/팀 운영**. [공식 출처·현재 차이·기능 추가 기준](docs/SUPPLY_CHAIN_DESIGN.md)을 작성했습니다. 협력사 연구 투자 단계는 사용자 요구에 따른 각색이며 원작 기능이라고 주장하지 않습니다.
+- **레퍼런스 전체 후보 정리(2026-09-10):** [14분야·70개 후보, 적용 순서·제외 범위](docs/REFERENCE_CATALOG.md). 원작 확인 사실과 자판기 사업에 맞춘 제안을 구분합니다. 후보 정리는 새 기능 구현/검증 완료가 아니며 아래 체크는 변경하지 않습니다.
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site) / 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
 - 현재 공개 게임 구현: [a336028](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/a336028df1255d7cdc1c6aed0906b33ee25588db), **Sites 버전 17 배포 성공**, 공개 HTTP 200 및 새 조달/연구/고용 코드 응답 확인. 로컬 전체 검사와 [GitHub Actions #34437122295](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34437122295) 빌드·회귀·장기 검사 성공. 이후 문서 확인 기록 커밋은 게임 변경과 구분합니다.
 - [과거 기록·사용자 기획 원문](docs/DEVELOPMENT_HISTORY_2026-09-10.md)은 보존합니다. 과거의 ‘미구현’을 현재 상태로 해석하지 않습니다.
