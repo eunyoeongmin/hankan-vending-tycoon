@@ -18,4 +18,22 @@ ev('acquireNpc(14)');assert.equal(ev('state.enterprise.trade.status'),'open');as
 ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#modal-body').textContent.replace('한국어','')));
 ev('proposeTrade(state.enterprise.trade.quote);state.npc.owned=[]');assert.equal(ev('completeTrade()'),false,'ownership rechecked');
 ev('state.enterprise.trade.offer=0');assert.equal(ev('valid(state)'),false,'invalid accepted offer rejected');
+// NPC purchases require an explicit contract; counteroffers persist and conserve assets.
+ev('state=fresh();state.started=true;state.ended=false;state.cash=50000;ensureOperations();state.machines.push(npcMachine(1,40));state.npc.cash=5000000;state.offer={loc:1,price:200000,deadline:state.day+3};render();acceptOffer()');
+assert.equal(ev('modalView'),'sale');assert.ok(ev('machine(1)'));assert.equal(ev('state.cash'),50000);
+ev('counterSale(1000000000)');assert.equal(ev('state.offer.negotiation.status'),'counter');assert.ok(ev('state.offer.price>200000'));
+ev('save()');const saleReload=setup(d.window.localStorage.getItem('hankan-tycoon-v1'));assert.equal(saleReload.window.eval('state.offer.negotiation.round'),1);assert.ok(saleReload.window.eval('valid(state)'));saleReload.window.close();
+ev('closeModal();acceptOffer()');assert.equal(ev('state.offer.negotiation.round'),1);
+ev('counterSale(state.offer.price)');assert.equal(ev('state.offer.negotiation.status'),'agreed');
+assert.equal(ev('counterSale(1000)'),false);
+ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#modal-body').textContent.replace('한국어','')));
+const salePrice=ev('state.offer.price'),physical=ev('JSON.stringify(machine(1))'),combined=ev('state.cash+state.npc.cash');
+ev('state.npc.cash=state.offer.price-1');assert.equal(ev('completeSale()'),false);assert.ok(ev('machine(1)'));
+ev('state.npc.cash=5000000');doc.querySelector('#sale-confirm').click();assert.equal(ev('state.cash'),50000+salePrice);assert.equal(ev('state.cash+state.npc.cash'),combined);assert.equal(ev('JSON.stringify(ensureOperations().machines.find(m=>m.loc===1))'),physical);assert.equal(ev('completeSale()'),false);assert.ok(ev('valid(state)'));
+ev('state.machines.push(npcMachine(2,20));state.offer={loc:2,price:100000,deadline:state.day};state.day++');assert.equal(ev('completeSale()'),false,'expired NPC bid cannot transfer');
+ev('state.offer.deadline=state.day+3;state.npc.cash=10000;acceptOffer();counterSale(900000)');assert.equal(ev('state.offer.negotiation.status'),'refused');
+ev('state.offer.negotiation.round=3');assert.equal(ev('counterSale(1000)'),false);
+ev('state.offer.negotiation.round=-1');assert.equal(ev('valid(state)'),false);ev('state.offer.negotiation.round=3');
+ev('declineSale()');assert.equal(ev('state.offer'),null);assert.ok(ev('machine(2)'));
+ev('state.machines=[machine(2)];state.offer={loc:2,price:100000,deadline:state.day+3};state.npc.cash=5000000');assert.equal(ev('completeSale()'),false,'last machine protected');
 assert.deepEqual(errors,[]);d.window.close();console.log('PASS: negotiated acquisition, rejection/counter/acceptance, no premature transfer, saved agreement, affordability/expiry/ownership checks, duplicate prevention and Japanese.');

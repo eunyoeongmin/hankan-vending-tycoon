@@ -35,3 +35,30 @@ drawModal=function(){modalBeforeTrade();if(modalView!=='trade')return;const t=st
  $('modal-body').insertAdjacentHTML('beforeend',body+buttons(closeButton()));
 };
 document.addEventListener('click',event=>{const id=event.target.closest('button')?.id;if(id==='trade-propose'){const amount=Number($('trade-amount').value)*1000;if(!proposeTrade(amount)&&$('trade-error'))$('trade-error').textContent=T('현금 범위 안에서 유효한 금액을 제안해 주세요.','手元資金の範囲内で有効な金額を提示してください。');}if(id==='trade-confirm')completeTrade();});
+
+function validSaleOffer(o){return o&&int(o.loc,0,23)&&int(o.price,1,1000000000)&&int(o.deadline,1,1000000)&&(!o.negotiation||(int(o.negotiation.round,0,3)&&int(o.negotiation.ask,0,1000000000)&&['open','counter','agreed','refused'].includes(o.negotiation.status)));}
+function saleAvailable(){const o=state.offer;return !!(o&&state.started&&!state.ended&&o.deadline>=state.day&&machine(o.loc)&&state.machines.length>1&&!state.npc.owned.includes(o.loc)&&!ensureRivalry().defeated);}
+function saleNegotiation(){const o=state.offer;if(!o)return null;return o.negotiation||(o.negotiation={round:0,ask:0,status:'open'});}
+const transferSale=acceptOffer;
+acceptOffer=function(){if(!saleAvailable())return false;saleNegotiation();save();openModal('sale');return true;};
+function counterSale(amount){
+ if(!saleAvailable()||!int(amount,1000,1000000000))return false;
+ const o=state.offer,n=saleNegotiation(),m=machine(o.loc);if(n.round>=3||n.status==='agreed')return false;
+ const map=LOCATIONS[m.loc].map,r=ensureRivalry(),strategic=state.npc.owned.some(id=>LOCATIONS[id].map===map),premium=strategic?1.25:1.1;
+ const ceiling=Math.max(0,Math.min(state.npc.cash-30000,Math.round(equipment(m)*premium+stockValue(m)+m.vault)));
+ n.round++;n.ask=amount;
+ if(amount<=ceiling){o.price=amount;n.status='agreed';}
+ else if(ceiling>o.price&&r.mode!=='retreat'){o.price=Math.min(ceiling,Math.round(o.price+(ceiling-o.price)*.5));n.status='counter';}
+ else n.status='refused';
+ rivalryLog(`매각 역제안 ${money(amount)} · ${n.status==='agreed'?'합의':n.status==='counter'?'경쟁사 재제시 '+money(o.price):'거절'}`,`売却再提示 ${money(amount)}・${n.status==='agreed'?'合意':n.status==='counter'?'競合の再提示 '+money(o.price):'拒否'}`);
+ save();drawModal();return true;
+}
+function completeSale(){if(!saleAvailable()||state.npc.cash<state.offer.price)return false;transferSale();closeModal();save();render();return true;}
+function declineSale(){if(!state.offer)return false;const loc=state.offer.loc;state.offer=null;rivalryLog(`${LOCATIONS[loc].short[0]} 매각 제안 거절`,`${LOCATIONS[loc].short[1]}の売却提案を辞退`);closeModal();save();render();return true;}
+const modalBeforeSale=drawModal;
+drawModal=function(){modalBeforeSale();if(modalView!=='sale')return;
+ if(!saleAvailable()){$('modal-body').insertAdjacentHTML('beforeend',`<p>${T('매각 조건 만료','売却条件の期限切れ')}</p>`+buttons(closeButton()));return;}
+ const o=state.offer,n=saleNegotiation(),m=machine(o.loc),messages={open:B('경쟁사 매입 제안','競合からの買収提案'),counter:B('경쟁사 재제시','競合からの再提示'),agreed:B('금액 합의 · 계약 대기','金額合意・契約待ち'),refused:B('역제안 거절 · 기존 제안 유지','再提示を拒否・従来の提案を維持')};
+ $('modal-body').insertAdjacentHTML('beforeend',`<h2>${T('기기 매각 협상','機械売却交渉')} · ${tr(LOCATIONS[o.loc].short)}</h2><p>${tr(messages[n.status])}</p>${row(T('경쟁사 제시 금액','競合の提示額'),money(o.price))}${row(T('재고 / 보관금','在庫／保管金'),m.stock+' / '+money(m.vault))}<p>${T('이전 대상: 기기·재고·보관금','譲渡対象：機械・在庫・保管金')} · DAY ${o.deadline}${T('까지','まで')}</p>${n.status!=='agreed'?`<label for="sale-amount">${T('희망 매각가 ($)','希望売却額 ($)')}</label><input class="full" id="sale-amount" type="number" min="1" max="1000000" step="1" value="${Math.ceil((n.ask||o.price*1.15)/1000)}"><p>${T('남은 역제안','残りの再提示')} ${3-n.round}</p><button class="full" id="sale-counter" ${disabled(n.round>=3)}>${T('역제안','再提示')}</button>`:''}<p id="sale-error" role="status">${state.npc.cash<o.price?T('상대 자금 부족 · 체결 불가','相手の資金不足・契約不可'):''}</p><button class="primary full" id="sale-confirm" ${disabled(state.npc.cash<o.price)}>${T('제시 금액으로 매각 계약','提示額で売却契約')} · ${money(o.price)}</button><button class="full" id="sale-decline">${T('제안 거절','提案を辞退')}</button>`+buttons(closeButton()));
+};
+document.addEventListener('click',event=>{const id=event.target.closest('button')?.id;if(id==='sale-counter'&&!counterSale(Number($('sale-amount').value)*1000))$('sale-error').textContent=T('유효한 금액을 입력해 주세요.','有効な金額を入力してください。');if(id==='sale-confirm'&&!completeSale())drawModal();if(id==='sale-decline')declineSale();});
