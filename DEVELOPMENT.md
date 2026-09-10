@@ -1,8 +1,8 @@
 # 자판기 게임 개발 현황
 
-마지막 대조: **2026-09-10 / 9.0.0 공개 배포 / `main`**.
+마지막 대조: **2026-09-10 / 9.0.1 공개 배포 / `main`**.
 
-**현재 위치: 승인된 레퍼런스 70개 후보를 현재 자판기 사업 규모에 맞춘 시스템으로 연결했습니다. 최종 로컬 회귀·장기 실행·브라우저 및 GitHub 검사를 통과하고 사용자 승인 후 9.0.0을 공개 배포했습니다. 다음 단계는 본격 수치 밸런싱입니다.**
+**현재 위치: 승인된 레퍼런스 70개 후보를 현재 자판기 사업 규모에 맞춘 시스템으로 연결했습니다. 최종 로컬 회귀·장기 실행·브라우저 및 GitHub 검사를 통과하고 사용자 승인 후 9.0.0을 공개 배포했습니다. 업무 메뉴의 사업 운영 우회를 제거한 9.0.1도 공개 반영했습니다. 다음 단계는 본격 수치 밸런싱입니다.**
 
 - 개발 순서: **핵심 시스템 → 치명적 붕괴 최소 수정 → 전체 연결 → 본격 수치 밸런싱**.
 - [70개 항목별 실제 규칙·구현 함수·화면·검증 범위](docs/REFERENCE_IMPLEMENTATION.md)가 구현 대조표입니다. 원작 전체를 복제했다거나 재미/수치 검증까지 끝났다는 뜻은 아닙니다.
@@ -17,7 +17,8 @@
 - [x] 이전 규칙 저장에서만 사업 규칙 전환 표시. 전환 후 운영 규정으로 이동하며 원본 백업 유지.
 - [x] 16묶음 회귀 및 3묶음 실제 브라우저 검사 통과. 4화면 크기, 거래 클릭, 선택 메뉴 유지, 규정 실제 저장, 정지/차입금 노드 변경0·이동0 확인.
 - [x] 한국어 메뉴 제목·키보드 이동·통지 바로가기·이전 규칙 전환의 추가 브라우저 확인.
-- [ ] 공개 반영과 응답 확인. 현재 공개 9.0.0과 구분.
+- [x] 수정 소스의 [GitHub Actions](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34452167563) 빌드·회귀·장기 검사 성공.
+- [x] 9.0.1 / Sites 19 공개 반영, 배포 성공·HTTP 200·검사 HTML 일치 확인. SHA-256 `A8D90360EBB8B42CCBBA3BA2328F99B0B3C715E5FABADF28DB3FC10F8E7942FB`.
 
 ## 현재 구현 체크
 
@@ -83,9 +84,9 @@
 
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
-- 현재 공개 게임은 **9.0.0 / Sites 18**, [배포 소스 3082b21](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/3082b21d7e93d1808b7349a11202857017cae2e9). 사용자 승인 후 [PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1)을 병합했습니다. 최종 검토 소스의 [Actions 검사](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34445589400)도 성공했습니다.
-- 배포 `appgdep_6aa25ce0cc7481918f4700602db77182` 상태 `succeeded`, 2026-09-10 07:32 UTC 확인. 공개 URL HTTP 200과 검증된 HTML의 일치를 확인했습니다. 응답에는 Cloudflare 보안 스크립트만 추가됩니다.
-- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_521afbdc745c8191be622c1a2f196617`. 이후 문서 갱신은 배포 게임 코드 변경과 구분합니다.
+- 현재 공개 게임은 **9.0.1 / Sites 19**, [배포 소스 535bebb](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/535bebb50f792145db0319ffbac535d4f874cf56). 9.0.0의 사용자 승인 및 PR #1 병합 후 요청한 업무 메뉴 수정입니다.
+- 배포 `appgdep_6aa261e188c08191b9fcff2830256afb` 상태 `succeeded`, 2026-09-10 07:53 UTC 확인. 공개 URL HTTP 200과 검증된 HTML의 일치를 확인했습니다. 응답에는 Cloudflare 보안 스크립트만 추가됩니다.
+- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_9cdd3270d65081919c2638da57d0734d`. 이후 문서 갱신은 배포 게임 코드 변경과 구분합니다.
 
 ## 다음 완료 조건
 
