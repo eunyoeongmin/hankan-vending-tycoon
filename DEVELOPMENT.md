@@ -64,6 +64,7 @@
 | `browser-reference.cjs` | 최종 실제 클릭 경로 통과 | 일본어 설립→조달/배송→연구 검토→공장→자회사/차입/계약 |
 | 화면 크기 | 1440×900 / 800×600 / 390×844 / 720×450 확인 | 문서 가로 넘침 없음, 실제 이미지 확인. 내부 스크롤 사용 |
 | 정지·배속 안정성 | 최종 노드 동일/내용 변경0/이동0 | 정지 버튼과 차입금 표시를 함께 관찰 |
+| GitHub Actions | [구현 커밋 검사 성공](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34445338883) | Ubuntu / Node 24: 빌드·16묶음 회귀·장기 검사. 브라우저는 위 로컬 결과 |
 | 인간 플레이·본격 밸런싱 | **미착수** | 자동 검사와 구분 |
 
 최종 명령과 산출물 해시는 [9.0 검증 기록](docs/VALIDATION_9.0.0.md)에 기록했습니다. 자동 검사는 인간 플레이 평가를 대신하지 않습니다.
@@ -73,13 +74,13 @@
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
 - 현재 공개 게임은 **8.0.0 / Sites 17**, [a336028](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/a336028df1255d7cdc1c6aed0906b33ee25588db). 당시 로컬 검사와 [Actions #34437122295](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34437122295) 성공.
-- **9.0.0은 로컬 검증 완료, 공개 검토 브랜치 업로드 준비, 미배포.** 검토 가능한 결과를 먼저 완성하고 최종 공개 반영 승인을 받으라는 이번 요청을 따릅니다.
+- **9.0.0은 로컬 검증 완료, [공개 검토 PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1), 미배포.** 구현 커밋은 `82da42b6d0daacac7674e290ab03b3e0bd59da1e`입니다. 검토 가능한 결과를 먼저 완성하고 최종 공개 반영 승인을 받으라는 이번 요청을 따릅니다.
 
 ## 다음 완료 조건
 
 - [x] 승인한 후보를 제외 목록과 구분하고 70개 항목을 실제 규칙/화면에 연결.
 - [x] 기존 저장과 원본 백업 보존 검사.
 - [x] 최종 소스의 전체 16묶음 회귀·기존/신규 장기 표본·브라우저 검사 완료.
-- [ ] 최종 소스/개발 메모/공개 검토 브랜치와 검사 근거 정리.
+- [x] 최종 소스/개발 메모/공개 검토 브랜치와 로컬 검사 근거 정리.
 - [ ] 사용자 최종 승인 후 9.0.0 공개 게임 반영과 응답 확인.
 - [ ] **그다음 본격 수치 밸런싱:** 정상 초기 자금, 여러 전략/난수/조건과 인간 플레이로 투자 회수 기간·원가/임금·AI 공세/생존·과도한 단일 전략 우세를 비교해 조정.

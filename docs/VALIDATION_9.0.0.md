@@ -2,6 +2,10 @@
 
 검증일: 2026-09-10. 공개 배포와 분리한 로컬 최종 검사 기록입니다.
 
+공개 구현 커밋: `82da42b6d0daacac7674e290ab03b3e0bd59da1e`. [검토 PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1).
+
+해당 구현 커밋의 [GitHub Actions 검사](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34445338883)도 성공했습니다. Ubuntu / Node 24 / Python 3.12에서 설치·빌드·회귀·장기 검사를 실행했으며 브라우저 검사는 로컬에서 실행했습니다. 이후 검증 기록 문서만 갱신합니다.
+
 ## 산출물
 
 `python build.py` 재생성 전후 `dist/index.html` SHA-256 동일:
