@@ -101,7 +101,7 @@ finishBusiness=function(){
  log(B(`${day}일 결산 · ${t.sold}개 판매 · 순이익 ${money(net)}`,`${day}日目決算・${t.sold}本販売・純利益 ${money(net)}`),day);
  if(checkEnding(true))return;
  state.day++;e.expenseDay=state.day;e.expenseToday=0;const beforeEvents=assets();worldEvents();e.expenseToday+=beforeEvents-assets();
- if(checkEnding())return;save();render();toast(B(`${day}일 결산 완료`,`${day}日目の決算完了`));
+ if(checkEnding())return;save();render();if(!(typeof mgEnabled==='function'&&mgEnabled()&&sceneSpeed>4))toast(B(`${day}일 결산 완료`,`${day}日目の決算完了`));
  if(!modalView&&!menuOpen&&!livePaused)startBusiness();
 };
 function enterpriseExpense(amount,kind,capital=false){state.cash-=amount;if(capital)state.enterprise.capital+=amount;else state.enterprise.expenseToday+=amount;ledger(kind,-amount);}

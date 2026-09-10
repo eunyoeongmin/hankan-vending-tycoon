@@ -1,0 +1,3 @@
+const fs=require('node:fs'),{JSDOM,VirtualConsole}=require('jsdom');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8');
+module.exports=function(raw){const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));const dom=new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;if(raw)w.localStorage.setItem('hankan-tycoon-v1',raw);}});return {dom,errors,ev:s=>dom.window.eval(s)};};

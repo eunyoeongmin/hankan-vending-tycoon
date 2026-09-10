@@ -7,6 +7,10 @@
 #reference-panel label{display:inline-flex;align-items:center;gap:4px;max-width:100%}
 #reference-panel .expansion-form{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:6px 0}
 #reference-panel table{width:100%;border-collapse:collapse}
+body.management #reference-panel table{min-width:560px}
+body.management #reference-panel td,body.management #reference-panel th{overflow-wrap:normal;white-space:nowrap}
+body.management #reference-panel label{white-space:nowrap}
+body.management #reference-panel label select{min-width:0}
 #reference-panel td,#reference-panel th{padding:4px 6px;text-align:left;border-bottom:1px solid #c5c8c5;overflow-wrap:anywhere}
 #reference-panel nav button[aria-pressed=true]{background:#c8d5d8;color:#142c33}
 .ref-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:5px;margin:8px 0}

@@ -15,6 +15,8 @@ engine+='\n'+(root/'src/organization.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/supply-chain-ui.js').read_text(encoding='utf-8')
 for module in ['core','operations','commerce','production','equipment','finance','market','decisions','hooks','completion','group','reporting','ui-state','ui','ui-extra']:
     engine+='\n'+(root/('src/reference-'+module+'.js')).read_text(encoding='utf-8')
+for module in ['core','finance','operations','ui']:
+    engine+='\n'+(root/('src/management-'+module+'.js')).read_text(encoding='utf-8')
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')

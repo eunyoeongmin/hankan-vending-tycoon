@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
  const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});
  const page=await browser.newPage({viewport:{width:390,height:844},locale:'ko-KR'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  try{
-  await page.goto(process.env.GAME_URL||'http://127.0.0.1:8765/');await page.locator('#menu-new').click();await page.locator('#launch-new').click();if(await page.locator('#tutorial-skip').isVisible())await page.locator('#tutorial-skip').click();await page.evaluate(()=>{if(modalView)closeModal();livePaused=true;state.cash=30000000;chainFirm(playerFirm()).licenses.quality=1;chainFirm(playerFirm()).licenses.efficiency=1;render();});
+  await page.goto(process.env.GAME_URL||'http://127.0.0.1:8765/');await page.evaluate(()=>{launchNew=launchReference;chosenDuration=36500;});await page.locator('#menu-new').click();await page.locator('#launch-new').click();if(await page.locator('#tutorial-skip').isVisible())await page.locator('#tutorial-skip').click();await page.evaluate(()=>{if(modalView)closeModal();livePaused=true;state.cash=30000000;chainFirm(playerFirm()).licenses.quality=1;chainFirm(playerFirm()).licenses.efficiency=1;render();});
   const desk=async id=>page.locator(`#desk-nav [data-desk="${id}"]`).click(),action=a=>page.locator(`#reference-panel [data-ref-action="${a}"]`),extra=a=>page.locator(`#reference-panel [data-ref-extra="${a}"]`);
   for(const lang of ['ko','ja']){
    await page.locator('#language').selectOption(lang);
