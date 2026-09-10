@@ -1,9 +1,10 @@
+// Regression coverage for explicitly retained pre-supply-chain saves.
 const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualConsole}=require('jsdom');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8');
 const results=[];
 for(const preset of ['standard','hard'])for(const policy of ['idle','steady','expand']){
  const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));const d=new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;}}),ev=s=>d.window.eval(s);
- ev(`profile.tutorialSeen=true;setupRules={...RULE_PRESETS.${preset},events:0};setupPreset='${preset}';chosenDuration=36500;launchNew();state.enterprise.rng=731293;render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
+ ev(`profile.tutorialSeen=true;setupRules={...RULE_PRESETS.${preset},events:0};setupPreset='${preset}';chosenDuration=36500;launchBeforeSupplyChain();state.enterprise.rng=731293;render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
  const start=performance.now();let maxBytes=0;
  for(let n=0;n<365&&!ev('state.ended');n++){
   if(policy!=='idle')ev(`state.enterprise.autoOrder=true;state.enterprise.emergency=false;state.staff.collect=1;state.staff.restock=1;for(const m of state.machines)if(m.condition<35&&state.cash>=15000){enterpriseExpense(15000,'maintenance');m.condition=100;}if(!state.live)startBusiness();`);

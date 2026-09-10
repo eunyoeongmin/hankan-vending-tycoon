@@ -9,13 +9,13 @@ change('scenario-preset','extreme');ev('profile.clears=7;profile.tutorialSeen=tr
 ev('setupRules.playerFunds=750000');assert.equal(ev('state.scenario.rules.playerFunds'),150000,'draft cannot mutate run');
 ev('save()');const raw=w.localStorage.getItem('hankan-tycoon-v1'),reload=setup(raw);assert.equal(reload.window.eval('state.scenario.rules.supply'),2);assert.equal(reload.window.eval('state.cash'),150000);reload.window.close();
 // Supplier risk changes lead time once, preserving purchase value.
-ev('state.cash=1000000;state.scenario.rules.supply=0;window.randomBefore=enterpriseRandom;enterpriseRandom=()=>0;');const before=ev('assets()');assert.ok(ev('orderGoods(0,100,1)'));assert.equal(ev('state.enterprise.orders[0].duration'),48000);assert.equal(ev('assets()'),before);
-ev('state.scenario.rules.supply=2;orderGoods(0,100,1)');assert.equal(ev('state.enterprise.orders[1].duration'),72000);assert.equal(ev('assets()'),before);ev('enterpriseRandom=randomBefore');
+ev('state.cash=1000000;state.scenario.rules.supply=0;window.randomBefore=enterpriseRandom;enterpriseRandom=()=>0;');const before=ev('assets()');assert.ok(ev('orderGoods(0,100,1)'));assert.equal(ev('state.enterprise.orders[0].duration'),33600);assert.equal(ev('assets()'),before);
+ev('state.scenario.rules.supply=2;orderGoods(0,100,1)');assert.equal(ev('state.enterprise.orders[1].duration'),57600);assert.equal(ev('assets()'),before);ev('enterpriseRandom=randomBefore');
 // Event controls affect all random incident paths, without suppressing rival strategy.
 ev('state.scenario.rules.events=0;state.pending=null;state.complaints=[];state.effects=[];Math.random=()=>0;worldEvents();');assert.equal(ev('state.pending'),null);assert.equal(ev('state.complaints.length'),0);assert.equal(ev('state.effects.length'),0);
 ev('state.scenario.rules.events=3;queueEvent()');assert.ok(ev('state.pending'));
 // Annual inflation affects goods, staff and site costs; cycles affect both firms through demand.
-ev('state.day=366;state.scenario.rules.cycle=1;state.scenario.rules.inflation=8;state.enterprise.index=1;state.staff.collect=1');assert.ok(Math.abs(ev('inflationFactor()')-1.08)<1e-10);assert.equal(ev('procurementPrice(0,0)'),513);assert.equal(ev('staffSalary()'),2160);assert.equal(ev('dailyRent(machine(0))'),2700);
+ev('state.day=366;state.scenario.rules.cycle=1;state.scenario.rules.inflation=8;state.enterprise.index=1;chainHire(playerFirm(),"collect")');assert.ok(Math.abs(ev('inflationFactor()')-1.08)<1e-10);assert.equal(ev('procurementPrice(0,0)'),513);assert.equal(ev('staffSalary()'),2160);assert.equal(ev('dailyRent(machine(0))'),2700);
 ev('state.day=12');assert.ok(ev('cycleFactor()')>1.1);ev('state.scenario.rules.cycle=0;state.scenario.rules.inflation=0');assert.equal(ev('cycleFactor()'),1);assert.equal(ev('inflationFactor()'),1);
 ev('state.scenario.rules.expertise=0');const strength=ev('competitionStrength(1).rival');ev('state.scenario.rules.expertise=2');assert.ok(ev('competitionStrength(1).rival')>strength);assert.equal(ev('rivalCostFactor()'),.88);
 ev('state.scenario.rules.aggression=0');assert.equal(ev('scenarioAttackDays()'),2);assert.equal(ev('scenarioExpansionInterval()'),7);ev('state.scenario.rules.aggression=2');assert.equal(ev('scenarioAttackDays()'),4);assert.equal(ev('scenarioExpansionInterval()'),3);

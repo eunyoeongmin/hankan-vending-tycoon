@@ -1,8 +1,9 @@
+// Regression coverage for explicitly retained pre-supply-chain saves.
 const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualConsole}=require('jsdom');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8'),errors=[];
 function setup(raw){const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));return new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;if(raw)w.localStorage.setItem('hankan-tycoon-v1',raw);}});}
 const dom=setup(),w=dom.window,doc=w.document,ev=s=>w.eval(s);
-ev('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:0,supply:0};chosenDuration=36500;launchNew()');
+ev('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:0,supply:0};chosenDuration=36500;launchBeforeSupplyChain()');
 assert.equal(ev('rivalFirms().length'),3);assert.equal(ev('new Set(rivalLocations()).size'),6);assert.ok(ev('valid(state)'));
 const npcCash=ev('state.npc.cash');ev('rivalById("atlas").account.cash+=1000');assert.equal(ev('state.npc.cash'),npcCash,'company accounts are independent');
 // One customer chooses at most one of four companies; rows exactly account for the market.
@@ -43,7 +44,7 @@ ev('state.enterprise.industry.companies[0].npc.owned.push(state.machines[0].loc)
 dom.window.close();
 // Frequent events, complaints, period assessment and continue-playing form one playable run.
 const run=setup(),re=s=>run.window.eval(s);
-re('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:3};chosenDuration=30;launchNew();state.cash=3000000;state.staff={collect:1,restock:1};state.enterprise.autoOrder=true;');
+re('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:3};chosenDuration=30;launchBeforeSupplyChain();state.cash=3000000;state.staff={collect:1,restock:1};state.enterprise.autoOrder=true;');
 for(let day=0;day<30&&!re('state.ended');day++){
  re('if(state.pending){const e=EVENTS.find(e=>e.id===state.pending.id);resolveEvent(e.options.findIndex(o=>o.fee===0));}for(const c of [...state.complaints])respondComplaint(c.id);if(!state.live){livePaused=false;closeModal();startBusiness();}advanceBusiness(DAY_MS);');
  if(re('state.pending&&!state.ended'))assert.equal(re('modalView'),'event');assert.ok(re('valid(state)'));

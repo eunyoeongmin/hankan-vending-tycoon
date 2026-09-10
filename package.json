@@ -1,12 +1,12 @@
 {
   "name": "hankan-enterprise",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "private": true,
   "scripts": {
     "build": "python build.py",
-    "test": "node tests/office.cjs && node tests/workspace.cjs && node tests/trade.cjs && node tests/menus.cjs && node tests/market.cjs && node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs && node tests/industry.cjs && node tests/expansion.cjs",
-    "test:balance": "node tests/industry-balance.cjs && node tests/expansion-long.cjs",
-    "test:browser": "node tests/browser-expansion.cjs"
+    "test": "node tests/office.cjs && node tests/workspace.cjs && node tests/trade.cjs && node tests/menus.cjs && node tests/market.cjs && node tests/scenario.cjs && node tests/rivalry.cjs && node tests/enterprise.cjs && node tests/live-controls.cjs && node tests/clock.cjs && node tests/industry.cjs && node tests/expansion.cjs && node tests/supply-chain.cjs",
+    "test:balance": "node tests/industry-balance.cjs && node tests/expansion-long.cjs && node tests/supply-chain-long.cjs",
+    "test:browser": "node tests/browser-expansion.cjs && node tests/browser-supply-chain.cjs"
   },
   "devDependencies": {
     "jsdom": "30.0.1"

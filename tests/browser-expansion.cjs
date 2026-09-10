@@ -3,7 +3,8 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});const context=await browser.newContext({viewport:{width:1440,height:900},locale:'ja-JP',reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto(process.env.GAME_URL||'http://127.0.0.1:8765/');await page.locator('#menu-new').waitFor();assert.equal(await page.locator('#modal-body [data-close]').count(),0);assert.equal(await page.locator('html').getAttribute('lang'),'ja');
- await page.locator('#menu-new').click();await page.locator('#run-duration').selectOption('36500');await page.locator('#launch-new').click();if(await page.locator('#tutorial-skip').isVisible())await page.locator('#tutorial-skip').click();
+ // Keep the previous ruleset's retained-save UI covered separately from browser-supply-chain.cjs.
+ await page.evaluate(()=>{launchNew=launchBeforeSupplyChain;});await page.locator('#menu-new').click();await page.locator('#run-duration').selectOption('36500');await page.locator('#launch-new').click();if(await page.locator('#tutorial-skip').isVisible())await page.locator('#tutorial-skip').click();
  // A test fixture funds the later systems; subsequent actions use visible controls.
  await page.evaluate(()=>{profile.tutorialSeen=true;if(modalView)closeModal();state.cash=20000000;state.reputation=100;livePaused=true;render();});
  await page.locator('#desk-nav [data-desk="manufacture"]').click();await page.locator('[data-expansion="plant"][data-arg="drink"]').click();await page.locator('[data-expansion="produce"]').click();assert.equal(await page.evaluate(()=>expansionFirm(playerFirm()).jobs.length),1);
