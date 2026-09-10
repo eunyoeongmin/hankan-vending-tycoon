@@ -19,11 +19,11 @@ ev('machine(0).vault=25000;syncScene()');const collect=doc.querySelector('[data-
 ev('chooseMap(1);selected=7;render();');
 const quote=ev('acquisitionPrice(7)');assert.ok(quote>=750000);assert.ok(quote>ev('(LOCATIONS[7].cost+20000)*2'));
 assert.ok(doc.querySelector('#manage').textContent.includes(ev('money(acquisitionPrice(7))')));
-ev('state.cash=acquisitionPrice(7)-1;renderManage()');assert.equal(doc.querySelector('[data-acquire="7"]').disabled,true);
+ev('state.cash=acquisitionPrice(7)-1;renderManage()');assert.equal(doc.querySelector('[data-acquire="7"]').disabled,false);
 ev('acquireNpc(7)');assert.equal(ev('Boolean(machine(7))'),false);
-ev('state.cash=acquisitionPrice(7)+100000;renderManage()');const npcCash=ev('state.npc.cash');
+ev('state.cash=5000000;renderManage()');const npcCash=ev('state.npc.cash');
 const acquire=doc.querySelector('[data-acquire="7"]');ev('refreshLiveNumbers()');assert.equal(doc.querySelector('[data-acquire="7"]'),acquire);acquire.click();
-assert.equal(ev('state.cash'),100000);assert.equal(ev('state.npc.cash'),npcCash+quote);assert.ok(ev('Boolean(machine(7))'));
+const agreed=ev('state.enterprise.trade.quote');ev('state.cash=state.enterprise.trade.quote+100000;proposeTrade(state.enterprise.trade.quote);completeTrade()');assert.equal(ev('state.cash'),100000);assert.equal(ev('state.npc.cash'),npcCash+agreed);assert.ok(ev('Boolean(machine(7))'));
 ev('acquireNpc(7)');assert.equal(ev('state.cash'),100000,'duplicate purchase rejected');
 assert.deepEqual(errors,[]);dom.window.close();
 console.log('PASS: stable live controls/focus, clicks across updates, collection/hiring/loan, acquisition quote and affordability.');

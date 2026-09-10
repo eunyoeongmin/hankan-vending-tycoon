@@ -1,0 +1,21 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualConsole}=require('jsdom');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8'),errors=[];
+function setup(raw){const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));return new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;if(raw)w.localStorage.setItem('hankan-tycoon-v1',raw);}});}
+const d=setup(),doc=d.window.document,ev=s=>d.window.eval(s);
+ev('state=fresh();state.started=true;state.cash=10000000;state.reputation=100;menuOpen=false;closeModal();startBusiness();acquireNpc(7)');
+assert.equal(ev('modalView'),'trade');assert.equal(ev('Boolean(machine(7))'),false);assert.equal(ev('state.cash'),10000000);
+assert.equal(ev('proposeTrade(NaN)'),false);assert.equal(ev('proposeTrade(state.cash+1000)'),false);
+ev('proposeTrade(1000)');assert.equal(ev('state.enterprise.trade.status'),'rejected');
+ev('proposeTrade(Math.ceil(state.enterprise.trade.quote*.8/1000)*1000)');assert.equal(ev('state.enterprise.trade.status'),'counter');
+ev('closeModal();acquireNpc(7)');assert.equal(ev('state.enterprise.trade.round'),2,'closing retains negotiation');
+ev('proposeTrade(state.enterprise.trade.quote)');assert.equal(ev('state.enterprise.trade.status'),'accepted');assert.ok(doc.querySelector('#trade-confirm'));assert.equal(ev('Boolean(machine(7))'),false);
+ev('save()');const re=setup(d.window.localStorage.getItem('hankan-tycoon-v1'));assert.equal(re.window.eval('state.enterprise.trade.status'),'accepted');assert.ok(re.window.eval('valid(state)'));re.window.close();
+const amount=ev('state.enterprise.trade.offer'),npcCash=ev('state.npc.cash'),stock=ev('ensureOperations().machines.find(m=>m.loc===7).stock');
+ev('state.cash=state.enterprise.trade.offer-1');assert.equal(ev('completeTrade()'),false);assert.equal(ev('Boolean(machine(7))'),false);
+ev('state.cash=state.enterprise.trade.offer+1000');doc.querySelector('#trade-confirm').click();assert.equal(ev('state.cash'),1000);assert.equal(ev('state.npc.cash'),npcCash+amount);assert.equal(ev('machine(7).stock'),stock);assert.equal(ev('completeTrade()'),false);assert.ok(ev('valid(state)'));
+ev('state.cash=10000000;acquireNpc(14);proposeTrade(state.enterprise.trade.quote);state.day++');assert.equal(ev('completeTrade()'),false,'expired agreement cannot transfer');
+ev('acquireNpc(14)');assert.equal(ev('state.enterprise.trade.status'),'open');assert.equal(ev('state.enterprise.trade.round'),0);
+ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#modal-body').textContent.replace('한국어','')));
+ev('proposeTrade(state.enterprise.trade.quote);state.npc.owned=[]');assert.equal(ev('completeTrade()'),false,'ownership rechecked');
+ev('state.enterprise.trade.offer=0');assert.equal(ev('valid(state)'),false,'invalid accepted offer rejected');
+assert.deepEqual(errors,[]);d.window.close();console.log('PASS: negotiated acquisition, rejection/counter/acceptance, no premature transfer, saved agreement, affordability/expiry/ownership checks, duplicate prevention and Japanese.');

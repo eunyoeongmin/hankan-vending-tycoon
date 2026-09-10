@@ -4,7 +4,7 @@
 
 ## 빌드와 검증
 
-- `python build.py`: `src/base.html`, `src/enterprise.js`, `src/rivalry.js`, `src/scenario.js`, `src/market.js`, `src/enterprise.css`를 합쳐 `dist/index.html`과 작업 폴더의 `vending-tycoon.html`을 생성합니다.
+- `python build.py`: `src/base.html`, `src/enterprise.js`, `src/rivalry.js`, `src/scenario.js`, `src/market.js`, `src/trade.js`, `src/enterprise.css`를 합쳐 `dist/index.html`과 작업 폴더의 `vending-tycoon.html`을 생성합니다.
 - Node 24에서 `npm install` 후 `npm test`로 고객·재고·회계·시간·버튼 회귀 검사를 실행합니다.
 - 배포 대상은 `dist`입니다. HTML 파일을 직접 열어서도 플레이할 수 있습니다.
 
@@ -73,3 +73,7 @@ python -m http.server 8080 --directory dist
 ## 시작 화면과 플레이 메뉴
 
 첫 접속의 시작 화면에는 새 게임·이어하기·언어 설정을 유지하며 닫기 버튼은 없습니다. 플레이에 진입한 뒤 여는 게임 메뉴는 닫기·저장·설정·도움말·시작 화면 복귀를 제공합니다. 시작 화면 복귀 중에도 영업은 멈추며, 이어하기로 다시 들어갑니다.
+
+## 기기 인수 협상
+
+경쟁사 기기를 선택해 인수 협상을 열고 USD 금액을 제안합니다. 상대는 거절·역제안·수락으로 응답하며, 수락 후 계약 체결을 눌러야 금액과 실제 기기가 이전됩니다. 협상당 제안은3회이며 당일 조건만 유효합니다. 기기별 새 협상으로 전환할 수 있고, 같은 협상을 닫거나 저장 후 불러와도 제안 상태는 유지됩니다. 상대의 마지막 기기는 더 높은 희망가를 요구합니다.
