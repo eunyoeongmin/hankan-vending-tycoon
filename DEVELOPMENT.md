@@ -5,6 +5,7 @@
 **현재 위치: 공개본 7.0.0의 구현과 검사 기록은 유효하지만, 제조·수직계열화를 기획 전체 완료로 판단한 것은 잘못이었습니다. 외부 음료/기기 회사 조달 → 협력사 투자·기간형 연구 → 자체 공장 운영이라는 원래 성장 구조가 빠져 있습니다. 제조·연구·직원은 부분 구현으로 되돌리고 구조 개편을 수치 밸런싱보다 먼저 진행합니다.**
 
 - 사용자 지정 순서: **핵심 시스템 → 치명적 붕괴 최소 수정 → 전체 연결 → 본격 수치 밸런싱**.
+- 설계 기준: **Capitalism Lab의 산업/조달/연구 구조 + Software Inc.의 직원/팀 운영**. [공식 출처·현재 차이·기능 추가 기준](docs/SUPPLY_CHAIN_DESIGN.md)을 작성했습니다. 협력사 연구 투자 단계는 사용자 요구에 따른 각색이며 원작 기능이라고 주장하지 않습니다.
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site) / 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
 - 현재 공개 게임 구현: [c4680ca](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/c4680ca116e9a428c361d7bd754a879b35902b46), Sites 버전 16 배포 성공 및 공개 응답 확인. [GitHub Actions #34429934857](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34429934857) 빌드·회귀·장기 검사 성공. 이후 문서 확인 기록 커밋은 게임 변경과 구분합니다.
 - [과거 기록·사용자 기획 원문](docs/DEVELOPMENT_HISTORY_2026-09-10.md)은 보존합니다. 과거의 ‘미구현’을 현재 상태로 해석하지 않습니다.
