@@ -1,8 +1,8 @@
 # 자판기 게임 개발 현황
 
-마지막 대조: **2026-09-10 / 9.0.2 공개 배포 / `main`**.
+마지막 대조: **2026-09-10 / 10.0.0 공개 배포 / `main`**.
 
-**현재 위치: 10.0 장기 경영 개편 로컬 구현·검증 완료, 공개 반영 준비. 9.0의 70개 기능 연결은 완료했으나, 시간·운영·재무의 일관성까지 완료한 것은 아니었습니다. 공개 게임은 아직 9.0.2입니다.**
+**현재 위치: 10.0 장기 경영 개편을 구현·검증하고 공개 게임과 공개 소스에 반영했습니다. 달력·월 결산·상환·반복 운영을 연결했습니다. 장기 전략과 인간 플레이의 재미/수치 밸런싱은 아직 완료하지 않았습니다.**
 
 ## 10.0 장기 경영 개편
 
@@ -15,7 +15,7 @@
 - [x] 새 규칙의 3난수 × 731일 운영·24개월 전 기간 상환·계속 생산·전환/재개·오류 저장 검증.
 - [x] 실제 브라우저 5묶음·KO/JA·4화면 크기·고배속/정지/차입금 노드 안정성 검증. 1440/390 이미지 확인.
 - [x] 전체 19묶음 회귀·기존/신규 장기 표본 통과. [검증 기록](docs/VALIDATION_10.0.0.md).
-- [ ] GitHub 검사·공개 배포 및 응답 대조.
+- [x] [GitHub 검사 성공](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34458343928)·10.0.0 / Sites 21 공개 반영·HTTP 200·검증 HTML 일치 확인.
 - [ ] 인간 플레이로 전략 선택의 재미·난도·장기 수치 밸런스 평가.
 
 설계와 검증 근거: [장기 경영 개편](docs/MANAGEMENT_REDESIGN.md), [10.0 검사 기록](docs/VALIDATION_10.0.0.md).
@@ -92,7 +92,7 @@
 ## 저장과 이전
 
 - 핵심 `version=5`, `saveVersion=7`, industry/expansion/chain v1을 유지하고 선택적 `enterprise.reference.version=1`을 유지하고 `enterprise.reference.management.version=1`을 추가했습니다.
-- **현재 로컬 새 게임은 10.0 장기 경영 규칙**입니다. 기존 저장을 읽기만 해서는 변경하지 않습니다. 9.0 저장은 **장기 경영 전환**, 이전 저장은 먼저 **사업 규칙 전환**을 선택합니다.
+- **새 게임은 10.0 장기 경영 규칙**입니다. 기존 저장을 읽기만 해서는 변경하지 않습니다. 9.0 저장은 **장기 경영 전환**, 이전 저장은 먼저 **사업 규칙 전환**을 선택합니다.
 - 전환 직전 원본을 `hankan-tycoon-v1-backup-before-reference`에 한 번 보관합니다. 이미 있는 백업은 덮어쓰지 않습니다.
 - 기존 공장의 장부가·창고 용량·원자재 원가·건설 대기열·음료 배송·직원·연구 진행을 이전합니다. 기존 진행 중 연구는 계약 조건을 유지하고, 새 연구부터 단계별 검토를 적용합니다.
 - 신규 공장 건설은 투자 원가를 자산으로 유지하고 이후 감가합니다. 8.0 공장은 전환 시 장부가를 임의로 올리지 않습니다.
@@ -120,9 +120,12 @@
 
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
-- 현재 공개 게임은 **9.0.2 / Sites 20**, [배포 소스 15df2a7](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/15df2a75eea3eb417a0e76fec86b8a2a21d9bff2). 빈 선택칸과 조건 안내 수정입니다.
-- 배포 `appgdep_6aa265e6a5fc8191a888dda716e76abb` 상태 `succeeded`, 2026-09-10 08:10 UTC 확인. 공개 URL HTTP 200과 검증된 HTML의 일치를 확인했습니다. 응답에는 Cloudflare 보안 스크립트만 추가됩니다.
-- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_6028cd6176ac81918b91fdea8be152b9`. 이후 문서 갱신은 배포 게임 코드 변경과 구분합니다.
+- 현재 공개 게임은 **10.0.0 / Sites 21**, [배포 소스 8ca848c](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/8ca848caa36af59ccc6bce23175e81044c0b680f).
+- 배포 `appgdep_6aa2729e736c81918d2bbb321cd57026` 상태 `succeeded`, 2026-09-10 09:05 UTC 확인. 공개 URL HTTP 200과 검증 HTML 일치 확인. 호스팅 보안 스크립트 938바이트만 추가됩니다.
+- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_8a0bf00215048191a3e1fbae186a2239`.
+- 게임 HTML SHA-256: `B5B181654213A96E671C18DCFD8AA174B6014C37B583144337D926B480A132CC`.
+- 배포 후 메모 갱신 커밋은 위 공개 게임 코드 변경과 구분합니다. [검증 기록](docs/VALIDATION_10.0.0.md).
+
 
 ## 이전 9.0 완료 조건 (10.0은 상단 기준)
 

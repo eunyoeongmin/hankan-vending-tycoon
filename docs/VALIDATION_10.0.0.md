@@ -10,7 +10,7 @@
 |---|---|---|
 | `python build.py` | 종료 0 | 독립 실행 HTML·개발 메모 사본 |
 | `npm test` | 종료 0 | 기존 16묶음 + 신규 계약/생산/시계 3묶음 |
-| `npm run test:balance` | 종료 0 | 기존 6종 장기 검사 + 신규 3난수 최대 731일 |
+| `npm run test:balance` | 종료 0 | 이전 규칙 장기 표본 + 신규 3난수 최대 731일 |
 | `npm run test:browser` | 종료 0 | 5묶음 실제 Edge/Playwright 클릭 검사 |
 | `git diff --check` | 종료 0 | 공백 오류 없음 |
 
@@ -47,3 +47,10 @@
 기본 영업의 잉여 현금과 사건/민원 미대응 결과의 편차가 큽니다. 새 기기/공장 비용 12배, 기기 제조 재료 12배, 새 연구 예산 10배는 자동화에 따른 즉시 증설을 줄이는 초기 수정입니다. 장기 전략 간 균형, 연구 기술 도입 가격, 물류 규모별 효율, 소득·임금·가격의 물가 대응, 담보별 개별 회수 조건, 인간 플레이의 재미는 본격 검증/보정 대상으로 남깁니다.
 
 공개 배포 및 GitHub 검사는 [개발 현황](../DEVELOPMENT.md)의 공개 상태를 확인합니다. 이 기록의 로컬 통과와 공개 반영을 혼동하지 않습니다.
+
+## 공개 반영
+
+- 코드: `8ca848caa36af59ccc6bce23175e81044c0b680f`.
+- [GitHub Actions](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34458343928): 빌드·19묶음 회귀·장기 검사 성공.
+- Sites 21 / 배포 `appgdep_6aa2729e736c81918d2bbb321cd57026`: `succeeded`, 2026-09-10 09:05 UTC.
+- 공개 URL HTTP 200. 위 SHA-256의 HTML이 그대로 반환되며 호스팅 보안 스크립트 938바이트만 삽입됨을 대조했습니다.
