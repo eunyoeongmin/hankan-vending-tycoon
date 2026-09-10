@@ -4,7 +4,7 @@
 
 - 공개 게임: https://hankan-vending-tycoon.eym7443.chatgpt.site
 - 공개 소스: https://github.com/eunyoeongmin/hankan-vending-tycoon
-- 9.0 검토본: [PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1). 다른 컴퓨터에서는 저장소를 받은 뒤 `git switch feature/reference-simulation`으로 전환합니다. 공개 게임 반영 전입니다.
+- 9.0 공개 반영 완료: [PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1). 다른 컴퓨터에서도 기본 `main` 브랜치를 받으면 현재 공개 게임을 개발할 수 있습니다.
 - 개발 방향·구현 이력·검증 한계: [DEVELOPMENT.md](DEVELOPMENT.md)
 - 현재 완료 체크·부분 완료·미착수·다음 작업은 위 상태표를 기준으로 확인합니다. [과거 기록과 사용자 기획 원문](docs/DEVELOPMENT_HISTORY_2026-09-10.md)은 별도 보관합니다.
 
@@ -36,9 +36,9 @@ http://localhost:8080 을 열거나 `dist/index.html`을 직접 열어 플레이
 
 GitHub Actions는 빌드와 회귀·장기 시뮬레이션 검사를 실행합니다. `.openai/hosting.json`은 기존 공개 사이트 연결 정보이며 로컬 실행에는 인증이 필요하지 않습니다. 배포 인증 정보는 저장소에 포함하지 않습니다.
 
-## 9.0 검토 버전
+## 9.0 공개 버전
 
-사업장·차량·배치 재고·제조사 SKU·공급 계약·단계형 연구·공정 생산·인력 시장·시설 계약·기업집단을 연결했습니다. [70개 구현 대조표](docs/REFERENCE_IMPLEMENTATION.md)와 [검사/공개 상태](DEVELOPMENT.md)를 확인하세요. 검토 브랜치와 현재 공개 게임의 버전은 다를 수 있습니다.
+사업장·차량·배치 재고·제조사 SKU·공급 계약·단계형 연구·공정 생산·인력 시장·시설 계약·기업집단을 연결했습니다. [70개 구현 대조표](docs/REFERENCE_IMPLEMENTATION.md)와 [검사/공개 상태](DEVELOPMENT.md)를 확인하세요. 사용자 최종 승인 후 공개 게임에 반영했습니다.
 
 새 게임은 새 규칙을 사용합니다. 기존 저장은 **사업 운영 → 규칙 적용**을 눌러 전환하며 원본을 별도로 보관합니다. 연구 검토와 급여/외상 만기, 자회사 운영자금은 직접 관리해야 합니다.
 

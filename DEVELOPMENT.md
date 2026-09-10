@@ -1,8 +1,8 @@
 # 자판기 게임 개발 현황
 
-마지막 대조: **2026-09-10 / 9.0.0 검토 브랜치 `feature/reference-simulation`**.
+마지막 대조: **2026-09-10 / 9.0.0 공개 배포 / `main`**.
 
-**현재 위치: 승인된 레퍼런스 70개 후보를 현재 자판기 사업 규모에 맞춘 시스템으로 연결했습니다. 최종 로컬 회귀·장기 실행·브라우저 검사가 모두 통과했습니다. 공개 게임은 아직 8.0.0이며, 9.0.0은 최종 검토용입니다.**
+**현재 위치: 승인된 레퍼런스 70개 후보를 현재 자판기 사업 규모에 맞춘 시스템으로 연결했습니다. 최종 로컬 회귀·장기 실행·브라우저 및 GitHub 검사를 통과하고 사용자 승인 후 9.0.0을 공개 배포했습니다. 다음 단계는 본격 수치 밸런싱입니다.**
 
 - 개발 순서: **핵심 시스템 → 치명적 붕괴 최소 수정 → 전체 연결 → 본격 수치 밸런싱**.
 - [70개 항목별 실제 규칙·구현 함수·화면·검증 범위](docs/REFERENCE_IMPLEMENTATION.md)가 구현 대조표입니다. 원작 전체를 복제했다거나 재미/수치 검증까지 끝났다는 뜻은 아닙니다.
@@ -73,8 +73,9 @@
 
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
-- 현재 공개 게임은 **8.0.0 / Sites 17**, [a336028](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/a336028df1255d7cdc1c6aed0906b33ee25588db). 당시 로컬 검사와 [Actions #34437122295](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34437122295) 성공.
-- **9.0.0은 로컬 검증 완료, [공개 검토 PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1), 미배포.** 구현 커밋은 `82da42b6d0daacac7674e290ab03b3e0bd59da1e`입니다. 검토 가능한 결과를 먼저 완성하고 최종 공개 반영 승인을 받으라는 이번 요청을 따릅니다.
+- 현재 공개 게임은 **9.0.0 / Sites 18**, [배포 소스 3082b21](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/3082b21d7e93d1808b7349a11202857017cae2e9). 사용자 승인 후 [PR #1](https://github.com/eunyoeongmin/hankan-vending-tycoon/pull/1)을 병합했습니다. 최종 검토 소스의 [Actions 검사](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34445589400)도 성공했습니다.
+- 배포 `appgdep_6aa25ce0cc7481918f4700602db77182` 상태 `succeeded`, 2026-09-10 07:32 UTC 확인. 공개 URL HTTP 200과 검증된 HTML의 일치를 확인했습니다. 응답에는 Cloudflare 보안 스크립트만 추가됩니다.
+- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_521afbdc745c8191be622c1a2f196617`. 이후 문서 갱신은 배포 게임 코드 변경과 구분합니다.
 
 ## 다음 완료 조건
 
@@ -82,5 +83,5 @@
 - [x] 기존 저장과 원본 백업 보존 검사.
 - [x] 최종 소스의 전체 16묶음 회귀·기존/신규 장기 표본·브라우저 검사 완료.
 - [x] 최종 소스/개발 메모/공개 검토 브랜치와 로컬 검사 근거 정리.
-- [ ] 사용자 최종 승인 후 9.0.0 공개 게임 반영과 응답 확인.
+- [x] 사용자 최종 승인 후 9.0.0 공개 게임 반영과 응답 확인.
 - [ ] **그다음 본격 수치 밸런싱:** 정상 초기 자금, 여러 전략/난수/조건과 인간 플레이로 투자 회수 기간·원가/임금·AI 공세/생존·과도한 단일 전략 우세를 비교해 조정.
