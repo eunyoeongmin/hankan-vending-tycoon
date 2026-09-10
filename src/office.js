@@ -17,7 +17,7 @@ function officeUpdate(){
  officeRegisterTabs.setAttribute('aria-label',T('업무 기록','業務記録'));
  patchPanel(officeRegisterTabs,[['all',T('영업 기록','営業記録')],['rival',T('경쟁사 동향','競合動向')],['complaints',T('민원','相談')]].map(([id,name])=>`<button data-office-feed="${id}" aria-pressed="${officeFeed===id}">${name}</button>`).join(''));
  document.querySelector('.log').hidden=officeFeed!=='all';officeMessages.hidden=officeFeed==='all';
- const records=officeFeed==='rival'?ensureRivalry().history.map(x=>`<div><time>DAY ${x.day}</time><span>${esc(tr(x.text))}</span></div>`):state.complaints.map(c=>`<div><time>DAY ${c.deadline}</time><button data-desk="alerts">${esc(tr(LOCATIONS[c.loc].short))} · ${esc(tr(COMPLAINT_NAMES[c.kind]))}</button></div>`);
+ const records=officeFeed==='rival'?(industryEnabled()?rivalFirms().flatMap(f=>f.policy.history).sort((a,b)=>b.day-a.day).slice(0,40):ensureRivalry().history).map(x=>`<div><time>DAY ${x.day}</time><span>${esc(tr(x.text))}</span></div>`):state.complaints.map(c=>`<div><time>DAY ${c.deadline}</time><button data-desk="alerts">${esc(tr(LOCATIONS[c.loc].short))} · ${esc(tr(COMPLAINT_NAMES[c.kind]))}</button></div>`);
  const key=lang+officeFeed+records.join('');if(key!==officeMessageKey){officeMessageKey=key;patchPanel(officeMessages,records.join('')||`<div>${T('기록 없음','記録なし')}</div>`);}
  // Decorative symbols are excluded from console text; map/weather symbols retain their meaning.
  for(const host of [deskContent,officeRegister,$('modal-body')]){
