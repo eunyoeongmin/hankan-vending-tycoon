@@ -60,5 +60,5 @@ document.addEventListener('click',event=>{const b=event.target.closest('[data-ex
  if(action==='debug'&&expansionDebugAccess){e.debug=true;state.enterprise.industry.sandbox=true;if(arg==='cash')state.cash+=10000000;if(arg==='step'&&!state.pending){if(!state.live)startBusiness();advanceBusiness(DAY_MS);}if(arg==='event'&&!state.pending&&state.machines.length){state.pending={id:'regulation-review',loc:state.machines[0].loc};openModal('event');}if(arg==='inspect')toast(valid(state)?B('저장 검사 통과','セーブ検査成功'):B('저장 검사 실패','セーブ検査失敗'));ok=true;}
  if(!ok)toast(B('조건 불충족 · 자금·용량·계약 확인','条件未達・資金・容量・契約を確認'));save();render();
 });
-document.addEventListener('keydown',event=>{if(event.altKey&&!modalView&&['ArrowUp','ArrowDown'].includes(event.key)){event.preventDefault();const n=DESK_TABS.findIndex(t=>t[0]===deskTab),next=(n+(event.key==='ArrowDown'?1:-1)+DESK_TABS.length)%DESK_TABS.length;selectDesk(DESK_TABS[next][0]);deskNav.querySelector(`[data-desk="${deskTab}"]`)?.focus();}});
+document.addEventListener('keydown',event=>{if(event.altKey&&!modalView&&['ArrowUp','ArrowDown'].includes(event.key)){event.preventDefault();const tabs=visibleDeskTabs(),n=tabs.findIndex(t=>t[0]===deskTab),next=(n+(event.key==='ArrowDown'?1:-1)+tabs.length)%tabs.length;selectDesk(tabs[next][0]);deskNav.querySelector(`[data-desk="${deskTab}"]`)?.focus();}});
 renderExpansion();

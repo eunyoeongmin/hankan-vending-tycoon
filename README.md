@@ -40,7 +40,7 @@ GitHub Actions는 빌드와 회귀·장기 시뮬레이션 검사를 실행합�
 
 사업장·차량·배치 재고·제조사 SKU·공급 계약·단계형 연구·공정 생산·인력 시장·시설 계약·기업집단을 연결했습니다. [70개 구현 대조표](docs/REFERENCE_IMPLEMENTATION.md)와 [검사/공개 상태](DEVELOPMENT.md)를 확인하세요. 사용자 최종 승인 후 공개 게임에 반영했습니다.
 
-새 게임은 새 규칙을 사용합니다. 기존 저장은 **사업 운영 → 규칙 적용**을 눌러 전환하며 원본을 별도로 보관합니다. 연구 검토와 급여/외상 만기, 자회사 운영자금은 직접 관리해야 합니다.
+새 게임은 새 규칙을 사용합니다. 기존 저장은 **사업 규칙 전환 → 규칙 적용**을 눌러 전환하며 원본을 별도로 보관합니다. 연구 검토와 급여/외상 만기, 자회사 운영자금은 직접 관리해야 합니다.
 
 `reference-core/operations/commerce/production/equipment/finance/market/decisions/hooks/completion/group/reporting/ui/ui-extra.js`는 새 규칙의 상태·업무·거래·연결·화면을 담당합니다. 기존 7/8 규칙의 회귀 검사는 유지됩니다.
 
