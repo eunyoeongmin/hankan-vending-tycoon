@@ -5,6 +5,7 @@
 - 공개 게임: https://hankan-vending-tycoon.eym7443.chatgpt.site
 - 공개 소스: https://github.com/eunyoeongmin/hankan-vending-tycoon
 - 개발 방향·구현 이력·검증 한계: [DEVELOPMENT.md](DEVELOPMENT.md)
+- 현재 완료 체크·부분 완료·미착수·다음 작업은 위 상태표를 기준으로 확인합니다. [과거 기록과 사용자 기획 원문](docs/DEVELOPMENT_HISTORY_2026-09-10.md)은 별도 보관합니다.
 
 ## 실행과 개발
 
