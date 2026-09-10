@@ -12,7 +12,7 @@ const deskAlerts=document.createElement('div');deskAlerts.id='desk-alerts';deskM
 const DESK_TABS=[['manage',B('기기 관리','機械管理')],['fleet',B('보유 기기','所有機械')],['supply',B('발주','発注')],['finance',B('재무','財務')],['staff',B('직원','スタッフ')],['research',B('연구','研究')],['market',B('시장','市場')],['rivalry',B('경쟁','競合')],['alerts',B('알림','通知')],['journal',B('일지·목표','日誌・目標')]];
 let deskTab='manage';
 function selectDesk(tab){if(!DESK_TABS.some(x=>x[0]===tab))return;deskTab=tab;
- const panels={manage:['manage'],fleet:['fleet'],supply:['enterprise'],finance:['bank','enterprise'],staff:['operations'],research:['hq','enterprise'],market:['enterprise','weather'],rivalry:['enterprise','rival'],alerts:['events','complaints'],journal:['enterprise','journal']}[tab];
+ const panels={manage:['manage'],fleet:['fleet'],supply:['enterprise'],finance:['bank','enterprise'],staff:['operations'],research:['hq','enterprise'],market:['enterprise','weather'],rivalry:['enterprise','rival'],alerts:['events','complaints'],journal:['enterprise','journal']}[tab]||['expansion'];
  for(const [key,node] of Object.entries(deskNodes))node.hidden=!panels.includes(key);
  if(panels.includes('enterprise')){enterpriseTab=tab==='finance'?'reports':tab==='journal'?'overview':tab;renderEnterprise();}
  deskContent.scrollTop=0;updateDesk();

@@ -1,6 +1,6 @@
 /* Quotes are negotiated, saved and revalidated before a physical transfer. */
-function validTrade(t){return t&&(!t.seller||['mono','atlas','nova'].includes(t.seller))&&int(t.loc,0,23)&&int(t.day,1,1000000)&&int(t.round,0,3)&&int(t.quote,1000,1000000000)&&int(t.offer,0,1000000000)&&['open','rejected','counter','accepted'].includes(t.status)&&(t.status!=='accepted'||t.offer>=t.quote);}
-function tradeAvailable(loc){return state.started&&!state.ended&&int(loc,0,23)&&!!rivalOwner(loc)&&canBuild(loc);}
+function validTrade(t){return t&&(!t.seller||['mono','atlas','nova'].includes(t.seller))&&int(t.loc,0,LOCATIONS.length-1)&&int(t.day,1,1000000)&&int(t.round,0,3)&&int(t.quote,1000,1000000000)&&int(t.offer,0,1000000000)&&['open','rejected','counter','accepted'].includes(t.status)&&(t.status!=='accepted'||t.offer>=t.quote);}
+function tradeAvailable(loc){return state.started&&!state.ended&&int(loc,0,LOCATIONS.length-1)&&!!rivalOwner(loc)&&canBuild(loc);}
 acquireNpc=function(loc){
  if(!tradeAvailable(loc))return;const e=state.enterprise;
  if(!e.trade||e.trade.loc!==loc||e.trade.day!==state.day){
@@ -36,7 +36,7 @@ drawModal=function(){modalBeforeTrade();if(modalView!=='trade')return;const t=st
 };
 document.addEventListener('click',event=>{const id=event.target.closest('button')?.id;if(id==='trade-propose'){const amount=Number($('trade-amount').value)*1000;if(!proposeTrade(amount)&&$('trade-error'))$('trade-error').textContent=T('현금 범위 안에서 유효한 금액을 제안해 주세요.','手元資金の範囲内で有効な金額を提示してください。');}if(id==='trade-confirm')completeTrade();});
 
-function validSaleOffer(o){return o&&(!o.buyer||['mono','atlas','nova'].includes(o.buyer))&&int(o.loc,0,23)&&int(o.price,1,1000000000)&&int(o.deadline,1,1000000)&&(!o.negotiation||(int(o.negotiation.round,0,3)&&int(o.negotiation.ask,0,1000000000)&&['open','counter','agreed','refused'].includes(o.negotiation.status)));}
+function validSaleOffer(o){return o&&(!o.buyer||['mono','atlas','nova'].includes(o.buyer))&&int(o.loc,0,LOCATIONS.length-1)&&int(o.price,1,1000000000)&&int(o.deadline,1,1000000)&&(!o.negotiation||(int(o.negotiation.round,0,3)&&int(o.negotiation.ask,0,1000000000)&&['open','counter','agreed','refused'].includes(o.negotiation.status)));}
 function saleAvailable(){const o=state.offer;return !!(o&&state.started&&!state.ended&&o.deadline>=state.day&&machine(o.loc)&&state.machines.length>1&&!rivalLocations().includes(o.loc)&&rivalById(o.buyer||'mono')&&!rivalById(o.buyer||'mono').policy.defeated);}
 function saleNegotiation(){const o=state.offer;if(!o)return null;return o.negotiation||(o.negotiation={round:0,ask:0,status:'open'});}
 const transferSale=acceptOffer;
