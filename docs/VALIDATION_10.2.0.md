@@ -12,4 +12,13 @@
 - 데스크톱 봄/눈, 모바일 및 1440×900/390×844 화면 이미지 확인. 기존 화면 검사는 800×600/720×450도 포함.
 - 장기 인간 플레이나 경제 수치 밸런싱은 이번 그래픽 검사 범위가 아님.
 
-공개 반영 결과는 배포 후 기록한다.
+## 공개 결과
+
+- 10.2.0 / Sites 23, 2026-09-11 00:23 UTC 공개 배포 성공.
+- 소스 `c2d0d60359a44ee79bb5a1adfd9d5b9eedfb1055`.
+- 버전 `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_130a21beedb881919af962d48f88d78f`.
+- 배포 `appgdep_6aa34a06c6808191bfcf66a7f58a7851`, succeeded.
+- HTTP 200, 검증 HTML 일치. 호스팅 스크립트 938바이트만 추가.
+- HTML SHA-256 `207A8B842AD3B2E62ACAF72F0E042854EA96982EE756B21C98E4974542BC1440`.
+- 공개 결과를 기록한 문서 커밋은 게임 코드 배포 커밋과 구분한다.
+- [GitHub CI](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34546219608) 전체 회귀·장기 시뮬레이션 성공, 2분 32초.

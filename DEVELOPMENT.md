@@ -1,8 +1,8 @@
 # 자판기 게임 개발 현황
 
-마지막 대조: **2026-09-11 / 10.2.0 도시 그래픽 구현·검증 / `main`**.
+마지막 대조: **2026-09-11 / 10.2.0 공개 배포 / `main`**.
 
-**현재 위치: 도시 메인 장면을 Windows 95 UI와 연결되는 타일형 그래픽으로 개편했습니다. 공개 상태는 하단 기록으로 구분합니다. 인간 플레이의 재미/수치 밸런싱은 아직 완료하지 않았습니다.**
+**현재 위치: 도시 메인 장면을 Windows 95 UI와 연결되는 타일형 그래픽으로 개편했습니다. 공개 게임과 GitHub에 반영했습니다. 인간 플레이의 재미/수치 밸런싱은 아직 완료하지 않았습니다.**
 
 ## 10.2 도시 디자인 통일 완료 조건
 
@@ -11,7 +11,8 @@
 - [x] 시간·판매량·계절/날씨를 지도 밖 상태줄에 배치. 모바일에서도 시간·계절 표시.
 - [x] 지도 핀 중심 좌표 복구, 마우스를 올려도 동일 위치에서 클릭. 단일 시계·기존 매출/재고·저장 규칙 유지.
 - [x] 기존 19묶음 회귀, 브라우저 6묶음, 신규 도시 그래픽 검사 통과. 5상권×4계절×KO/JA, 비/눈, 움직임 끄기, 4화면 및 스크린샷 확인.
-- [ ] 공개 게임·GitHub 반영 및 배포 HTML 대조.
+- [x] 공개 게임·GitHub 반영 및 HTTP 200·배포 HTML 일치 확인 (Sites 23).
+- [x] 배포 소스 [GitHub 전체 회귀·장기 시뮬레이션 검사 성공](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34546219608).
 
 검사 기록: [10.2 도시 그래픽](docs/VALIDATION_10.2.0.md). 상권 배경은 기존 입지 좌표를 공유하는 도식형 지도이며 자유 건설/도로 편집 기능은 아니다.
 
@@ -145,11 +146,11 @@
 
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
-- 현재 공개 게임은 **10.1.0 / Sites 22**, [배포 소스 da3d4c4](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/da3d4c4084e6ff7ed4b5c1b4f570d63fcd0116e4).
-- 배포 `appgdep_6aa347a814d48191bc170597c23f6ff9` 상태 `succeeded`, 2026-09-11 00:13 UTC 확인. 공개 URL HTTP 200과 검증 HTML 일치 확인. 호스팅 보안 스크립트 938바이트만 추가됩니다.
-- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_57dc4178b51481918dce1d50f62fad8e`.
-- 게임 HTML SHA-256: `79B8FF28E2FF6BD17D26C6E6C9D9B145BFAC295B0948E66693882E4329FC0723`.
-- 배포 후 메모 갱신 커밋은 위 공개 게임 코드 변경과 구분합니다. [검증 기록](docs/VALIDATION_10.1.0.md).
+- 현재 공개 게임은 **10.2.0 / Sites 23**, [배포 소스 c2d0d60](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/c2d0d60359a44ee79bb5a1adfd9d5b9eedfb1055).
+- 배포 `appgdep_6aa34a06c6808191bfcf66a7f58a7851` 상태 `succeeded`, 2026-09-11 00:23 UTC 확인. 공개 URL HTTP 200과 검증 HTML 일치 확인. 호스팅 보안 스크립트 938바이트만 추가됩니다.
+- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_130a21beedb881919af962d48f88d78f`.
+- 게임 HTML SHA-256: `207A8B842AD3B2E62ACAF72F0E042854EA96982EE756B21C98E4974542BC1440`.
+- 배포 후 메모 갱신 커밋은 위 공개 게임 코드 변경과 구분합니다. [검증 기록](docs/VALIDATION_10.2.0.md).
 
 
 ## 이전 9.0 완료 조건 (10.0은 상단 기준)
