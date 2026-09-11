@@ -2,13 +2,13 @@
 function mgDebt(f){return refFirm(f).notes.reduce((n,x)=>n+x.principal,0);}
 function mgCreditLimit(f){const reports=refFirm(f).reports.filter(p=>p.final).slice(0,90),daily=reports.reduce((n,p)=>n+p.operating,0)/Math.max(1,reports.length),equity=Math.max(0,companyEquity(f));return Math.floor((Math.max(100000,equity*.5)+Math.max(0,daily)*90)*refClamp(f.meta.credit/70,.25,1.2));}
 function mgAnnualRate(f,kind){return refClamp((.045+(100-f.meta.credit)*.001+(kind==='working'?.015:kind==='bond'?.025:0))*refWorld().cities[refHome(f).map].interest,.04,.20);}
-function mgBorrow(f,amount,kind='equipment'){
+function mgBorrow(f,amount,kind='equipment',rateType='fixed'){
  const r=refFirm(f),w=refWorld(),pool=kind==='bond'?'investorCash':'bankCash';
- if(!mgEnabled()||!['working','equipment','bond'].includes(kind)||!int(amount,10000,1000000000)||state.ended||r.notes.length>=12||f.meta.credit<40||r.bills.some(b=>b.due<state.day)||r.notes.some(n=>n.missed)||amount+mgDebt(f)>mgCreditLimit(f)||w[pool]<amount)return false;
+ if(!['fixed','variable'].includes(rateType)||!mgEnabled()||!['working','equipment','bond'].includes(kind)||!int(amount,10000,1000000000)||state.ended||r.notes.length>=12||f.meta.credit<40||r.bills.some(b=>b.due<state.day)||r.notes.some(n=>n.missed)||amount+mgDebt(f)>mgCreditLimit(f)||w[pool]<amount)return false;
  if(kind==='bond'&&mgFirm(f).month.filter(m=>m.closed&&m.profit>0).length<6)return false;
  const months=kind==='working'?3:kind==='equipment'?24:36,grace=kind==='equipment'?3:months;
  w[pool]-=amount;f.account.cash+=amount;
- r.notes.push({id:refId(),kind:kind==='bond'?'bond':'loan',product:kind,principal:amount,original:amount,rate:mgAnnualRate(f,kind)/365,due:mgAddMonths(state.day,months),start:state.day,next:mgAddMonths(state.day,1),grace:mgAddMonths(state.day,grace),installment:kind==='equipment'?Math.ceil(amount/(months-grace)):amount,duePrincipal:0,missed:0,calendar:true});
+ r.notes.push({id:refId(),kind:kind==='bond'?'bond':'loan',product:kind,principal:amount,original:amount,variable:kind!=='bond'&&rateType==='variable',rate:(mgAnnualRate(f,kind)-(kind!=='bond'&&rateType==='variable'?.005:0))/365,due:mgAddMonths(state.day,months),start:state.day,next:mgAddMonths(state.day,1),grace:mgAddMonths(state.day,grace),installment:kind==='equipment'?Math.ceil(amount/(months-grace)):amount,duePrincipal:0,missed:0,calendar:true});
  refPost(f,'loan-proceeds',amount,'financing');return true;
 }
 function mgRepay(f,id,amount=Infinity){const r=refFirm(f),n=r.notes.find(n=>n.id===id);if(!n||!(amount>0)||(!finite(amount)&&amount!==Infinity)||state.ended)return false;const value=Math.min(n.principal,Math.floor(amount),Math.max(0,Math.floor(f.account.cash)));if(value<=0)return false;f.account.cash-=value;n.principal-=value;n.duePrincipal=Math.max(0,(n.duePrincipal||0)-value);refWorld()[n.kind==='bond'&&n.calendar?'investorCash':'bankCash']+=value;refPost(f,'principal-payment',-value,'financing');if(!n.duePrincipal)n.missed=0;if(!n.principal)r.notes=r.notes.filter(x=>x!==n);return true;}

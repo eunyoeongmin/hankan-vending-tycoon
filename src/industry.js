@@ -199,10 +199,10 @@ beginMarket=function(){contractsBegin();if(!industryEconomy()||!state.live)retur
 const industryOldQueue=queueEvent;
 queueEvent=function(){industryOldQueue();if(industryEnabled()&&state.pending&&inGameSession&&!modalView&&!menuOpen)openModal('event');};
 const industryOldStart=startBusiness;
-startBusiness=function(){if(industryEnabled()&&state.pending&&inGameSession&&!menuOpen){if(!modalView)openModal('event');return;}return industryOldStart();};
+startBusiness=function(){if(industryEnabled()&&eventBlocksClock()&&inGameSession&&!menuOpen){if(!modalView)openModal('event');return;}return industryOldStart();};
 // Closing or Escape cannot bypass an unresolved business decision. Manual pause remains unchanged.
 const industryOldClose=closeModal;
-closeModal=function(){if(industryEnabled()&&modalView==='event'&&state.pending&&!state.ended)return;industryOldClose();};
-$('modal').addEventListener('cancel',event=>{if(industryEnabled()&&inGameSession&&modalView==='event'&&state.pending){event.preventDefault();event.stopImmediatePropagation();}},true);
+closeModal=function(){if(industryEnabled()&&modalView==='event'&&eventBlocksClock()&&!state.ended)return;industryOldClose();};
+$('modal').addEventListener('cancel',event=>{if(industryEnabled()&&inGameSession&&modalView==='event'&&eventBlocksClock()){event.preventDefault();event.stopImmediatePropagation();}},true);
 const industryOldResolve=resolveEvent;
 resolveEvent=function(index){industryOldResolve(index);if(industryEnabled()&&!state.pending&&!state.ended&&!state.live&&!livePaused&&!menuOpen)startBusiness();};

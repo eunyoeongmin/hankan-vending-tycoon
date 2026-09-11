@@ -19,6 +19,8 @@ for module in ['core','finance','operations','ui']:
     engine+='\n'+(root/('src/management-'+module+'.js')).read_text(encoding='utf-8')
 engine+='\n'+(root/'src/desktop.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/city-art.js').read_text(encoding='utf-8')
+for module in ['catalog','core','choices','actions','hooks','ui']:
+    engine+='\n'+(root/('src/business-events-'+module+'.js')).read_text(encoding='utf-8')
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')

@@ -27,7 +27,7 @@ launchNew=launchManagement;
 chosenDuration=36500;
 
 // Close each day once. Unprocessed time stays in the one RAF carry, never in another timer.
-function mgConsumeClock(){let turns=0;while(businessCarry>=20&&turns++<4&&!livePaused&&!modalView&&!menuOpen&&!state.pending&&!state.ended){if(!state.live)startBusiness();if(!state.live)break;const step=Math.min(businessCarry,DAY_MS-state.live.elapsed);if(step<=0)break;businessCarry-=step;advanceBusiness(step);}}
+function mgConsumeClock(){let turns=0;while(businessCarry>=20&&turns++<4&&!livePaused&&!modalView&&!menuOpen&&!eventBlocksClock()&&!state.ended){if(!state.live)startBusiness();if(!state.live)break;const step=Math.min(businessCarry,DAY_MS-state.live.elapsed);if(step<=0)break;businessCarry-=step;advanceBusiness(step);}}
 const mgOldPayroll=refAccruePayroll;
 refAccruePayroll=function(){if(!mgEnabled())return mgOldPayroll();for(const f of allFirms().filter(f=>!f.policy?.defeated)){const amount=Math.round(f.id==='player'?state.live?.payroll||0:f.ops.market?.payroll||0);if(!amount)continue;f.account.cash+=amount;const r=refFirm(f),due=mgMonthEnd(),bill=r.bills.find(b=>b.kind==='wages'&&b.due===due);if(bill)bill.amount+=amount;else r.bills.push({id:refId(),kind:'wages',to:'workforce',amount,due});}};
 const mgOldFinalize=refFinalizeReports;

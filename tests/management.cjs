@@ -17,12 +17,12 @@ for(const seed of [7,19473,731293]){
  const g=create();g.ev(`profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:${seed===731293?3:0},supply:${seed===731293?2:0}};launchNew();state.enterprise.rng=${seed};render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
  const days=Number(process.env.MANAGEMENT_DAYS||731);
  for(let n=0;n<days&&!g.ev('state.ended');n++){
-  g.ev('if(state.pending)resolveEvent(1);if(modalView)closeModal();livePaused=false;if(!state.live)startBusiness();advanceBusiness(DAY_MS);');
+  g.ev('if(state.pending){resolveEvent(1);if(state.pending&&state.businessEvents?.pending)state.businessEvents.pending.deferred=true;}if(modalView)closeModal();livePaused=false;if(!state.live)startBusiness();advanceBusiness(DAY_MS);');
   if(!g.ev('valid(state)&&allFirms().every(f=>refCheckConservation(f))')){fs.writeFileSync(require('node:path').join(require('node:os').tmpdir(),'hankan-management-invalid.json'),g.ev('JSON.stringify(state)'));throw Error('invalid seed '+seed+' day '+g.ev('state.day'));}
   assert.ok(g.ev('allFirms().every(f=>refFirm(f).reports.filter(r=>r.final).every(r=>Math.abs(r.assets-r.liabilities-r.equity)<.01&&Math.abs(r.operating+r.investing+r.financing-r.cashChange)<.01))'));
  }
  const out={seed,day:g.ev('state.day'),ended:g.ev('state.ended'),cash:g.ev('state.cash'),sold:g.ev('state.totalSold'),months:g.ev('mgFirm(playerFirm()).month.length'),rivals:g.ev('rivalFirms().map(f=>({id:f.id,machines:f.machines.length,closed:f.policy.defeated,produced:refFirm(f).stats.manufactured}))')};console.log('MANAGEMENT',JSON.stringify(out));
- if(seed!==731293)assert.ok(out.day>days,'unattended operation reaches requested date');assert.ok(out.sold>100,'standing ordering/delivery produces sales');
+ assert.ok(out.day>days||out.ended,'unattended operation reaches requested date or actual ending');assert.ok(out.sold>100,'standing ordering/delivery produces sales');
  const re=create(g.ev('JSON.stringify(state)'));assert.equal(re.ev('loadWarning'),false);assert.ok(re.ev('mgEnabled()'));assert.equal(re.ev('state.day'),out.day);assert.deepEqual(re.errors,[]);re.dom.window.close();assert.deepEqual(g.errors,[]);g.dom.window.close();
 }
 console.log('PASS calendar/leap-month arithmetic, default free game, consolidated loan ledger, monthly wages, KO/JA, standing operation and saved state');

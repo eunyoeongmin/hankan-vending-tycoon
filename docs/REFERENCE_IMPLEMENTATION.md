@@ -89,7 +89,7 @@
 | E2 | 고용·소득·임금·수요·금리, 기존 경기/물가 옵션 연계 | `refWorldDay`, `demand`, `refBorrow` |
 | E3 | 기존 날씨/계절 장면 + 계절·영업 시간대 상품 선호 | `refCustomer`, 기존 실시간 장면 |
 | E4 | 2000년 시작, 결제/통신 도입 연도와 냉각 효율 부담금 | `refRetrofit`, `refWorldDay` |
-| E5 | **부분 구현. 연속 선택 사건 미완료 ([대조](EVENT_AUDIT.md)).** 공급사 자금난→공급 중단, 피로/정비 부족→처리 저하/불량, 냉장 고장→폐기 | `refWorldDay`, `refProductionAdvance`, `refOperationsDay` |
+| E5 | **40종 선택 사건 연결 구현 ([대조](EVENT_AUDIT.md)).** 조건/대상→견적/보류→실제 지출·작업→후속 결과. 인간 빈도·재미 평가 미완료 | `beTarget`, `beResolve`, `beCompleteTask`, `beChoiceFactor` |
 | U1 | 고정 경영 화면의 사업장 장부·작업 큐·병목 원인 | `renderReference`, `refServiceDiagnostics` |
 | U2 | 입지별 가격/재고·관측일/근접 자사와 배송 거점 연결 전환 | `refSupplyMap` |
 | U3 | 연구 예산·인력 부족·입고·계약·차입 통지에서 해당 업무 이동 | `refNotice`, `refExtraUI` |
