@@ -36,3 +36,9 @@ out=base.replace(marker,engine+'\n'+marker).replace('</style>',css+'\n</style>',
 notes=root/'DEVELOPMENT.md'
 if notes.exists(): (root.parent/'자판기_개발메모.md').write_text(notes.read_text(encoding='utf-8-sig'),encoding='utf-8')
 print('Built standalone enterprise game')
+
+lab=(root/'src/art-lab/index.html').read_text(encoding='utf-8-sig')
+for name,marker in [('assets','/*ASSETS*/'),('scene','/*SCENE*/')]:
+    lab=lab.replace(marker,(root/f'src/art-lab/{name}.js').read_text(encoding='utf-8-sig'))
+(root/'dist/art-lab.html').write_text(lab,encoding='utf-8')
+print('Built isolated art lab')
