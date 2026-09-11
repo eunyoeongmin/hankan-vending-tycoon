@@ -1,0 +1,128 @@
+[
+  {
+    "seed": 7,
+    "policy": "manual",
+    "day": 181,
+    "cash": 13253.648,
+    "sold": 14108,
+    "events": 0,
+    "profit30": 1573.6096890745866
+  },
+  {
+    "seed": 7,
+    "policy": "margin",
+    "day": 181,
+    "cash": 6772.085,
+    "sold": 16551,
+    "events": 0,
+    "profit30": 816.8634476130743
+  },
+  {
+    "seed": 7,
+    "policy": "share",
+    "day": 181,
+    "cash": 5570.904,
+    "sold": 17028,
+    "events": 0,
+    "profit30": 532.5250626415187
+  },
+  {
+    "seed": 7,
+    "policy": "price2",
+    "day": 181,
+    "cash": 16151.16,
+    "sold": 11694,
+    "events": 0,
+    "profit30": 2025.2517999999807
+  },
+  {
+    "seed": 7,
+    "policy": "price3",
+    "day": 181,
+    "cash": 14940.546,
+    "sold": 6812,
+    "events": 0,
+    "profit30": 2266.3578556946745
+  },
+  {
+    "seed": 7,
+    "policy": "price4",
+    "day": 181,
+    "cash": 12194.785,
+    "sold": 4099,
+    "events": 0,
+    "profit30": 2232.999860468105
+  },
+  {
+    "seed": 7,
+    "policy": "events",
+    "day": 181,
+    "cash": 16051.024999999741,
+    "sold": 17888,
+    "events": 20,
+    "profit30": 2406.688809999982
+  },
+  {
+    "seed": 19473,
+    "policy": "manual",
+    "day": 181,
+    "cash": 14095.462,
+    "sold": 14811,
+    "events": 0,
+    "profit30": 1606.1470052355833
+  },
+  {
+    "seed": 19473,
+    "policy": "margin",
+    "day": 181,
+    "cash": 6526.891,
+    "sold": 15873,
+    "events": 0,
+    "profit30": 541.884038371333
+  },
+  {
+    "seed": 19473,
+    "policy": "share",
+    "day": 181,
+    "cash": 6545.282,
+    "sold": 17910,
+    "events": 0,
+    "profit30": 997.0400596026585
+  },
+  {
+    "seed": 19473,
+    "policy": "price2",
+    "day": 181,
+    "cash": 15138.673,
+    "sold": 11410,
+    "events": 0,
+    "profit30": 1116.1009345794207
+  },
+  {
+    "seed": 19473,
+    "policy": "price3",
+    "day": 181,
+    "cash": 16302.953,
+    "sold": 7578,
+    "events": 0,
+    "profit30": 2602.841356321821
+  },
+  {
+    "seed": 19473,
+    "policy": "price4",
+    "day": 181,
+    "cash": 11957.287,
+    "sold": 4044,
+    "events": 0,
+    "profit30": 1645.6908493150497
+  },
+  {
+    "seed": 19473,
+    "policy": "events",
+    "day": 181,
+    "cash": 10329.86300000067,
+    "sold": 11257,
+    "events": 24,
+    "profit30": 928.4412333333148
+  }
+]

@@ -27,6 +27,10 @@ http://localhost:8765 또는 `dist/index.html`을 열어 실행합니다. 다른
 
 `src/`가 원본이며 `build.py`가 `dist/index.html`과 상위 폴더의 `vending-tycoon.html`, 개발 메모 사본을 생성합니다. `dist`를 직접 수정하지 마세요. `.openai/hosting.json`은 공개 사이트의 연결 정보입니다. 인증 정보는 저장소에 포함하지 않습니다.
 
+## 10.3.1 시스템 점검
+
+타사 음료는 상품 연구 없이 매입·판매하고, 자체 상품 개발은 연구를 요구합니다. 기기의 저온·온장 설비와 슬롯 재고는 진열 조건으로 확인합니다. 자동 운영은 상환 원금을 유보하고 최소 발주 계약을 지키며, 정지하면 정기 배송도 멈춥니다. 신규 중고·리스 견적은 현행 기기 가격과 연동합니다. [전체 점검·수정 내역과 밸런스 비교](docs/SYSTEM_AUDIT_10.3.1.md).
+
 ## 10.3 사업 사건
 
 40종 사건을 실제 영업과 연결했습니다. 후원·할인·발주·고장·직원 이직·계약 갱신·연구 실패 등을 비용과 기간을 비교해 결정하고, 보류하면 영업을 계속할 수 있습니다. 결과 장부에서 실제 지출과 판매 기록, 경쟁사 참여, 지연 작업 결과를 확인합니다. [40종 조건과 선택 대조표](docs/EVENT_AUDIT.md).
@@ -60,9 +64,9 @@ http://localhost:8765 또는 `dist/index.html`을 열어 실행합니다. 다른
 - `base`, `enterprise`, `industry`, `market` 등: 단일 시계와 기존 저장/시장/회계.
 - `supply-chain`, `organization`, `reference-*`: 조달·배치·공장·인력·연구·시설·기업집단.
 - `management-core/finance/operations/ui`: 장기 경영의 달력·결산·차입·운영 정책·화면. 기존 규칙과의 경계를 명시합니다.
-- `npm test`: 기존 16묶음과 신규 계약/생산/시계 3묶음 회귀.
+- `npm test`: 기존 시스템·사건·전체 점검 22묶음 회귀.
 - `npm run test:balance`: 이전 규칙의 장기 표본과 신규 3난수 × 최대 731일. 기본 자금과 추가 자금의 후반 검사, 자동 검사와 인간 난도 평가를 구분합니다.
-- `npm run test:browser`: 5묶음. Playwright/Edge가 필요하며 기본 주소는 `http://127.0.0.1:8765/`, `GAME_URL`과 `BROWSER_EXECUTABLE`로 변경합니다. Playwright는 별도 도구 디렉터리에 설치하고 `NODE_PATH`로 연결할 수 있습니다.
+- `npm run test:browser`: 9묶음. Playwright/Edge가 필요하며 기본 주소는 `http://127.0.0.1:8765/`, `GAME_URL`과 `BROWSER_EXECUTABLE`로 변경합니다. Playwright는 별도 도구 디렉터리에 설치하고 `NODE_PATH`로 연결할 수 있습니다.
 
 GitHub Actions는 빌드·회귀·장기 검사를 실행합니다. 실제 브라우저 확인과 공개 배포 근거는 개발 메모에 따로 기록합니다. `?debug=1`의 시험 조작은 일반 플레이 화면과 구분됩니다.
 
