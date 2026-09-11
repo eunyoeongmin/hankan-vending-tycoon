@@ -18,11 +18,13 @@ for module in ['core','operations','commerce','production','equipment','finance'
 for module in ['core','finance','operations','ui']:
     engine+='\n'+(root/('src/management-'+module+'.js')).read_text(encoding='utf-8')
 engine+='\n'+(root/'src/desktop.js').read_text(encoding='utf-8')
+engine+='\n'+(root/'src/city-art.js').read_text(encoding='utf-8')
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/reference.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/desktop.css').read_text(encoding='utf-8')
+css+='\n'+(root/'src/city-art.css').read_text(encoding='utf-8')
 marker="render();if(loadWarning)"
 assert base.count(marker)==1
 out=base.replace(marker,engine+'\n'+marker).replace('</style>',css+'\n</style>',1)

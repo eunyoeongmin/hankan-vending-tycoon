@@ -170,6 +170,24 @@ body.desktop95 .scene-clock{background:#c0c0c0!important;border:2px solid!import
 @media(max-width:650px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 111px;gap:3px}body.office.desktop95 .layout{grid-template-columns:80px minmax(0,1fr);grid-template-rows:minmax(125px,35%) minmax(0,1fr);gap:3px}body.office.desktop95 #desk-nav{grid-column:1;grid-row:1/3;padding:2px}body.office.desktop95 #desk-map{grid-column:2;grid-row:1}body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:2;grid-row:2}body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:80px minmax(0,1fr)}body.office.desktop95 .layout:not([data-window=open]) #desk-map{grid-row:1/3}body.desktop95 #desk-alerts{position:static;pointer-events:auto}body.desktop95 #desk-map .map-wrap{margin:0}body.desktop95 #desk-content{padding:4px}body.desktop95 #desktop-city-status{font-size:11px;padding:2px 4px}body.desktop95 #desktop-task{min-width:100px}body.desktop95 #office-status .stat-value{font-size:12px}body.desktop95 #desk-map #district-controls{padding:1px}}
 @media(max-height:500px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 78px}body.desktop95 #office-register-tabs button{min-height:20px;padding:0 5px}#desktop-taskbar{min-height:23px}}
 
+body.desktop95 #city-readout{display:flex;align-items:center;justify-content:space-between;gap:3px;padding:2px 0;background:#c0c0c0;flex-shrink:0;min-height:25px;font:11px Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif}
+body.desktop95 #city-readout .map-label,body.desktop95 #city-readout .scene-clock{position:static;display:flex;align-items:center;flex-direction:row;gap:6px;max-width:none;background:#c0c0c0!important;color:#000;padding:3px!important;border:1px solid!important;border-color:#808080 #fff #fff #808080!important;min-width:0;border-radius:0!important}
+body.desktop95 #city-readout .map-label #scene-mode{display:none}
+body.desktop95 #city-readout .scene-clock strong{font-size:13px;font-weight:bold}
+body.desktop95 #city-readout .scene-clock span{font-size:11px;margin:0}
+body.desktop95 #desk-map #district-controls{background:#c0c0c0;padding:3px;gap:4px;border:0}
+body.desktop95 #desk-map #district-controls h2{font-size:12px}
+body.desktop95 #desk-map .map-wrap{background:#90a860;border-color:#404040 #fff #fff #404040;aspect-ratio:auto}
+body.office.desktop95 #desk-map .map-pin,body.office.desktop95 #desk-map .map-pin:hover:enabled{transform:translate(-50%,-50%)!important;min-height:20px;max-width:28%;padding:1px 4px;font:11px Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif;background:#c0c0c0;color:#000}
+body.office.desktop95 #desk-map .map-pin.selected{outline:2px solid #000080;outline-offset:1px;background:#000080;color:#fff}
+body.office.desktop95 #desk-map .map-pin.owned:before{content:'■';color:#008000}
+body.office.desktop95 #desk-map .map-pin.rival-pin{background:#808080!important;color:#fff!important}
+body.desktop95 #scene-bubbles rect{rx:0;fill:#ffffc0;stroke:#000;stroke-width:1}
+body.desktop95 #scene-bubbles text{font-family:Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif;fill:#000;font-weight:400}
+body.desktop95 #desk-map .scene-progress-track{background:#808080;border:1px solid;border-color:#404040 #fff #fff #404040;height:7px;border-radius:0}
+body.desktop95 #desk-map .scene-progress-track i{background:#000080;transition:none}
+@media(max-width:650px){body.desktop95 #city-readout{font-size:10px;min-height:22px}body.desktop95 #city-readout .scene-clock span{display:none}body.desktop95 #city-readout .scene-clock strong{font-size:11px}body.office.desktop95 #desk-map .map-pin{font-size:9px;padding:0 2px;min-height:17px}body.desktop95 #desk-map #district-controls h2{display:none}}
+
 </style>
 </head>
 <body>
@@ -417,7 +435,7 @@ function paintDistrict(){const layer=$('district-scenery');if(!layer)return;docu
  if(selectedMap===3){art+=`<path d="M660 0q-60 130 25 190t-15 170h130V0z" fill="${PALETTES[sceneSeason()].water}"/><ellipse cx="390" cy="95" rx="65" ry="30" fill="${PALETTES[sceneSeason()].river}"/>`;for(const [x,y] of [[80,65],[180,95],[350,40],[440,65],[555,88],[150,250],[220,300],[345,272],[430,250],[570,240],[640,310]])art+=`<use href="#tree" x="${x}" y="${y}"/>`;for(const [x,y] of [[100,110],[375,255],[560,120]])art+=`<path d="M${x} ${y+25}l27-37 30 37z" fill="#d5a46d"/><path d="M${x+15} ${y+25}l12-22 15 22z" fill="#f1dcc2"/>`;}
  layer.innerHTML=art;
 }
-function paintScene(time){paintSceneBase(time);if(!$('scene-npc'))return;$('scene-npc').innerHTML=rivalLocations().filter(id=>LOCATIONS[id].map===selectedMap).map(id=>{const [x,y]=STOPS[id%6];return `<g transform="translate(${x} ${y})"><rect x="-10" y="-20" width="21" height="35" rx="3" fill="#73647e"/><rect x="-7" y="-16" width="12" height="18" fill="#c5d3d1"/><text x="0" y="-3" font-size="11" text-anchor="middle" fill="#695271">◆</text><rect x="-5" y="7" width="9" height="4" fill="#3f3845"/></g>`;}).join('');$('scene-workers').innerHTML=state.jobs.filter(j=>LOCATIONS[j.loc].map===selectedMap).map((j,i)=>{const pt=pathPoint(customerPath(j.loc,i),1-j.remaining/j.duration);return `<g>${personSvg(...pt,5,time,false,state.weather===2&&sceneSeason()!==3,sceneSeason()===3)}<text x="${pt[0]}" y="${pt[1]-29}" font-size="10" text-anchor="middle" fill="#28684e">${j.type==='collect'?'$':'▣'}</text></g>`;}).join('');}
+function paintScene(time){paintSceneBase(time);if(!$('scene-npc'))return;$('scene-npc').innerHTML=rivalLocations().filter(id=>LOCATIONS[id].map===selectedMap).map(id=>cityMachine(...STOPS[id%6],'#000080',null)).join('');$('scene-workers').innerHTML=state.jobs.filter(j=>LOCATIONS[j.loc].map===selectedMap).map((j,i)=>{const pt=pathPoint(customerPath(j.loc,i),1-j.remaining/j.duration);return `<g>${personSvg(...pt,5,time,false,state.weather===2&&sceneSeason()!==3,sceneSeason()===3)}<text x="${pt[0]}" y="${pt[1]-29}" font-size="10" text-anchor="middle" fill="#28684e">${j.type==='collect'?'$':'▣'}</text></g>`;}).join('');}
 function initWorld(){menuOpen=true;openModal('menu');$('reset').onclick=()=>{menuOpen=true;openModal(inGameSession?'pause':'menu');};$('game-menu').onclick=()=>{menuOpen=true;openModal(inGameSession?'pause':'menu');};$('scene-report').onclick=()=>{if(state.report)openModal('report');};$('modal').addEventListener('cancel',e=>{if(['menu','pause','newrun','tutorialOffer','tutorial','settings'].includes(modalView)){e.preventDefault();}});}
 document.addEventListener('change',e=>{if(e.target.id==='run-duration')chosenDuration=Number(e.target.value);if(e.target.id==='menu-language')changeLanguage(e.target.value);});
 document.addEventListener('click',e=>{const el=e.target.closest('button');if(!el)return;if(el.dataset.map!==undefined)chooseMap(Number(el.dataset.map));if(el.dataset.staff)hire(el.dataset.staff,Number(el.dataset.delta));if(el.dataset.bank)bankAction(el.dataset.bank);if(el.dataset.job)dispatch(el.dataset.job,Number(el.dataset.loc));if(el.dataset.complaint)respondComplaint(Number(el.dataset.complaint));if(el.dataset.acquire)acquireNpc(Number(el.dataset.acquire));switch(el.id){case'menu-new':openModal('newrun');break;case'menu-load':if(state.started){inGameSession=true;menuOpen=false;closeModal();livePaused=false;if(state.ended)openModal('end');else if(!state.live)startBusiness();render();}break;case'menu-settings':openModal('settings');break;case'menu-back':openModal(inGameSession?'pause':'menu');break;case'launch-new':launchNew();break;case'tutorial-start':tutorialStep=0;openModal('tutorial');break;case'tutorial-next':if(tutorialStep<5){tutorialStep++;drawModal();}else completeTutorial();break;case'tutorial-skip':completeTutorial();break;case'world-pr':worldPr();break;case'accept-offer':acceptOffer();break;}});
@@ -473,7 +491,7 @@ function personSvg(x,y,seed,time,drinking=false,umbrella=false,winter=false){
 function paintSceneBase(time){
  if(!$('scene-people'))return;
  const si=sceneSeason(),wi=state.weather,p=PALETTES[si],l=state.live,clock=l?Math.min(DAY_MS,l.elapsed+businessCarry):time,raining=wi===2&&si!==3,snowing=wi===2&&si===3;
- $('scene-machines').innerHTML=visibleMachines().map(m=>{const [x,y]=STOPS[m.loc%6];return `<g class="scene-vender" transform="translate(${x} ${y})"><ellipse cy="16" rx="13" ry="4" fill="#28423220"/><rect x="-10" y="-20" width="21" height="35" rx="3" fill="${product(m).color}"/><path d="M7-18v31" stroke="#263c3130" stroke-width="4"/><rect x="-7" y="-16" width="12" height="19" rx="1" fill="#d9e9d6" stroke="#405d57" stroke-width="1.7"/><path d="M-4-12v4m5-4v4m-5 3v4m5-4v4" stroke="${m.stock?'#edb856':'#95a5a0'}" stroke-width="3"/><rect x="-6" y="7" width="10" height="4" rx="1" fill="#344c45"/><circle cx="8" cy="3" r="1.5" fill="${m.stock?'#c9f79a':'#fa856c'}"/>${!m.stock?'<path d="M-5-11l8 8m0-8l-8 8" stroke="#c65b4b" stroke-width="1.5"/>':''}</g>`;}).join('');
+ $('scene-machines').innerHTML=visibleMachines().map(m=>cityMachine(...STOPS[m.loc%6],product(m).color,m.stock)).join('');
  const people=[],bubbles=[];
  if(sceneMotion){for(let i=0;i<7;i++){const progress=((time/23000+i/7)%1),route=i%2?[[280,-25],[280,180],[825,180]]:[[-25,180],[510,180],[510,365]],pt=pathPoint(route,progress);people.push({y:pt[1],svg:personSvg(...pt,i,clock,false,raining,si===3)});}}
  if(l){const total=l.rows.reduce((n,r)=>n+r.n,0),stride=Math.max(1,Math.ceil(total/150));for(const r of sceneCustomerRows(l).filter(r=>LOCATIONS[r.loc].map===selectedMap)){for(let i=0;i<r.n;i++){if(state.enterprise.operations?.market&&!state.enterprise.operations.market.legacy&&!r.bought.some(b=>b.i===i))continue;if(i%stride!==0&&i!==r.n-1)continue;const due=sceneCustomerDue(r,i),age=clock-due;if(age< -3000||age>2200)continue;const seed=r.loc*43+i,route=customerPath(r.loc,seed),t=age<0?(age+3000)/3000:age<650?1:1-(age-650)/1550,pt=pathPoint(route,sceneMotion?t:1);people.push({y:pt[1],svg:personSvg(...pt,seed,clock,age>=0&&age<650,raining,si===3)});if(age>=0&&age<1200&&r.bought?.some(b=>b.i===i)){bubbles[r.loc]=(`<g transform="translate(${STOPS[r.loc%6][0]} ${STOPS[r.loc%6][1]-30-(sceneMotion?age/60:0)})" opacity="${Math.max(0,1-age/1200)}"><rect x="-28" y="-12" width="56" height="18" rx="8" fill="#fffef4"/><text text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="700" fill="#37765c">+${money(r.bought.find(b=>b.i===i).price)}</text></g>`);}}
@@ -481,11 +499,7 @@ function paintSceneBase(time){
  }}
  $('scene-people').innerHTML=people.sort((a,b)=>a.y-b.y).slice(0,65).map(p=>p.svg).join('');$('scene-bubbles').innerHTML=bubbles.slice(-22).join('');
  const afternoon=l?Math.max(0,(clock/DAY_MS-.5)*2):0;$('scene-tint').setAttribute('fill',wi===2?'#43566f':afternoon>.55?'#694e80':'#efaa65');$('scene-tint').setAttribute('opacity',String(wi===2?.14:afternoon*.20));
- let weather='';const fallTime=sceneMotion?clock:0;if(raining){for(let i=0;i<65;i++){const x=(i*137+fallTime*.025)%850-25,y=(i*71+fallTime*.30)%390-25;weather+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l-4 13" stroke="#dceaf4" stroke-width="1.3" opacity=".8"/>`;}}
- else if(snowing||si===0||si===2){const count=snowing?55:22;for(let i=0;i<count;i++){const x=(i*149+Math.sin(fallTime/1500+i)*18+fallTime*.012)%850-25,y=(i*89+fallTime*(snowing?.035:.021))%390-25;weather+=snowing?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${1.4+i%3*.5}" fill="#fff" opacity=".85"/>`:`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3.4" ry="1.5" transform="rotate(${i*37+fallTime/25} ${x} ${y})" fill="${p.particle}" opacity=".8"/>`;}}
- if(wi===0||wi===1)weather+=`<circle cx="725" cy="41" r="${wi===1?22:16}" fill="#ffe8a3" opacity=".8"/><circle cx="725" cy="41" r="${wi===1?31:23}" fill="#ffe8a3" opacity=".17"/>`;
- if(wi>=2){const drift=sceneMotion?Math.sin(clock/12000)*30:0;weather+=`<g transform="translate(${drift} 0)" fill="${wi===2?'#8e9faa':'#c2ced0'}" opacity=".32"><ellipse cx="700" cy="28" rx="74" ry="14"/><ellipse cx="680" cy="17" rx="30" ry="15"/><ellipse cx="112" cy="28" rx="62" ry="13"/></g>`;}
- $('scene-weather').innerHTML=weather;
+ $('scene-weather').innerHTML=cityWeather(clock,si,wi);
 }
 function sceneTick(now){
  if(industryEnabled()&&inGameSession&&state.pending&&!modalView&&!menuOpen&&!state.ended)openModal('event');
@@ -2588,6 +2602,61 @@ document.addEventListener('click',event=>{
 });
 deskSide.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modalView){event.preventDefault();setDesktopWindow('minimized');$('desktop-task').focus();}});
 updateDesktop();
+
+/* Code-native city tiles share the existing stop coordinates and simulation layers. */
+const CITY_COLORS=[
+ {land:'#a8b878',park:'#709850',leaf:'#b86890',leafLight:'#e8a8c0',river:'#385878',water:'#5898b0',road:'#707878',roof:'#a85848',particle:'#e8a8c0'},
+ {land:'#90a860',park:'#507838',leaf:'#386838',leafLight:'#709848',river:'#305878',water:'#4888a8',road:'#707878',roof:'#a85840',particle:'#e0c868'},
+ {land:'#b0a068',park:'#908048',leaf:'#985030',leafLight:'#c89040',river:'#405870',water:'#608898',road:'#707878',roof:'#885040',particle:'#d09840'},
+ {land:'#c8d0d0',park:'#a8b8b8',leaf:'#708888',leafLight:'#e0e8e8',river:'#486878',water:'#90b0c0',road:'#707878',roof:'#c0d0d0',particle:'#ffffff'}
+];
+CITY_COLORS.forEach((p,i)=>Object.assign(PALETTES[i],p));
+function cityTree(x,y){return `<g transform="translate(${x} ${y})"><path d="M-12 8h28v5h-28z" fill="#384838"/><path d="M-2-3h5v17h-5z" fill="#685038"/><path d="M-6-28h12v5h7v7h5v13H-18v-13h5v-7h7z" fill="var(--scene-leaf)" stroke="#384838" stroke-width="2"/><path d="M-7-24h12v5h-10v10h-9v-7h7z" fill="var(--scene-leafLight)"/></g>`;}
+function cityBuilding(x,y,w,h,roof,label,floors=2){
+ let windows='';for(let row=0;row<floors;row++)for(let col=0;col<Math.floor((w-16)/14);col++)windows+=`<rect x="${8+col*14}" y="${18+row*14}" width="7" height="8" fill="var(--scene-windows,#d8e0c0)" stroke="#484848" stroke-width="2"/>`;
+ return `<g transform="translate(${x} ${y})"><path d="M8 8h${w}v${h}H8z" fill="#384838"/><rect width="${w}" height="${h}" fill="#b8b0a0" stroke="#383838" stroke-width="2"/><path d="M${w-9} 1h8v${h-2}h-8z" fill="#808078"/><path d="M0 0h${w}v12H0z" fill="${roof}" stroke="#383838" stroke-width="2"/><path d="M3 3h${w-6}" stroke="#d0c8b0" stroke-width="2"/>${windows}<rect x="${w-25}" y="${h-20}" width="14" height="20" fill="#485868" stroke="#383838" stroke-width="2"/><rect x="5" y="${h-19}" width="${Math.max(24,w-35)}" height="13" fill="#c0c0c0" stroke="#484848"/><text x="9" y="${h-9}" font-size="9" fill="#000" font-family="Tahoma, sans-serif">${label}</text></g>`;
+}
+function cityRoads(){return `<path d="M0 180H800M280 0V340M510 0V340" stroke="#484848" stroke-width="40"/><path d="M0 180H800M280 0V340M510 0V340" stroke="#b8b8b0" stroke-width="36"/><path d="M0 180H800M280 0V340M510 0V340" stroke="var(--scene-road)" stroke-width="26"/><path d="M0 180H800M280 0V340M510 0V340" stroke="#e0d890" stroke-width="2" stroke-dasharray="10 10"/>${[280,510].map(x=>`<path d="M${x-26} 168v24m52-24v24" stroke="#e0e0d0" stroke-width="9" stroke-dasharray="3 3"/>`).join('')}`;}
+function cityScenery(map){
+ const p=PALETTES[sceneSeason()];let art=`<rect width="800" height="340" fill="${p.land}"/><defs><pattern id="city-grid" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M0 0h2v2H0z" fill="#485838" opacity=".25"/></pattern></defs><rect width="800" height="340" fill="url(#city-grid)"/>`;
+ if(map===4)art+=`<rect width="800" height="65" fill="${p.water}"/><path d="M0 57h800" stroke="#484848" stroke-width="12"/><path d="M0 52h800" stroke="#c0c0b0" stroke-width="3"/><path d="M30 14h120m45 18h108m250-18h130" stroke="#b0c8c8" stroke-width="2"/>`;
+ else art+=`<path d="M685 0v90h35v100h-30v150" fill="none" stroke="${p.river}" stroke-width="64"/><path d="M685 0v90h35v100h-30v150" fill="none" stroke="${p.water}" stroke-width="52"/><path d="M676 20v50m35 35v45m-30 85v55" stroke="#b0c8c8" stroke-width="2"/>`;
+ art+=cityRoads();
+ const titles=map===1?[T('사무소','事務所'),T('본사','本社'),T('상가','店舗')]:map===2?[T('역','駅'),T('시장','市場'),T('백화점','百貨店')]:map===3?[T('호텔','ホテル'),T('박물관','博物館'),T('매표소','切符売場')]:map===4?[T('창고','倉庫'),T('물류','物流'),T('공장','工場')]:[T('주택','住宅'),T('대학','大学'),T('사무소','事務所')];
+ if(map===0||map===3){art+=`<rect x="40" y="26" width="192" height="124" fill="${p.park}" stroke="#485838" stroke-width="2"/><path d="M48 130h170V65h-90v57" stroke="#c8b888" stroke-width="10" fill="none"/><rect x="66" y="46" width="70" height="35" fill="${p.water}" stroke="#485838" stroke-width="2"/>`;for(const [x,y] of [[55,110],[170,55],[216,110],[155,141]])art+=cityTree(x,y);}
+ else art+=cityBuilding(60,map===4?88:35,140,map===4?55:96,'#586880',titles[0],map===4?1:4);
+ art+=cityBuilding(330,map===4?84:36,110,map===4?63:98,map===4?'#686868':'#805848',titles[1],map===4?2:4);
+ art+=cityBuilding(550,map===4?84:45,84,map===4?63:91,'#586878',titles[2],map===4?2:4);
+ art+=cityBuilding(112,222,94,72,'var(--scene-roof)',titles[0],2);
+ art+=cityBuilding(340,224,100,66,'#587068',map===4?titles[2]:T('역','駅'),2);
+ art+=cityBuilding(555,221,68,54,'var(--scene-roof)',titles[0],1);
+ for(const [x,y] of [[38,275],[235,270],[320,305],[650,305],[757,85],[755,273]])art+=cityTree(x,y);
+ if(map===2)art+=`<path d="M35 5h580m-580 7h580" stroke="#383838" stroke-width="3"/><path d="M35 0h580" stroke="#786850" stroke-width="20" stroke-dasharray="3 12"/><rect x="344" y="0" width="120" height="19" fill="#b8b8a8" stroke="#383838"/><path d="M354 6h95" stroke="#285878" stroke-width="6"/>`;
+ if(map===4)art+=`<path d="M358 15h124l-16 25h-96z" fill="#485878" stroke="#282828" stroke-width="2"/><rect x="392" y="6" width="38" height="16" fill="#c0c0b0"/><path d="M620 54V8h58M624 12l42 40" fill="none" stroke="#a88838" stroke-width="5"/>`;
+ return art;
+}
+let cityArtKey='';
+paintDistrict=function(){const key=selectedMap+':'+sceneSeason()+':'+lang;if(cityArtKey===key)return;cityArtKey=key;document.querySelector('.city-base').style.display='none';$('district-scenery').innerHTML=cityScenery(selectedMap);};
+personSvg=function(x,y,seed,time,drinking=false,umbrella=false,winter=false){
+ const shirt=['#a83838','#305888','#688038','#784878','#b88828','#287870'][seed%6],step=sceneMotion&&!drinking?(Math.floor(time/160+seed)%2?2:-2):0;
+ return `<g class="scene-person" transform="translate(${Math.round(x)} ${Math.round(y)})"><path d="M-5 1h12v3H-5z" fill="#484848"/><path d="M-4-5v${9+step}h3v-9h2v${9-step}h3V-5z" fill="#283040"/><path d="M-5-15h10v12H-5z" fill="${shirt}" stroke="#282828"/><path d="M-4-22h8v7H-4z" fill="#d8a878"/><path d="M-4-24h8v3H-4z" fill="#483828"/><path d="M-7-13v8m14-8v${drinking?-6:8}" stroke="#d8a878" stroke-width="3"/>${winter?'<path d="M-5-15h10v3H1v6h-3v-9z" fill="#d8c078"/>':''}${drinking?'<rect x="5" y="-23" width="5" height="7" fill="#e0c848" stroke="#fff"/>':''}${umbrella?`<path d="M0-28v16" stroke="#282828" stroke-width="2"/><path d="M-12-27v-5h5v-4H7v4h5v5z" fill="${shirt}" stroke="#282828"/>`:''}</g>`;
+};
+function cityMachine(x,y,color,stock){return `<g class="scene-vender" transform="translate(${x} ${y})"><path d="M-10 14h25v4h-25z" fill="#484848"/><rect x="-11" y="-23" width="23" height="38" fill="#c0c0c0" stroke="#282828" stroke-width="2"/><path d="M-9-21h16v4H-9z" fill="${color}"/><path d="M9-21v34" stroke="#808080" stroke-width="3"/><rect x="-8" y="-15" width="14" height="19" fill="#283848" stroke="#808080"/><path d="M-5-12v5m6-5v5m-6 3v5m6-5v5" stroke="${stock?'#e0c058':'#808080'}" stroke-width="3"/><rect x="-6" y="8" width="12" height="4" fill="#282828"/><rect x="8" y="3" width="2" height="3" fill="${stock===null?'#808080':stock?'#00a000':'#c00000'}"/>${stock!==null&&!stock?'<path d="M-6-10l10 10m0-10L-6 0" stroke="#c00000" stroke-width="2"/>':''}</g>`;}
+const cityBeforePaint=paintScene;
+paintScene=function(time){cityBeforePaint(time);paintDistrict();};
+function cityWeather(clock,season,weather){
+ const t=sceneMotion?clock:0,snow=weather===2&&season===3,rain=weather===2&&!snow;let art='';
+ if(rain||snow||season===0||season===2){const count=rain?65:snow?55:22;for(let i=0;i<count;i++){const x=Math.round((i*149+t*.012)%850-25),y=Math.round((i*89+t*(rain?.3:snow?.035:.021))%390-25);art+=rain?`<path d="M${x} ${y}v6h-2v6" fill="none" stroke="#b0d0e0" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="${snow?2:4}" height="2" fill="${snow?'#fff':PALETTES[season].particle}"/>`;}}
+ if(weather<2)art+=`<path d="M715 20h20v5h5v20h-5v5h-20v-5h-5V25h5z" fill="${weather===1?'#e8a828':'#e0c858'}" stroke="#907028" stroke-width="2"/><path d="M725 12v5m0 36v5m-23-23h5m36 0h5" stroke="#e0c858" stroke-width="2"/>`;
+ else {const drift=sceneMotion?Math.round(Math.sin(clock/12000)*25):0;art+=`<g transform="translate(${drift} 0)" fill="${rain?'#788898':'#b0b8b8'}" stroke="#586870" stroke-width="2"><path d="M630 26h12V16h25V8h30v8h30v10h22v12H630z"/><path d="M60 24h15V14h28v6h30v8h18v10H60z"/></g>`;}
+ return art;
+}
+// Keep map information out of the scene so small viewports retain usable city space.
+const cityReadout=document.createElement('div');cityReadout.id='city-readout';
+cityReadout.append(document.querySelector('.map-label'),document.querySelector('.scene-clock'));
+document.querySelector('.map-wrap').before(cityReadout);
+document.querySelector('.city').setAttribute('shape-rendering','crispEdges');
+paintDistrict();
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 
