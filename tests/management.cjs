@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualC
 const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8');
 function create(raw){const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));const dom=new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;if(raw)w.localStorage.setItem('hankan-tycoon-v1',raw);}});return {dom,errors,ev:s=>dom.window.eval(s)};}
 const {dom,errors,ev}=create();
-ev('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:0,supply:0};launchNew();window.f=playerFirm();window.h=refHome(f);');
+ev('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:0,supply:0};mgStartOptions.automation=true;mgStartOptions.review=true;launchNew();window.f=playerFirm();window.h=refHome(f);');
 assert.ok(ev('mgEnabled()&&refWorld().management.free&&state.continued'));
 assert.equal(ev('mgDateText()'),'2000-01-01');assert.equal(ev('mgDateText(60)'),'2000-02-29');assert.equal(ev('mgDateText(mgAddMonths(31,1))'),'2000-02-29');assert.equal(ev('mgDateText(mgAddMonths(31,2))'),'2000-03-31');assert.equal(ev('sceneSeason()'),3);
 assert.ok(ev('valid(state)'));
@@ -14,7 +14,7 @@ for(const lang of ['ko','ja']){ev(`changeLanguage('${lang}')`);for(const tab of 
 assert.deepEqual(errors,[]);dom.window.close();
 // Default funding, untouched one-machine policy: no scripted money/stock/collection or purchases.
 for(const seed of [7,19473,731293]){
- const g=create();g.ev(`profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:${seed===731293?3:0},supply:${seed===731293?2:0}};launchNew();state.enterprise.rng=${seed};render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
+ const g=create();g.ev(`profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:${seed===731293?3:0},supply:${seed===731293?2:0}};mgStartOptions.automation=true;mgStartOptions.review=true;launchNew();state.enterprise.rng=${seed};render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
  const days=Number(process.env.MANAGEMENT_DAYS||731);
  for(let n=0;n<days&&!g.ev('state.ended');n++){
   g.ev('if(state.pending){resolveEvent(1);if(state.pending&&state.businessEvents?.pending)state.businessEvents.pending.deferred=true;}if(modalView)closeModal();livePaused=false;if(!state.live)startBusiness();advanceBusiness(DAY_MS);');

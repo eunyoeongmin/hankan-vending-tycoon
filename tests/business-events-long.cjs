@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM,VirtualC
 const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8');
 for(const seed of [7,19473]){
  const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));const dom=new JSDOM(html,{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;}}),ev=s=>dom.window.eval(s);
- ev(`profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:3,supply:1};launchNew();state.cash=5000000;state.enterprise.rng=${seed};refWorld().management.pauseMonth=false;render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
+ ev(`profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:3,supply:1};mgStartOptions.automation=true;mgStartOptions.review=true;launchNew();state.cash=5000000;state.enterprise.rng=${seed};refWorld().management.pauseMonth=false;render=()=>{};save=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};`);
  let decisions=0;
  for(let i=0;i<365&&!ev('state.ended');i++){
   const previous=ev('state.day');

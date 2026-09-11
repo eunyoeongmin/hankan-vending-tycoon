@@ -22,7 +22,9 @@ function mgInitialize(migration=false){
  }
  return true;
 }
-function launchManagement(){launchReference();mgInitialize();businessCarry=0;save();render();}
+let mgStartOptions={automation:false,review:false,running:false};
+function launchManagement(){launchReference();mgInitialize();Object.assign(mgFirm(playerFirm()),{enabled:mgStartOptions.automation,review:mgStartOptions.review});livePaused=!mgStartOptions.running;businessCarry=0;if(modalView==='tutorialOffer')drawModal();save();render();}
+const mgTutorialBefore=completeTutorial;completeTutorial=function(){mgTutorialBefore();if(mgEnabled()){livePaused=!mgStartOptions.running;render();}};
 launchNew=launchManagement;
 chosenDuration=36500;
 

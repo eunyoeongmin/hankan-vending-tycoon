@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),make=require('./management-harness.cjs');
+const g=make(),ev=g.ev;
+ev('profile.tutorialSeen=true;setupRules={...STANDARD_RULES,events:0,supply:0};launchNew();window.f=playerFirm();window.r=refFirm(f);');
+assert.ok(ev('livePaused&&!mgFirm(f).enabled&&!mgFirm(f).review'));
+assert.equal(ev('r.work.length'),0);
+ev('for(const m of f.machines){for(const s of m.slots){s.batches=[];refSyncBucket(s,true);}syncMachine(m);}render=()=>{};refreshLiveNumbers=()=>{};toast=()=>{};closeModal();livePaused=false;advanceBusiness(DAY_MS);');
+assert.equal(ev('r.work.filter(j=>j.kind==="purchase"||j.kind==="route").length'),0,'running the clock must not enable automatic purchasing or dispatch');
+ev('save()');let re=make(ev('localStorage.getItem(KEY)'));assert.ok(re.ev('!loadWarning&&!mgFirm(playerFirm()).enabled&&!mgFirm(playerFirm()).review'));re.dom.window.close();
+ev('mgFirm(f).enabled=true;mgFirm(f).review=true;mgOperate(f);');assert.ok(ev('r.work.some(j=>j.kind==="purchase")'),'explicit opt-in places real orders');
+ev('mgFirm(f).enabled=false;companyReceive(f,DAY_MS*4);');assert.ok(ev('f.ops.warehouse.some(b=>b.qty>0)'),'accepted purchase arrives even after automation is stopped');
+ev('mgFirm(f).enabled=true;save()');re=make(ev('localStorage.getItem(KEY)'));assert.ok(re.ev('!loadWarning&&mgFirm(playerFirm()).enabled&&mgFirm(playerFirm()).review'),'existing opted-in save remains opted in');re.dom.window.close();
+ev('state.eventsResolved=137;renderEvents()');assert.match(ev("$('event-panel').querySelector('.tag').textContent"),/137/);assert.ok(!ev("$('event-panel').querySelector('.tag').textContent.includes('40')"));
+assert.deepEqual(g.errors,[]);g.dom.window.close();
+const t=make();t.ev('launchNew()');assert.match(t.ev("$('modal-body').textContent"),/시간 설정/);for(const language of ['ko','ja'])for(let step=0;step<6;step++){t.ev(`lang='${language}';tutorialStep=${step};openModal('tutorial')`);assert.equal(t.ev("$('modal-body').querySelector('p').textContent"),t.ev(`tr(mgLessons[${step}])`));}t.ev('completeTutorial()');assert.ok(t.ev('livePaused&&!mgFirm(playerFirm()).enabled'),'tutorial completion respects paused start');t.dom.window.close();
+const opted=make();opted.ev('mgStartOptions={automation:true,review:true,running:true};launchNew();completeTutorial()');assert.ok(opted.ev('!livePaused&&mgFirm(playerFirm()).enabled&&mgFirm(playerFirm()).review'));opted.dom.window.close();
+console.log('PASS onboarding: manual/paused defaults, clock does not auto-order, opt-in real purchase, accepted delivery survives stop, both saved policies retained, cumulative event count and tutorial pause');
