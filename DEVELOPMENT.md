@@ -1,10 +1,10 @@
 # 자판기 게임 개발 현황
 
-마지막 대조: **2026-09-11 / 10.2.1 민원 수정·이벤트 대조 / `main`**.
+마지막 대조: **2026-09-11 / 10.2.1 공개 배포·이벤트 대조 / `main`**.
 
 **현재 위치: 고객 민원의 자동 벌금/기기 삭제를 제거했습니다. 과거 이벤트 후보는 아직 부분 구현이며, 기반 시스템만으로 완료 표시했던 범위를 바로잡습니다.**
 
-## 10.2.1 민원 수정·이벤트 대조 완료 조건
+## 10.2.1 공개 배포·이벤트 대조 완료 조건
 
 - [x] 일반 민원 미처리의 벌금·강제 삭제 제거. 재고·보관금·기기 유지.
 - [x] 기한 초과 평판 -3은 민원당 한 번. 미처리 고객 선호 -15%, 지연 시 -30%, 대응하면 해제. 실제 판매 감소율은 경쟁/가격 등에 따라 달라짐.
@@ -13,7 +13,8 @@
 - [ ] 원인/대상/대응/지연 결과로 연결되는 후보 이벤트 전체 구현. 이번에 추가한 선택 이벤트 없음.
 - [x] 기존 19묶음+민원 전용 검사 통과. 40일 방치에도 기기/재고/보관금/현금 보존, 지연 평판 1회, 기존 stage=1 저장 대응 확인.
 - [x] 실제 브라우저 management/desktop 검사 통과 (KO/JA, 4화면, 시계·메뉴·노드 안정성).
-- [ ] 공개 게임 반영 및 배포 HTML 대조.
+- [x] 공개 게임 반영·HTTP 200·검증 HTML 일치 확인 (Sites 24).
+- [x] 배포 소스의 [GitHub 전체 회귀·장기 시뮬레이션 검사 성공](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34547601027), 2분 46초.
 
 ## 10.2 도시 디자인 통일 완료 조건
 
@@ -158,11 +159,11 @@
 
 - 공개 게임: [한 칸 상회](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - 공개 소스: [GitHub](https://github.com/eunyoeongmin/hankan-vending-tycoon)
-- 현재 공개 게임은 **10.2.0 / Sites 23**, [배포 소스 c2d0d60](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/c2d0d60359a44ee79bb5a1adfd9d5b9eedfb1055).
-- 배포 `appgdep_6aa34a06c6808191bfcf66a7f58a7851` 상태 `succeeded`, 2026-09-11 00:23 UTC 확인. 공개 URL HTTP 200과 검증 HTML 일치 확인. 호스팅 보안 스크립트 938바이트만 추가됩니다.
-- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_130a21beedb881919af962d48f88d78f`.
-- 게임 HTML SHA-256: `207A8B842AD3B2E62ACAF72F0E042854EA96982EE756B21C98E4974542BC1440`.
-- 배포 후 메모 갱신 커밋은 위 공개 게임 코드 변경과 구분합니다. [검증 기록](docs/VALIDATION_10.2.0.md).
+- 현재 공개 게임은 **10.2.1 / Sites 24**, [배포 소스 d18a91b](https://github.com/eunyoeongmin/hankan-vending-tycoon/commit/d18a91b29a28bdf5ad47c3f343279727be504484).
+- 배포 `appgdep_6aa34e817a80819198d560236c7d7a88` 상태 `succeeded`, 2026-09-11 00:43 UTC 확인. 공개 URL HTTP 200과 검증 HTML 일치 확인. 호스팅 보안 스크립트 938바이트만 추가됩니다.
+- 배포 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_c30f50378bf48191831b83c57d36b18c`.
+- 게임 HTML SHA-256: `1C40DF9BE23694716D05F17B6300D94BBF0F91C5247D36FE4EE7B545B8C43B1F`.
+- 배포 후 메모 갱신 커밋은 위 공개 게임 코드 변경과 구분합니다. 10.2.1 검사 근거는 이 문서 상단 및 tests/complaints.cjs에 기록합니다.
 
 
 ## 이전 9.0 완료 조건 (10.0은 상단 기준)
