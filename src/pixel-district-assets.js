@@ -42,3 +42,48 @@ sprite('stall-closed',44,42,p=>{p.poly([[7,28],[29,39],[38,34],[16,23]],'steel',
 function snowRoof(name,base){const s=SPRITES[base];sprite(name,s.w,s.h,p=>{p.c.drawImage(s.canvas,0,0);const img=p.c.getImageData(0,0,s.w,s.h);for(let y=0;y<s.h*.48;y++)for(let x=0;x<s.w;x++){const i=(y*s.w+x)*4;if(!img.data[i+3])continue;const col=(img.data[i]<<16)|(img.data[i+1]<<8)|img.data[i+2];if([PAL.steel,PAL.brick,PAL.mist].some(c=>parseInt(c.slice(1),16)===col)&&((x+y)%5!==0)){img.data[i]=226;img.data[i+1]=225;img.data[i+2]=199;}}p.c.putImageData(img,0,0);},s.ax,s.ay);}
 sprite('train',95,48,p=>{p.poly([[2,14],[71,48],[92,37],[24,3]],'shade');p.poly([[3,7],[72,41],[72,46],[3,12]],'cream','ink');p.poly([[3,7],[23,0],[92,34],[72,41]],'white','ink');p.poly([[72,41],[92,34],[92,40],[72,46]],'steel','ink');p.line(4,14,70,46,'blue');for(let i=0;i<8;i++)p.poly([[8+i*8,10+i*4],[13+i*8,12+i*4],[13+i*8,17+i*4],[8+i*8,15+i*4]],'blue','ink');},48,42);
 sprite('boat',100,56,p=>{p.poly([[1,22],[59,51],[97,34],[75,41],[14,11]],'deep','ink');p.poly([[9,19],[65,46],[90,34],[34,7]],'mist','ink');p.poly([[31,16],[61,31],[73,25],[43,10]],'white','shade');p.poly([[31,16],[61,31],[61,38],[31,23]],'steel','shade');p.poly([[34,19],[58,31],[58,35],[34,23]],'blue');p.rect(49,7,5,14,'brick');p.line(1,29,53,55,'glass');},49,48);
+
+// Distinct silhouettes for the business district, on the same native raster grid.
+block('tech-base',60,38,103,'glass');
+sprite('tech-tower',122,164,p=>{p.c.drawImage(SPRITES['tech-base'].canvas,0,8);p.poly([[39,8],[68,22],[91,10],[62,0]],'steel','ink');p.line(61,0,61,20,'white');p.line(29,42,29,109,'glass');p.line(33,44,33,112,'cyan');p.poly([[19,112],[47,126],[65,117],[38,104]],'glass','ink');},68,160);
+block('night-office',74,40,80,'brick');
+block('media-base',77,47,60,'studio');
+sprite('media',150,139,p=>{p.c.drawImage(SPRITES['media-base'].canvas,0,15);p.line(64,27,64,7,'deep');p.poly([[44,5],[52,0],[77,10],[71,28],[56,23]],'white','shade');p.line(57,10,81,1,'deep');p.poly([[27,85],[64,103],[64,111],[27,93]],'navy','ink');for(let i=0;i<5;i++)p.rect(32+i*5,88+i*2.5,3,3,'white');},85,137);
+sprite('convention',176,110,p=>{
+ p.poly([[5,67],[109,119],[166,89],[62,37]],'shade');
+ p.poly([[7,47],[106,97],[106,110],[7,60]],'glass','ink');p.poly([[106,97],[164,68],[164,82],[106,110]],'blue','ink');
+ p.poly([[5,47],[25,17],[55,4],[163,58],[164,68],[106,97]],'steel','ink');
+ for(let i=0;i<12;i++){const x=8+i*8;p.line(x,46+i*4,x+20,18+i*4,'white');p.line(x+20,18+i*4,x+48,5+i*4,'mist');}
+ for(let i=0;i<9;i++)p.line(14+i*10,53+i*5,14+i*10,62+i*5,'white');
+ },106,108);
+sprite('central-station',163,113,p=>{
+ p.poly([[6,61],[104,110],[156,84],[58,35]],'shade');
+ p.poly([[8,41],[104,89],[104,104],[8,56]],'cream','ink');p.poly([[104,89],[151,65],[151,81],[104,104]],'steel','ink');
+ p.poly([[5,41],[53,17],[155,64],[104,89]],'steel','ink');
+ for(let i=0;i<10;i++)p.line(12+i*9,41+i*4.5,53+i*9,21+i*4.5,'mist');
+ p.poly([[26,49],[53,62],[53,28],[26,15]],'mist','ink');p.poly([[53,62],[77,50],[77,16],[53,28]],'shade','ink');
+ p.poly([[26,15],[49,3],[77,16],[53,28]],'navy','ink');
+ p.rect(36,27,13,16,'ink');p.rect(37,28,11,14,'white');p.line(42,30,42,35,'ink');p.line(42,35,46,37,'ink');
+ for(let i=0;i<4;i++)p.poly([[59+i*10,69+i*5],[67+i*10,73+i*5],[67+i*10,89+i*5],[59+i*10,85+i*5]],'navy','ink');
+ p.poly([[8,54],[100,100],[107,95],[15,49]],'navy','ink');
+ },104,104);
+sprite('platform-roof',97,65,p=>{for(const [x,y]of [[10,28],[76,61]]){p.line(x,y,x,y-21,'deep');p.line(x+1,y,x+1,y-21,'mist');}p.poly([[3,8],[70,42],[94,30],[27,0]],'mist','ink');p.line(3,8,70,42,'white');p.line(70,42,94,30,'steel');},72,62);
+sprite('commuter-train',94,72,p=>{
+ p.poly([[3,23],[69,56],[91,45],[25,12]],'white','ink');
+ p.poly([[3,23],[69,56],[69,70],[3,37]],'mist','ink');p.poly([[69,56],[91,45],[91,59],[69,70]],'steel','ink');
+ p.line(4,35,67,67,'blue');p.line(4,36,67,68,'blue');
+ for(let i=0;i<6;i++){let x=7+i*10,y=26+i*5;p.poly([[x,y],[x+7,y+3],[x+7,y+10],[x,y+7]],'navy','ink');p.line(x+1,y+1,x+6,y+3,'glass');}
+ p.poly([[73,56],[87,49],[87,57],[73,64]],'navy','ink');p.dot(75,65,'yellow');p.dot(86,60,'yellow');
+ for(const x of [13,54]){p.rect(x,42+(x-13)/2,6,4,'ink');}
+ },47,58);
+sprite('planter',35,27,p=>{p.poly([[2,13],[20,22],[33,15],[15,6]],'grass','ink');p.poly([[2,13],[20,22],[20,27],[2,18]],'steel','ink');p.poly([[20,22],[33,15],[33,20],[20,27]],'shade','ink');for(let i=0;i<7;i++)p.rect(7+i*3,8+(i%3)*2,4,4,'leaf');},20,26);
+sprite('directory',21,43,p=>{p.rect(4,4,14,36,'steel','ink');p.rect(5,5,12,18,'navy');for(let y=8;y<21;y+=4)p.rect(7,y,8,1,'white');p.rect(6,27,10,8,'glass');},11,40);
+sprite('poster',21,33,p=>{p.rect(2,0,17,26,'ink');p.rect(3,1,15,24,'mist');p.rect(5,3,11,12,'brick');p.rect(7,5,5,6,'gold');for(let y=18;y<23;y+=3)p.rect(5,y,11,1,'navy');p.line(5,26,2,32,'deep');p.line(16,26,19,32,'deep');},10,31);
+sprite('ticket',24,32,p=>{p.rect(3,4,17,26,'navy');p.rect(4,5,15,7,'blue');p.rect(6,7,10,3,'white');p.rect(5,15,8,7,'glass');p.rect(15,17,3,3,'gold');p.rect(7,25,10,2,'ink');},12,30);
+paletteCopy('atm','ticket',{navy:'leaf',blue:'grass'});
+sprite('kiosk',46,44,p=>{p.poly([[4,21],[27,33],[27,43],[4,31]],'cream','ink');p.poly([[27,33],[43,25],[43,35],[27,43]],'brick','ink');p.poly([[1,20],[25,32],[45,22],[21,10]],'leaf','ink');p.poly([[6,26],[23,34],[23,39],[6,31]],'glass');p.poly([[5,14],[21,22],[21,28],[5,20]],'navy','ink');},25,42);
+sprite('cafe-table',36,35,p=>{p.line(17,19,17,32,'deep');p.poly([[3,16],[19,24],[33,17],[17,9]],'white','ink');p.rect(15,13,4,6,'red');p.line(3,22,3,31,'deep');p.line(28,24,28,33,'deep');},18,32);
+sprite('bus-stop',25,47,p=>{p.rect(11,5,2,40,'deep');p.rect(3,2,20,15,'white');p.rect(5,4,16,7,'blue');p.rect(6,13,12,2,'navy');p.rect(7,21,12,16,'cream');for(let y=24;y<35;y+=3)p.rect(9,y,8,1,'deep');},12,44);
+sprite('fountain',63,44,p=>{p.poly([[3,22],[30,36],[60,21],[32,7]],'mist','ink');p.poly([[7,21],[30,32],[55,20],[32,10]],'blue','shade');p.line(30,26,30,8,'white');p.line(30,8,22,18,'glass');p.line(30,8,40,18,'glass');p.poly([[3,22],[30,36],[30,42],[3,28]],'steel','ink');p.poly([[30,36],[60,21],[60,27],[30,42]],'shade','ink');},30,40);
+sprite('broadcast-van',77,57,p=>{p.c.drawImage(SPRITES.bus.canvas,0,13);p.poly([[26,7],[33,2],[47,8],[41,20],[32,18]],'mist','ink');p.line(35,12,52,0,'deep');},36,50);
+for(const dir of ['ne','nw','se','sw'])for(let f=0;f<4;f++)paletteCopy('customer-suit-'+dir+'-'+f,'customer-'+dir+'-'+f,{brick:'navy',red:'steel'});

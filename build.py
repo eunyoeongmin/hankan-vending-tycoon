@@ -21,7 +21,7 @@ engine+='\n'+(root/'src/desktop.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/city-art.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/iso-city.js').read_text(encoding='utf-8')
 engine+='\n;(()=>{if(typeof window.CanvasRenderingContext2D===\"undefined\")return;\n'
-for part in ['art-lab/assets','pixel-district-assets','pixel-world','pixel-traffic','pixel-city']:
+for part in ['art-lab/assets','pixel-district-assets','pixel-world','pixel-traffic','pixel-landmarks','pixel-city']:
     engine+=(root/f'src/{part}.js').read_text(encoding='utf-8-sig')+'\n'
 engine+='})();\n'
 for module in ['catalog','core','choices','actions','hooks','ui']:

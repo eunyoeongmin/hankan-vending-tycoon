@@ -17,6 +17,7 @@ function run(cmd, args) {
     await new Promise(resolve => setTimeout(resolve, 800));
     run(process.execPath, ['tests/browser-scene-flow.cjs']);
     run(process.execPath, ['tests/browser-scene-live.cjs']);
+    run(process.execPath, ['tests/browser-district-identity.cjs']);
   } finally {
     if (server) server.kill();
     fs.rmSync('dist/review.html', {force: true});

@@ -3,16 +3,16 @@ const W=704,H=480,canvas=document.createElement('canvas');canvas.id='pixel-city'
 const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;cityStage.prepend(canvas);document.querySelector('.city').style.visibility='hidden';document.querySelector('.city').setAttribute('aria-hidden','true');cityStage.classList.add('pixel-stage');
 const ground=document.createElement('canvas');ground.width=W;ground.height=H;const gc=ground.getContext('2d');gc.imageSmoothingEnabled=false;
 const point=(x,y)=>[265+(x-y)*24,176+(x+y)*12],lots=[[0,0],[6.5,0],[13,0],[0,7],[6.5,7],[13,7]],stop=i=>{const [x,y]=lots[i%6];return point(x-.25,y+.8);};
-const districtPieces=[['garden','campus','startup','house','station','riverside'],['office','bank','startup','studio','office','hall'],['station','arcade','terminal','cinema','market','plaza'],['beach','garden','lookout','camp','inn','fair'],['station','warehouse','bank','riverside','terminal','tower']];
+const districtPieces=[['garden','campus','startup','house','station','riverside'],['tech-tower','bank','startup','media','night-office','convention'],['central-station','arcade','terminal','cinema','market','plaza'],['beach','garden','lookout','camp','inn','fair'],['station','warehouse','bank','riverside','terminal','tower']];
 let key='',objects=[],lastSelection=-1,zoom='auto',lastDepths=[],lastActors=[],lastSales=[];
 function blit(c,name,x,y){const s=SPRITES[name];c.drawImage(s.canvas,Math.round(x-s.ax),Math.round(y-s.ay));}
 function object(name,x,y){const t=terrain(selectedMap,...fromScreen(x,y));if(name!=='boat'&&name!=='train'&&['water','road','crossing','rail'].includes(t))return;objects.push({name,x,y,depth:y});}
 function groundPoly(points,color,edge){new Pixel(gc).poly(points,color,edge);}
 function plot(x,y,w,d,color){groundPoly([point(x,y),point(x+w,y),point(x+w,y+d),point(x,y+d)],color);}
 function landscape(){const season=sceneSeason(),night=!!state.live&&state.live.elapsed>DAY_MS*.8,newKey=selectedMap+':'+season+':'+night+':'+state.weather+':'+lang;if(key===newKey)return;key=newKey;objects=[];const tree=season===1?'tree':'tree-'+['spring','summer','autumn','winter'][season],land=season===3?'mist':season===2?'sand':'grass';gc.fillStyle=PAL[land];gc.fillRect(0,0,W,H);
- lots.splice(0,lots.length,...WORLD_MAPS[selectedMap].lots);drawTerrain(gc,selectedMap,season);
+ lots.splice(0,lots.length,...WORLD_MAPS[selectedMap].lots);drawTerrain(gc,selectedMap,season);districtGround();
  if(selectedMap===4)object('boat',...point(1,-6));
- if(selectedMap===2)object('train',...point(1,-5.2));
+ if(selectedMap===2){for(const x of [-2,1,4])object('platform-roof',...point(x,-2.35));}
  districtPieces[selectedMap].forEach((kind,i)=>{const [x,y]=lots[i],[sx,sy]=point(x,y);
   if(['garden','riverside','beach','camp','lookout','fair','plaza','market'].includes(kind)){
    if(kind==='camp'){object('tent',sx-33,sy-17);object('tent',sx+22,sy-8);object('sign',sx+30,sy-4);}
@@ -22,13 +22,13 @@ function landscape(){const season=sceneSeason(),night=!!state.live&&state.live.e
    if(kind==='riverside'||kind==='beach'){object('bench',sx-28,sy-1);object('lamp',sx+14,sy-8);if(kind==='beach'){object('umbrella',sx-45,sy-6);object('umbrella',sx-10,sy-25);}else object(tree,sx+40,sy+5);}
    if(kind==='plaza'){object('sign',sx-33,sy-22);object('bench',sx+25,sy-17);object(tree,sx,sy-60);object('lamp',sx-50,sy-39);}
    if(kind==='market'){for(const [dx,dy]of [[-44,-28],[0,-52],[32,-29]])object(night?'stall':'stall-closed',sx+dx,sy+dy);object('sign',sx-2,sy+2);}
-  }else{object(kind,sx,sy);if(kind==='campus')object('gate',sx-29,sy+12);if(kind==='terminal')object('bus',sx+33,sy+22);if(kind==='station'){object('sign',sx-47,sy+9);object('bike',sx+38,sy-3);}if(kind==='inn')object('steam',sx+26,sy-59);if(['house','startup','studio'].includes(kind))object('bike',sx+29,sy-1);if(kind==='warehouse')object('cart',sx+33,sy+7);}
-  object('bin',sx+20,sy+13);object('lamp',...point(x-2,y+.72));if(!['garden','lookout','fair','camp','beach','riverside'].includes(kind))object(tree,sx+49,sy-35);
+  }else{object(kind,sx,sy);if(kind==='campus')object('gate',sx-29,sy+12);if(kind==='terminal')object('bus',sx+33,sy+22);if(kind==='station'||kind==='central-station'){object('sign',sx-47,sy+9);object('bike',sx+38,sy-3);}if(kind==='inn')object('steam',sx+26,sy-59);if(['house','startup','studio'].includes(kind))object('bike',sx+29,sy-1);if(kind==='warehouse')object('cart',sx+33,sy+7);}
+  districtDetails(kind,x,y);object('bin',sx+20,sy+13);object('lamp',...point(x-2,y+.72));if(!['garden','lookout','fair','camp','beach','riverside'].includes(kind))object(tree,sx+49,sy-35);
  });
  // Small edge plots make a continuous district without turning names into interchangeable buildings.
- for(const [x,y]of [[-5,-3],[7,-5],[15,-3],[-4,5]]){const p=point(x,y);if(['water','bank','rail','road','crossing'].includes(terrain(selectedMap,x,y)))continue;if(selectedMap===0)object('house',...p);else if(selectedMap===3)object(tree,...p);else if(selectedMap===4)object('warehouse',...p);else object('store',...p);}
- if(season===3){for(const o of objects){if(!['house','office','tower','store','inn','cinema','station','bank','campus','startup','studio','hall','terminal','arcade','warehouse'].includes(o.name))continue;const name=o.name+'-snow';if(!SPRITES[name])snowRoof(name,o.name);o.name=name;}}
- if(night){for(const o of objects){if(!['office','tower','store','inn','cinema','station','bank'].includes(o.name.replace('-snow','')))continue;const n=o.name+'-night';if(!SPRITES[n])paletteCopy(n,o.name,{glass:'yellow',cyan:'gold'});o.name=n;}}
+ for(const [x,y]of [[-5,-3],[7,-5],[15,-3],[-4,5]]){const p=point(x,selectedMap===4?(y===-3?-1.6:y===5?6:y):y);if(['water','bank','rail','road','crossing'].includes(terrain(selectedMap,x,y)))continue;if(selectedMap===1||selectedMap===2)continue;if(selectedMap===0)object('house',...p);else if(selectedMap===3)object(tree,...p);else if(selectedMap===4)object('warehouse',...p);else object('store',...p);}
+ districtEdges();if(season===3){for(const o of objects){if(!['house','office','tower','store','inn','cinema','station','bank','campus','startup','studio','hall','terminal','arcade','warehouse','tech-tower','media','night-office','convention','central-station'].includes(o.name))continue;const name=o.name+'-snow';if(!SPRITES[name])snowRoof(name,o.name);o.name=name;}}
+ if(night){for(const o of objects){if(!['office','tower','store','inn','cinema','station','bank','tech-tower','night-office','central-station'].includes(o.name.replace('-snow','')))continue;const n=o.name+'-night';if(!SPRITES[n])paletteCopy(n,o.name,{glass:'yellow',cyan:'gold'});o.name=n;}}
  canvas.setAttribute('aria-label',tr(MAPS[selectedMap].name)+' · '+tr(SEASONS[season].name)+' · '+sceneWeatherName());
 }
 function route(loc,progress){const [x,y]=lots[loc%6];return point(x-2.7+2.45*Math.max(0,Math.min(1,progress)),y+1.18);}
@@ -42,7 +42,7 @@ function paint(time){landscape();ctx.clearRect(0,0,W,H);ctx.drawImage(ground,0,0
  const walkers=updateTraffic(time,l?sceneCustomerRows(l):[],reserved);
  for(const a of walkers){const [x,y]=a.p;actors.push({name:actorSprite(a,time),x,y,depth:y,kind:'customer',loc:a.loc,id:a.id,role:a.role});if(a.role==='leave')actors.push({name:'can',x:x-5,y:y-11,depth:y+.1,kind:'drink',loc:a.loc});if(state.weather===2&&sceneSeason()!==3)actors.push({name:'umbrella',x,y:y-19,depth:y+.2,kind:'umbrella',loc:a.loc});}
  for(const [loc,b]of traffic.bubbles)bubbles.push({loc,text:b.text});
- const all=[...objects,...actors].sort((a,b)=>a.depth-b.depth);lastDepths=all.map(a=>a.depth);lastActors=actors.map(({kind,loc,name,x,y,id,role})=>({kind,loc,name,x,y,id,role}));lastSales=bubbles.map(b=>b.loc);for(const o of all)blit(ctx,o.name,o.x,o.y);
+ if(selectedMap===2){const cycle=(sceneMotion?time:0)%30000,tx=cycle<7000?1:cycle<19000?1+(cycle-7000)/500:cycle<21000?-20:-20+(cycle-21000)/9000*21;for(const shift of [0,-3.4]){const [x,y]=point(tx+shift,-4.2);actors.push({name:'commuter-train',x,y,depth:y,kind:'train'});}}const all=[...objects,...actors].sort((a,b)=>a.depth-b.depth);lastDepths=all.map(a=>a.depth);lastActors=actors.map(({kind,loc,name,x,y,id,role})=>({kind,loc,name,x,y,id,role}));lastSales=bubbles.map(b=>b.loc);for(const o of all)blit(ctx,o.name,o.x,o.y);
  const p=new Pixel(ctx),season=sceneSeason(),t=sceneMotion?time:0;if(state.weather===2||season===0||season===2){const count=state.weather===2?55:13;for(let i=0;i<count;i++){const x=Math.round((i*137+t*.012)%W),y=Math.round((i*73+t*(state.weather===2&&season!==3?.16:.027))%H);if(state.weather===2&&season!==3)p.line(x,y,x-2,y+6,'glass');else p.rect(x,y,2,1,season===3?'white':season===2?'gold':'red');}}
  for(const b of bubbles.slice(-12)){const [x,y]=stop(b.loc);ctx.font='11px Tahoma, sans-serif';const width=Math.ceil(ctx.measureText(b.text).width)+8;p.rect(x-width/2,y-47,width,16,'cream');p.line(x-width/2,y-47,x+width/2,y-47,'ink');ctx.fillStyle=PAL.ink;ctx.textAlign='center';ctx.fillText(b.text,Math.round(x),Math.round(y-35));}
 }
@@ -51,5 +51,5 @@ cityFit=function(){const fit=Math.min(cityViewport.clientWidth/W,cityViewport.cl
 function focusLocation(){if(zoom==='auto')return;const [x,y]=stop(selected),scale=Number(zoom);cityViewport.scrollLeft=x*scale-cityViewport.clientWidth/2;cityViewport.scrollTop=y*scale-cityViewport.clientHeight/2;}
 function pins(){for(const pin of $('pins').children){const id=Number(pin.dataset.select),[x,y]=stop(id);pin.dataset.number=String(id%6+1);pin.title=tr(LOCATIONS[id].name);pin.setAttribute('aria-label',tr(LOCATIONS[id].name));pin.style.left=(x/W*100)+'%';pin.style.top=((y+21)/H*100)+'%';}camera.options[0].textContent=T('전체','全体');camera.setAttribute('aria-label',T('지도 배율','地図の倍率'));if(lastSelection!==selected){lastSelection=selected;focusLocation();}}
 paintDistrict=landscape;paintScene=paint;const beforeRender=render;render=function(){beforeRender();pins();};cityFit();pins();paint(ambientClock);
-window.pixelCity={canvas,point,stop,lots,districtPieces,sprites:SPRITES,palette:PAL,terrain,worlds:WORLD_MAPS,fromScreen,snapshot:()=>({depths:lastDepths,actors:lastActors,sales:lastSales,scene:key,objects:objects.map(o=>({name:o.name,x:o.x,y:o.y})),motion:{stats:traffic.stats,agents:traffic.agents.map(a=>({id:a.id,role:a.role,p:a.p,loc:a.loc,blocked:a.blocked}))}})};
+window.pixelCity={canvas,point,stop,lots,districtPieces,sprites:SPRITES,palette:PAL,footprint:buildingFootprint,terrain,worlds:WORLD_MAPS,fromScreen,snapshot:()=>({depths:lastDepths,actors:lastActors,sales:lastSales,scene:key,objects:objects.map(o=>({name:o.name,x:o.x,y:o.y})),motion:{stats:traffic.stats,agents:traffic.agents.map(a=>({id:a.id,role:a.role,p:a.p,loc:a.loc,blocked:a.blocked}))}})};
 
