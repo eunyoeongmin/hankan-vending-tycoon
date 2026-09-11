@@ -32,4 +32,4 @@
 
 ## 공개 반영
 
-검증한 소스의 배포가 성공한 뒤 DEVELOPMENT.md에 버전·소스·배포 ID를 기록한다.
+10.5.1 / Sites 33 배포 성공. 소스 `b8aef2d6aed0aa0aefc286d640e5a4a58938e716`, 배포 `appgdep_6aa39545be548191b48de5cde79020af`. 공개 주소에서도 browser-city-art 검사를 실행해 통과했다. 검사용 review.html은 배포 아카이브에서 제외했다. GitHub 장기 검사의 상태는 DEVELOPMENT.md에 별도 기록한다.
