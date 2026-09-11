@@ -27,7 +27,7 @@ function officeUpdate(){
 const updateBeforeOffice=updateDesk;updateDesk=function(){updateBeforeOffice();officeUpdate();};
 const modalBeforeOffice=drawModal;drawModal=function(){modalBeforeOffice();if(modalView==='help'){
  const bar=$('modal-body').querySelector('.entry-languages');$('modal-body').replaceChildren();if(bar)$('modal-body').append(bar);
- const rules=[[T('영업 시간','営業時間'),T('1배속: 1일 3분 / 메뉴·다른 탭에서 정지','1倍速：1日3分／メニュー・他タブで停止')],[T('매출 회수','売上回収'),T('기기 보관금 → 직접 회수 또는 직원 배치','機械の保管金→手動回収またはスタッフ配置')],[T('발주·보충','発注・補充'),T('선결제 → 배송 → 창고 → 기기 보충','前払い→配送→倉庫→機械補充')],[T('가격·재고','価格・在庫'),T('슬롯별 설정 / 품목 변경 시 재고는 창고로 이동','スロット別設定／商品変更時は在庫を倉庫へ移動')],[T('손익','損益'),T('매출 − 판매 원가 − 운영비 − 이자','売上−売上原価−運営費−利息')],[T('민원','相談'),T('처리 기한 경과: 벌금·철거 위험','期限超過：罰金・撤去リスク')]];
+ const rules=[[T('영업 시간','営業時間'),T('1배속: 1일 3분 / 메뉴·다른 탭에서 정지','1倍速：1日3分／メニュー・他タブで停止')],[T('매출 회수','売上回収'),T('기기 보관금 → 직접 회수 또는 직원 배치','機械の保管金→手動回収またはスタッフ配置')],[T('발주·보충','発注・補充'),T('선결제 → 배송 → 창고 → 기기 보충','前払い→配送→倉庫→機械補充')],[T('가격·재고','価格・在庫'),T('슬롯별 설정 / 품목 변경 시 재고는 창고로 이동','スロット別設定／商品変更時は在庫を倉庫へ移動')],[T('손익','損益'),T('매출 − 판매 원가 − 운영비 − 이자','売上−売上原価−運営費−利息')],[T('민원','相談'),T('대응 지연: 고객 선호 감소·평판 하락','対応遅延：顧客選好低下・評判低下')]];
  $('modal-body').insertAdjacentHTML('beforeend',`<h2>${T('운영 참고','運営資料')}</h2><table class="office-help">${rules.map(([k,v])=>`<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>`+buttons(inGameSession&&menuOpen?`<button id="menu-back">${T('메뉴로','メニューへ')}</button>`:closeButton()));
  }officeUpdate();};
 document.addEventListener('click',event=>{const button=event.target.closest('[data-office-feed]');if(button){officeFeed=button.dataset.officeFeed;officeUpdate();}});
