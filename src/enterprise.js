@@ -158,5 +158,4 @@ drawModal=function(){oldDrawModalEnterprise();if(modalView==='help'){$('modal-bo
 function trackDecision(fn){return function(...args){const before=assets(),result=fn(...args);state.enterprise.expenseToday+=before-assets();save();return result;};}
 respondComplaint=trackDecision(respondComplaint);
 resolveEvent=trackDecision(resolveEvent);
-worldPr=trackDecision(worldPr);
 research=trackDecision(research);

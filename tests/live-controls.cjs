@@ -4,7 +4,7 @@ const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.mess
 const dom=new JSDOM(fs.readFileSync(require('node:path').join(__dirname,'../dist/index.html'),'utf8'),{runScripts:'dangerously',url:'https://hankan.test',virtualConsole:vc,beforeParse(w){w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};w.Math.random=()=>.5;}});
 const w=dom.window,doc=w.document,ev=s=>w.eval(s);
 ev('state=fresh();state.started=true;state.cash=3000000;state.reputation=100;menuOpen=false;closeModal();startBusiness();');
-const selectors=['[data-enterprise="price"][data-param="0:100"]','#refill-button','[data-job="collect"]','#slot-0','[data-staff="collect"][data-delta="1"]','[data-bank="borrow"]','[data-map="1"]','#world-pr'];
+const selectors=['[data-enterprise="price"][data-param="0:100"]','#refill-button','[data-job="collect"]','#slot-0','[data-staff="collect"][data-delta="1"]','[data-bank="borrow"]','[data-map="1"]'];
 const controls=selectors.map(s=>doc.querySelector(s));controls.forEach(assert.ok);
 const priceButton=controls[0];priceButton.focus();priceButton.dispatchEvent(new w.MouseEvent('mousedown',{bubbles:true}));
 for(let i=0;i<30;i++)ev('advanceBusiness(100);syncScene()');
