@@ -17,7 +17,12 @@
 
 ## 공개 반영
 
-로컬 최종 회귀 통과. 공개 버전·배포 결과·소스 검사 링크는 배포 후 이 절과 DEVELOPMENT.md에 기록한다.
+- 10.3.0 / Sites 25, 공개 반영 성공. 공개 주소 HTTP 200, 서버 삽입 `/cdn-cgi/` 스크립트 938바이트를 제외한 HTML이 로컬 검증 결과와 일치.
+- 소스: `2ffdb4cf829e6e46e13630c27f38188986df5078`.
+- 버전: `appgprj_6a9e145432188191b3925a2f61742aa3~appgver_189e462921948191b1352b5e1a38c818`.
+- 배포: `appgdep_6aa35a33c1408191bc7d70aeda725706`.
+- HTML SHA-256: `C3EF9DB8B005F73B1BE2129E0275D3F777E01BF5C2B7D8421128A3F3F29920FA`.
+- [GitHub 배포 소스 검사](https://github.com/eunyoeongmin/hankan-vending-tycoon/actions/runs/34551025555): 성공, 3분 42초.
 
 ## 남은 부분
 
