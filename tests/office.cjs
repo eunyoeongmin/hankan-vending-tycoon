@@ -6,7 +6,7 @@ assert.equal(doc.querySelector('#desk-nav').parentElement,doc.querySelector('.la
 assert.ok(doc.querySelector('#office-status #cash'));assert.ok(doc.querySelector('#office-status #scene-speed'));assert.ok(doc.querySelector('#office-register #logs'));
 ev('state=fresh();state.started=true;state.bank.principal=250000;menuOpen=false;closeModal();startBusiness();refreshLiveNumbers()');assert.ok(doc.querySelector('#office-debt').textContent.includes('$250.00'));
 const speed=doc.querySelector('#scene-speed');speed.focus();ev('refreshLiveNumbers()');assert.equal(doc.activeElement,speed);
-doc.querySelector('#desk-nav [data-desk="finance"]').click();assert.equal(doc.querySelector('#desk-map').hidden,true);assert.equal(ev('enterpriseTab'),'reports');
+doc.querySelector('#desk-nav [data-desk="finance"]').click();assert.equal(doc.querySelector('#desk-map').hidden,false);assert.equal(ev('enterpriseTab'),'reports');
 doc.querySelector('#desk-nav [data-desk="manage"]').click();assert.equal(doc.querySelector('#desk-map').hidden,false);
 ev('state.enterprise.rivalry.history=[{day:1,text:B("경쟁사: 역 앞 할인","競合：駅前で値下げ")}];updateDesk()');doc.querySelector('[data-office-feed="rival"]').click();assert.ok(doc.querySelector('#office-messages').textContent.includes(ev('tr(state.enterprise.rivalry.history[0].text)')));
 doc.querySelector('[data-office-feed="complaints"]').click();assert.ok(doc.querySelector('#office-messages').textContent);

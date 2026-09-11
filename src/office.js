@@ -10,7 +10,7 @@ officeRegister.append(officeRegisterTabs,document.querySelector('.log'),officeMe
 let officeFeed='all',officeMessageKey='';
 function officeUpdate(){
  document.body.classList.add('office');deskLayout.dataset.screen=deskTab;
- deskMap.hidden=!['manage','fleet','market'].includes(deskTab);
+ deskMap.hidden=false;
  deskNav.dataset.caption=T('회사 메뉴','会社メニュー');document.querySelectorAll('.stat-label')[0].textContent=T('현금','現金');document.querySelectorAll('.stat-label')[1].textContent=T('매출총이익','売上総利益');
  controlText('office-debt',T('차입금 ','借入金 ')+money(state.bank.principal+state.bank.arrears+(typeof refEnabled==='function'&&refEnabled()?refFirm(playerFirm()).notes.reduce((n,note)=>n+note.principal,0):0)));
  controlText('help',T('도움말','ヘルプ'));

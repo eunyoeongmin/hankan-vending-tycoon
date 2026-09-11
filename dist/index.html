@@ -112,6 +112,64 @@ body.management #reference-panel label select{min-width:0}
 .ref-map section{border:1px solid #9caaa7;padding:4px}
 .ref-map button{display:block;width:100%;text-align:left;margin:2px 0}
 
+/* Windows 95 desktop: solid title bars, raised controls and recessed work surfaces. */
+body.office.desktop95{--bg:#008080;--paper:#c0c0c0;--ink:#000;--muted:#444;--line:#808080;--orange:#000080;--green:#000080;--mint:#ddd;background:#008080;color:#000;font:13px/1.4 Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif}
+body.desktop95 header{background:#000080;border:0;margin:3px 3px 0;height:27px;min-height:27px;padding:0 5px;color:#fff}
+body.desktop95 .brand strong{font-size:13px;font-weight:bold}
+body.desktop95 main{padding:3px;gap:4px;grid-template-rows:auto minmax(0,1fr) 125px}
+body.office.desktop95 button{border:2px solid;border-color:#fff #404040 #404040 #fff;border-radius:0!important;background:#c0c0c0;color:#000;box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf!important;transform:none!important;transition:none!important;font-weight:400;min-height:25px;padding:3px 8px}
+body.office.desktop95 button:hover:enabled{background:#c0c0c0;color:#000;transform:none!important}
+body.office.desktop95 button:active:enabled,body.office.desktop95 button[aria-pressed=true]{border-color:#404040 #fff #fff #404040;box-shadow:inset 1px 1px #808080!important;background:#d6d6d6;color:#000}
+body.office.desktop95 button:disabled{color:#808080;text-shadow:1px 1px #fff;opacity:1}
+body.office.desktop95 button:focus-visible,body.office.desktop95 input:focus-visible,body.office.desktop95 select:focus-visible{outline:1px dotted #000;outline-offset:-5px}
+body.office.desktop95 input,body.office.desktop95 select{border:2px solid;border-color:#808080 #fff #fff #808080;border-radius:0;background:#fff;color:#000;font:inherit;min-height:25px;padding:2px 4px;max-width:100%}
+body.desktop95 #office-status{background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:3px;gap:2px}
+body.desktop95 #office-status .stat,body.desktop95 #office-debt{border:1px solid;border-color:#808080 #fff #fff #808080;background:#c0c0c0;padding:3px 6px}
+body.desktop95 #office-status .stat-value{font-size:13px;color:#000}
+body.office.desktop95 .layout{grid-template-columns:112px minmax(0,1fr) minmax(340px,45%);grid-template-rows:minmax(0,1fr);gap:5px;background:#008080}
+body.office.desktop95 #desk-nav{grid-column:1;grid-row:1;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:3px;gap:2px}
+body.desktop95 #desk-nav::before{color:#fff;background:#808080;border:0;padding:3px 4px;margin:0 0 3px;font-weight:bold}
+body.office.desktop95 #desk-nav button{font-size:12px;padding:5px 5px;min-height:29px;flex-shrink:0}
+body.office.desktop95 #desk-nav button.primary{background:#000080;color:#fff;border-color:#808080 #fff #fff #808080}
+body.office.desktop95 #desk-nav button.primary:hover{background:#000080;color:#fff}
+body.office.desktop95 #desk-map{grid-column:2;grid-row:1;border:2px solid;border-color:#fff #404040 #404040 #fff;background:#c0c0c0;padding:2px;gap:0;overflow:hidden}
+body.desktop95 #desk-map .panel{background:#c0c0c0}
+body.desktop95 #desk-map .panel-head{background:#000080;color:#fff;padding:3px 5px;min-height:24px}
+body.desktop95 #desk-map .panel-head h2{font-size:12px;color:#fff}
+body.desktop95 #desk-map .map-wrap{border:2px solid;border-color:#808080 #fff #fff #808080;margin:3px 0;isolation:isolate}
+body.desktop95 #desk-map .scene-console,body.desktop95 #desk-alerts{background:#c0c0c0;border-color:#808080;padding:3px}
+body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:3;grid-row:1;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:2px;min-width:0}
+#desktop-titlebar{display:flex;align-items:center;gap:4px;background:#000080;color:#fff;min-height:25px;padding:2px 3px;flex-shrink:0}
+#desktop-title{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12px}
+.desktop-app-icon{width:14px;height:13px;border:1px solid #fff;background:#c0c0c0;position:relative;flex-shrink:0}
+.desktop-app-icon::before{content:'';position:absolute;inset:2px 1px 6px;background:#000080}
+body.office.desktop95 #desktop-titlebar button{min-height:19px;height:19px;width:21px;padding:0;line-height:13px;font:bold 14px Tahoma,sans-serif;flex-shrink:0}
+body.office.desktop95 #desk-content{background:#c0c0c0;border:2px solid;border-color:#808080 #fff #fff #808080;margin-top:3px;padding:7px;scrollbar-color:#c0c0c0 #dfdfdf}
+body.desktop95 #desk-content>.panel,body.desktop95 #desk-content .enterprise-body{background:#c0c0c0}
+body.desktop95 #desk-content h3{background:#c0c0c0;border-bottom:1px solid #808080;padding:4px 0;font-size:13px}
+body.desktop95 #desk-content table{background:#fff;border-collapse:collapse;font-size:12px}
+body.desktop95 #desk-content th{background:#c0c0c0!important;color:#000!important;border:1px solid #808080!important;font-weight:400}
+body.desktop95 #desk-content td{border:1px solid #c0c0c0!important;padding:5px 6px;font-size:12px}
+body.desktop95 #desk-content .enterprise-metrics>div{background:#fff;border-bottom:1px solid #c0c0c0;padding:3px 6px}
+body.desktop95 #desk-content .enterprise-metrics strong{font-size:13px}
+body.desktop95 #desk-content .helper{color:#444}
+body.desktop95 #desk-content .slot-card,body.desktop95 #desk-content .research-card,body.desktop95 #desk-content .machine-card{border:1px solid #808080;background:#c0c0c0;padding:6px;margin-bottom:5px}
+body.desktop95 #office-register{border:2px solid;border-color:#fff #404040 #404040 #fff;background:#c0c0c0;padding:2px}
+body.desktop95 #office-register-tabs{background:#c0c0c0;border:0;padding:0 0 2px;gap:3px}
+body.desktop95 #office-register .log,body.desktop95 #office-messages{background:#fff;border:1px solid #808080;flex:1;min-height:0}
+#desktop-taskbar{display:flex;align-items:center;gap:8px;min-height:26px;flex-shrink:0;padding:2px 0 0}
+#desktop-city-status{font-size:12px;border:1px solid;border-color:#808080 #fff #fff #808080;padding:2px 8px}
+body.desktop95 #desktop-task{min-width:140px;text-align:left;font-size:12px;min-height:23px;padding:1px 8px}
+body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:112px minmax(0,1fr)}
+body.office.desktop95 dialog{background:#c0c0c0;border:3px solid;border-color:#fff #404040 #404040 #fff;padding:10px;color:#000}
+body.office.desktop95 dialog h2{background:#000080;color:#fff;font-size:13px;font-weight:bold;padding:4px 6px;border:0}
+body.desktop95 dialog .entry-languages{border-bottom:1px solid #808080}
+body.desktop95 .tag,body.desktop95 .scenario-index{background:#dfdfdf;color:#000;border:1px solid #808080}
+body.desktop95 .scene-clock{background:#c0c0c0!important;border:2px solid!important;border-color:#fff #404040 #404040 #fff!important;color:#000!important}
+@media(max-width:1000px){body.office.desktop95 .layout{grid-template-columns:94px minmax(0,1fr) minmax(290px,48%)}body.office.desktop95 #desk-nav button{font-size:12px;padding:4px}body.desktop95 #office-status .stat-label{display:none}}
+@media(max-width:650px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 111px;gap:3px}body.office.desktop95 .layout{grid-template-columns:80px minmax(0,1fr);grid-template-rows:minmax(125px,35%) minmax(0,1fr);gap:3px}body.office.desktop95 #desk-nav{grid-column:1;grid-row:1/3;padding:2px}body.office.desktop95 #desk-map{grid-column:2;grid-row:1}body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:2;grid-row:2}body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:80px minmax(0,1fr)}body.office.desktop95 .layout:not([data-window=open]) #desk-map{grid-row:1/3}body.desktop95 #desk-alerts{position:static;pointer-events:auto}body.desktop95 #desk-map .map-wrap{margin:0}body.desktop95 #desk-content{padding:4px}body.desktop95 #desktop-city-status{font-size:11px;padding:2px 4px}body.desktop95 #desktop-task{min-width:100px}body.desktop95 #office-status .stat-value{font-size:12px}body.desktop95 #desk-map #district-controls{padding:1px}}
+@media(max-height:500px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 78px}body.desktop95 #office-register-tabs button{min-height:20px;padding:0 5px}#desktop-taskbar{min-height:23px}}
+
 </style>
 </head>
 <body>
@@ -1287,7 +1345,7 @@ officeRegister.append(officeRegisterTabs,document.querySelector('.log'),officeMe
 let officeFeed='all',officeMessageKey='';
 function officeUpdate(){
  document.body.classList.add('office');deskLayout.dataset.screen=deskTab;
- deskMap.hidden=!['manage','fleet','market'].includes(deskTab);
+ deskMap.hidden=false;
  deskNav.dataset.caption=T('회사 메뉴','会社メニュー');document.querySelectorAll('.stat-label')[0].textContent=T('현금','現金');document.querySelectorAll('.stat-label')[1].textContent=T('매출총이익','売上総利益');
  controlText('office-debt',T('차입금 ','借入金 ')+money(state.bank.principal+state.bank.arrears+(typeof refEnabled==='function'&&refEnabled()?refFirm(playerFirm()).notes.reduce((n,note)=>n+note.principal,0):0)));
  controlText('help',T('도움말','ヘルプ'));
@@ -2193,7 +2251,7 @@ function refValue(id,fallback){return refInputs[id]??document.querySelector('#re
 function refTable(headers,rows){return enterpriseTable(headers,rows.map(cells=>`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`));}
 function refSiteChoices(f,kind){return refFirm(f).sites.filter(s=>!s.closed&&(!kind||s.kind===kind)).map(s=>[s.id,`#${s.id} ${tr(refName(s.kind))} · ${tr(MAPS[s.map].name)}`]);}
 function refLabel(key){const labels={warehouse:B('배송 거점','配送拠点'),research:B('연구소','研究所'),drink:B('음료 공장','飲料工場'),machine:B('기기 공장','機械工場'),water:B('용수','用水'),concentrate:B('원액','原液'),package:B('용기','容器'),steel:B('금속','金属'),electronics:B('전자 부품','電子部品'),purchase:B('상품 입고','商品入荷'),material:B('원자재 입고','原材料入荷'),production:B('생산','生産'),route:B('배송 운행','配送運行'),recruit:B('이직 대기','転職待ち'),retrofit:B('개조','改造'),replacement:B('기기 교체','機械交換'),relocation:B('이전','移転'),cold:B('냉각','冷却'),hot:B('가열','加熱'),payment:B('전자 결제','電子決済'),telemetry:B('원격 재고','遠隔在庫'),overhaul:B('분해 정비','分解整備'),density:B('상권 집중','商圏集中'),premium:B('고급화','高級化'),manufacturer:B('제조 확대','製造拡大'),defensive:B('현금 보전','現金確保')};return labels[key]?tr(labels[key]):key;}
-function renderReference(){if(!refEnabled()&&deskTab!=='business')return;if(refEnabled()){const selected=Object.entries(REF_ROUTES).find(([,tab])=>tab===deskTab);if(!selected)return;refDesk=selected[0];}for(const [k,n] of Object.entries(deskNodes))n.hidden=k!=='reference'&&!(deskTab==='finance'&&['bank','enterprise'].includes(k));deskMap.hidden=true;if(!refEnabled()){patchPanel(refPanel,`<h3>${T('사업 규칙 전환','事業ルール移行')}</h3><p>${T('사업장·거래 계약 규칙으로 전환합니다. 전환 전 저장은 별도로 보존됩니다.','事業所・取引契約ルールに移行。移行前のセーブは別途保存されます。')}</p>${refButton('migrate',T('규칙 적용','ルールを適用'))}`);return;}
+function renderReference(){if(!refEnabled()&&deskTab!=='business')return;if(refEnabled()){const selected=Object.entries(REF_ROUTES).find(([,tab])=>tab===deskTab);if(!selected)return;refDesk=selected[0];}for(const [k,n] of Object.entries(deskNodes))n.hidden=k!=='reference'&&!(deskTab==='finance'&&['bank','enterprise'].includes(k));if(!refEnabled()){patchPanel(refPanel,`<h3>${T('사업 규칙 전환','事業ルール移行')}</h3><p>${T('사업장·거래 계약 규칙으로 전환합니다. 전환 전 저장은 별도로 보존됩니다.','事業所・取引契約ルールに移行。移行前のセーブは別途保存されます。')}</p>${refButton('migrate',T('규칙 적용','ルールを適用'))}`);return;}
  const f=playerFirm(),r=refFirm(f),c=chainFirm(f),siteChoices=refSiteChoices(f),hubs=refSiteChoices(f,'warehouse'),skuChoices=refCatalog().filter(s=>!s.retired).map(s=>[s.id,tr(s.name)+' / '+(s.volume||350)+' ml']),machineChoices=f.machines.map(m=>[m.loc,tr(LOCATIONS[m.loc].short)]),vendorChoices=state.enterprise.chain.suppliers.filter(s=>s.kind==='drink').map(s=>[s.id,chainSupplierName(s.id)]);
  let html=`<h3>${tr(DESK_TABS.find(d=>d[0]===deskTab)[1])}</h3>`;
  if(refDesk==='sites'){
@@ -2479,8 +2537,8 @@ function mgReportsUI(f){const a=mgFirm(f),r=refFirm(f),last=a.month.find(m=>m.cl
  refTable([T('월 / 결산일수','月／決算日数'),T('매출 / 원가','売上／原価'),T('급여 / 세금','給与／税金'),T('순이익','純利益'),T('영업 / 투자 / 재무 현금흐름','営業／投資／財務キャッシュフロー')],a.month.map(m=>[m.key+' / '+m.days+(m.closed?'':T(' 집계 중',' 集計中')),money(m.revenue)+' / '+money(m.cost),money(m.payroll)+' / '+money(m.tax),money(m.profit),money(m.operating)+' / '+money(m.investing)+' / '+money(m.financing)]))+
  refTable([T('병목','ボトルネック'),T('사업장','事業所')],[...a.blocked.map(x=>[mgReason(x.key),'#'+x.site]),...f.machines.filter(m=>!m.stock).map(m=>[T('품절','品切れ'),tr(LOCATIONS[m.loc].short)])]);}
 const mgBeforeRender=renderReference;renderReference=function(){
- if(deskTab==='management-migrate'&&!mgEnabled()){for(const n of Object.values(deskNodes))n.hidden=n!==refPanel;deskMap.hidden=true;patchPanel(refPanel,`<h3>${T('장기 경영 전환','長期経営へ移行')}</h3><p>${T('달력 계절·월 급여·월 결산을 적용합니다. 기존 차입·연구 계약은 유지하며, 자동 운영은 운영 규정에서 켭니다. 전환 전 저장을 별도 보관합니다.','暦の季節・月給・月次決算を適用。既存の借入・研究契約は維持し、自動運営は運営規定で開始。移行前セーブを別途保存します。')}</p>${mgButton('migrate',T('전환 적용','移行を適用'))}`);return;}
- if(!mgEnabled()||!['finance','policies','reports'].includes(deskTab))return mgBeforeRender();refDesk=deskTab;for(const n of Object.values(deskNodes))n.hidden=n!==refPanel;deskMap.hidden=true;const f=playerFirm();patchPanel(refPanel,deskTab==='finance'?mgFinanceUI(f):deskTab==='policies'?mgPoliciesUI(f):mgReportsUI(f));
+ if(deskTab==='management-migrate'&&!mgEnabled()){for(const n of Object.values(deskNodes))n.hidden=n!==refPanel;patchPanel(refPanel,`<h3>${T('장기 경영 전환','長期経営へ移行')}</h3><p>${T('달력 계절·월 급여·월 결산을 적용합니다. 기존 차입·연구 계약은 유지하며, 자동 운영은 운영 규정에서 켭니다. 전환 전 저장을 별도 보관합니다.','暦の季節・月給・月次決算を適用。既存の借入・研究契約は維持し、自動運営は運営規定で開始。移行前セーブを別途保存します。')}</p>${mgButton('migrate',T('전환 적용','移行を適用'))}`);return;}
+ if(!mgEnabled()||!['finance','policies','reports'].includes(deskTab))return mgBeforeRender();refDesk=deskTab;for(const n of Object.values(deskNodes))n.hidden=n!==refPanel;const f=playerFirm();patchPanel(refPanel,deskTab==='finance'?mgFinanceUI(f):deskTab==='policies'?mgPoliciesUI(f):mgReportsUI(f));
 };
 const mgBeforeExtra=refExtraUI;refExtraUI=function(f){let html=mgBeforeExtra(f);if(!mgEnabled())return html;const a=mgFirm(f);if(refDesk==='production')html+=`<h4>${T('계속 생산','継続生産')}</h4><div class="expansion-form">${refField('mg-factory',T('공장','工場'),refSiteChoices(f).filter(([id])=>['drink','machine'].includes(refSite(f,id).kind)))}${refField('mg-sku',T('상품','商品'),refOwnProducts(f).map(s=>[s.id,tr(s.name)]))}${refNumber('mg-target',T('목표 재고','目標在庫'),200,1,1000)}${refNumber('mg-batch',T('회당 생산량','1回生産量'),100,1,500)}${mgButton('production',T('계속 생산 등록','継続生産を登録'))}</div>`+refTable([T('공장 / 상품','工場／商品'),T('목표 / 회당','目標／1回'),T('상태','状態')],a.production.map(p=>['#'+p.site+' / '+(refSKU(p.sku)?tr(refSKU(p.sku).name):T('기기','機械')),p.target+' / '+p.batch,mgButton('production-toggle',p.enabled?T('가동 중 · 정지','稼働中・停止'):T('재개','再開'),p.site)]));
  if(refDesk==='research')html+=row(T('선택 과제 예산 / 독점 계약','選択課題予算／独占契約'),money(600000*(chainFirm(f).licenses[refValue('research-key','quality')]+1))+' / '+money(900000*(chainFirm(f).licenses[refValue('research-key','quality')]+1)))+`<p>${T('신규 연구: 단계별 기본 30일 × 기술 단계. 협력사 연구 인원·동시 프로젝트·사내 연구소에 따라 완료일이 달라집니다.','新規研究：各段階の基本30日 × 技術レベル。提携先研究人員・同時案件・社内研究所で完了日が変わります。')}</p>`;return html;};
@@ -2496,6 +2554,40 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mg]');if(!
 const mgOfficeBefore=officeUpdate;officeUpdate=function(){mgOfficeBefore();document.body.classList.toggle('management',mgEnabled());if(mgEnabled()){controlText('day',mgDateText());const small=document.querySelector('.day-control small');if(small)small.textContent=refWorld().management.free?T(' / 자유 경영',' / 自由経営'):' / '+mgDateText(state.duration);}};
 const mgModalBefore=drawModal;drawModal=function(){mgModalBefore();if(modalView==='newrun'){const select=$('run-duration');if(select){select.innerHTML=[[36500,T('자유 경영 · 기간 제한 없음','自由経営・期間制限なし')],[365,T('1년 평가','1年評価')],[1095,T('3년 평가','3年評価')]].map(([d,label])=>`<option value="${d}" ${d===chosenDuration?'selected':''}>${label}</option>`).join('');}const p=$('modal-body').querySelector('p');if(p)p.textContent=T('회사 설립 · 2000-01-01. 자동 발주와 사장 배송으로 영업을 시작합니다.','会社設立・2000-01-01。自動発注と社長配送で営業を開始します。');}
  if(modalView==='help'&&mgEnabled())$('modal-body').innerHTML=`<h2>${T('회사 운영','会社運営')}</h2><p>${T('1배속 하루 3분. 계절은 달력에 따라 변합니다. 급여는 월말, 차입금은 계약의 월 지급일에 지급합니다.','1倍速で一日3分。季節は暦に従って変化。給与は月末、借入金は契約の月次支払日に支払います。')}</p><p>${T('운영 규정에서 예산·현금 유보·가격을 지정합니다. 첫 거점은 사장이 관리하고 최대 2대까지 배송합니다. 확장 거점은 관리자, 배송은 직원·차량·경로가 필요합니다.','運営規定で予算・現金留保・価格を指定。最初の拠点は社長が管理し最大2台に配送。追加拠点には管理者、配送には社員・車両・ルートが必要です。')}</p><p>${T('공장의 계속 생산에는 관리자·생산 직원·원재료가 필요합니다. 연구 추가 예산과 투자 결정은 직접 처리합니다.','工場の継続生産には管理者・生産社員・原材料が必要です。研究追加予算と投資判断は個別に処理します。')}</p>`+buttons(inGameSession&&menuOpen?`<button id="menu-back">${T('메뉴로','メニューへ')}</button>`:closeButton());};
+
+/* One persistent city viewport and one reusable business window. No simulation timer. */
+document.body.classList.add('desktop95');
+const desktopTitlebar=document.createElement('div');desktopTitlebar.id='desktop-titlebar';
+desktopTitlebar.innerHTML='<span class="desktop-app-icon" aria-hidden="true"></span><strong id="desktop-title"></strong><button id="desktop-minimize" type="button">_</button><button id="desktop-close" type="button">×</button>';
+deskSide.prepend(desktopTitlebar);deskSide.setAttribute('aria-labelledby','desktop-title');deskSide.setAttribute('role','region');
+const desktopTaskbar=document.createElement('div');desktopTaskbar.id='desktop-taskbar';
+desktopTaskbar.innerHTML='<span id="desktop-city-status"></span><button id="desktop-task" type="button"></button>';
+officeRegister.append(desktopTaskbar);
+let desktopWindowState='open';
+function updateDesktop(){
+ const tab=visibleDeskTabs().find(t=>t[0]===deskTab),title=tab?tr(tab[1]):T('회사','会社');
+ controlText('desktop-title',title);controlText('desktop-task',title);
+ controlText('desktop-city-status',T('도시 · 영업 현황','都市 · 営業状況'));
+ $('desktop-minimize').setAttribute('aria-label',T('업무 창 최소화','業務ウィンドウを最小化'));
+ $('desktop-close').setAttribute('aria-label',T('업무 창 닫기','業務ウィンドウを閉じる'));
+ $('desktop-task').setAttribute('aria-label',T('업무 창 복원: ','業務ウィンドウを復元：')+title);
+ $('desktop-task').setAttribute('aria-pressed',String(desktopWindowState==='open'));
+ $('desktop-task').hidden=desktopWindowState==='closed';
+ deskSide.hidden=desktopWindowState!=='open';deskLayout.dataset.window=desktopWindowState;
+}
+function setDesktopWindow(next){desktopWindowState=next;updateDesktop();}
+const desktopBeforeSelect=selectDesk;
+selectDesk=function(tab){desktopBeforeSelect(tab);setDesktopWindow('open');};
+const desktopBeforeUpdate=updateDesk;
+updateDesk=function(){desktopBeforeUpdate();updateDesktop();};
+document.addEventListener('click',event=>{
+ const b=event.target.closest('button');if(!b)return;
+ if(b.id==='desktop-minimize'){setDesktopWindow('minimized');$('desktop-task').focus();}
+ if(b.id==='desktop-close'){setDesktopWindow('closed');deskNav.querySelector('[aria-pressed="true"]')?.focus();}
+ if(b.id==='desktop-task'){setDesktopWindow('open');$('desktop-minimize').focus();}
+});
+deskSide.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modalView){event.preventDefault();setDesktopWindow('minimized');$('desktop-task').focus();}});
+updateDesktop();
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 

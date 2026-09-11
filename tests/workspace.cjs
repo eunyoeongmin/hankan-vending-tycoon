@@ -8,6 +8,12 @@ for(const tab of ['manage','fleet','supply','finance','staff','research','market
 doc.querySelector('[data-select="0"]').click();assert.equal(ev('deskTab'),'manage');assert.equal(doc.querySelector('[data-enterprise="price"]'),price);
 price.focus();ev('refreshLiveNumbers()');assert.equal(doc.activeElement,price);assert.equal(doc.querySelector('[data-enterprise="price"]'),price);
 doc.querySelector('#desk-nav [data-desk="finance"]').click();assert.equal(ev('enterpriseTab'),'reports');assert.equal(doc.querySelector('#bank-panel').hidden,false);
+const pauseBefore=ev('livePaused');
+doc.querySelector('#desktop-minimize').click();assert.equal(doc.querySelector('#desk-side').hidden,true);assert.equal(doc.querySelector('#desk-map').hidden,false);
+ev('refreshLiveNumbers()');assert.equal(doc.querySelector('#desk-side').hidden,true);
+doc.querySelector('#desktop-task').click();assert.equal(doc.querySelector('#desk-side').hidden,false);
+doc.querySelector('#desktop-close').click();assert.equal(doc.querySelector('#desktop-task').hidden,true);assert.equal(ev('livePaused'),pauseBefore);
+doc.querySelector('#desk-nav [data-desk="finance"]').click();assert.equal(doc.querySelector('#desk-side').hidden,false);
 doc.querySelector('#desk-nav [data-desk="research"]').click();assert.equal(doc.querySelector('#hq').hidden,false);
 doc.querySelector('#desk-nav [data-desk="staff"]').click();assert.equal(doc.querySelector('#operations').hidden,false);
 ev('changeLanguage("ja")');assert.ok(!/[가-힣]/.test(doc.querySelector('#desk-nav').textContent));

@@ -1,0 +1,57 @@
+/* Windows 95 desktop: solid title bars, raised controls and recessed work surfaces. */
+body.office.desktop95{--bg:#008080;--paper:#c0c0c0;--ink:#000;--muted:#444;--line:#808080;--orange:#000080;--green:#000080;--mint:#ddd;background:#008080;color:#000;font:13px/1.4 Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif}
+body.desktop95 header{background:#000080;border:0;margin:3px 3px 0;height:27px;min-height:27px;padding:0 5px;color:#fff}
+body.desktop95 .brand strong{font-size:13px;font-weight:bold}
+body.desktop95 main{padding:3px;gap:4px;grid-template-rows:auto minmax(0,1fr) 125px}
+body.office.desktop95 button{border:2px solid;border-color:#fff #404040 #404040 #fff;border-radius:0!important;background:#c0c0c0;color:#000;box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf!important;transform:none!important;transition:none!important;font-weight:400;min-height:25px;padding:3px 8px}
+body.office.desktop95 button:hover:enabled{background:#c0c0c0;color:#000;transform:none!important}
+body.office.desktop95 button:active:enabled,body.office.desktop95 button[aria-pressed=true]{border-color:#404040 #fff #fff #404040;box-shadow:inset 1px 1px #808080!important;background:#d6d6d6;color:#000}
+body.office.desktop95 button:disabled{color:#808080;text-shadow:1px 1px #fff;opacity:1}
+body.office.desktop95 button:focus-visible,body.office.desktop95 input:focus-visible,body.office.desktop95 select:focus-visible{outline:1px dotted #000;outline-offset:-5px}
+body.office.desktop95 input,body.office.desktop95 select{border:2px solid;border-color:#808080 #fff #fff #808080;border-radius:0;background:#fff;color:#000;font:inherit;min-height:25px;padding:2px 4px;max-width:100%}
+body.desktop95 #office-status{background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:3px;gap:2px}
+body.desktop95 #office-status .stat,body.desktop95 #office-debt{border:1px solid;border-color:#808080 #fff #fff #808080;background:#c0c0c0;padding:3px 6px}
+body.desktop95 #office-status .stat-value{font-size:13px;color:#000}
+body.office.desktop95 .layout{grid-template-columns:112px minmax(0,1fr) minmax(340px,45%);grid-template-rows:minmax(0,1fr);gap:5px;background:#008080}
+body.office.desktop95 #desk-nav{grid-column:1;grid-row:1;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:3px;gap:2px}
+body.desktop95 #desk-nav::before{color:#fff;background:#808080;border:0;padding:3px 4px;margin:0 0 3px;font-weight:bold}
+body.office.desktop95 #desk-nav button{font-size:12px;padding:5px 5px;min-height:29px;flex-shrink:0}
+body.office.desktop95 #desk-nav button.primary{background:#000080;color:#fff;border-color:#808080 #fff #fff #808080}
+body.office.desktop95 #desk-nav button.primary:hover{background:#000080;color:#fff}
+body.office.desktop95 #desk-map{grid-column:2;grid-row:1;border:2px solid;border-color:#fff #404040 #404040 #fff;background:#c0c0c0;padding:2px;gap:0;overflow:hidden}
+body.desktop95 #desk-map .panel{background:#c0c0c0}
+body.desktop95 #desk-map .panel-head{background:#000080;color:#fff;padding:3px 5px;min-height:24px}
+body.desktop95 #desk-map .panel-head h2{font-size:12px;color:#fff}
+body.desktop95 #desk-map .map-wrap{border:2px solid;border-color:#808080 #fff #fff #808080;margin:3px 0;isolation:isolate}
+body.desktop95 #desk-map .scene-console,body.desktop95 #desk-alerts{background:#c0c0c0;border-color:#808080;padding:3px}
+body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:3;grid-row:1;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:2px;min-width:0}
+#desktop-titlebar{display:flex;align-items:center;gap:4px;background:#000080;color:#fff;min-height:25px;padding:2px 3px;flex-shrink:0}
+#desktop-title{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12px}
+.desktop-app-icon{width:14px;height:13px;border:1px solid #fff;background:#c0c0c0;position:relative;flex-shrink:0}
+.desktop-app-icon::before{content:'';position:absolute;inset:2px 1px 6px;background:#000080}
+body.office.desktop95 #desktop-titlebar button{min-height:19px;height:19px;width:21px;padding:0;line-height:13px;font:bold 14px Tahoma,sans-serif;flex-shrink:0}
+body.office.desktop95 #desk-content{background:#c0c0c0;border:2px solid;border-color:#808080 #fff #fff #808080;margin-top:3px;padding:7px;scrollbar-color:#c0c0c0 #dfdfdf}
+body.desktop95 #desk-content>.panel,body.desktop95 #desk-content .enterprise-body{background:#c0c0c0}
+body.desktop95 #desk-content h3{background:#c0c0c0;border-bottom:1px solid #808080;padding:4px 0;font-size:13px}
+body.desktop95 #desk-content table{background:#fff;border-collapse:collapse;font-size:12px}
+body.desktop95 #desk-content th{background:#c0c0c0!important;color:#000!important;border:1px solid #808080!important;font-weight:400}
+body.desktop95 #desk-content td{border:1px solid #c0c0c0!important;padding:5px 6px;font-size:12px}
+body.desktop95 #desk-content .enterprise-metrics>div{background:#fff;border-bottom:1px solid #c0c0c0;padding:3px 6px}
+body.desktop95 #desk-content .enterprise-metrics strong{font-size:13px}
+body.desktop95 #desk-content .helper{color:#444}
+body.desktop95 #desk-content .slot-card,body.desktop95 #desk-content .research-card,body.desktop95 #desk-content .machine-card{border:1px solid #808080;background:#c0c0c0;padding:6px;margin-bottom:5px}
+body.desktop95 #office-register{border:2px solid;border-color:#fff #404040 #404040 #fff;background:#c0c0c0;padding:2px}
+body.desktop95 #office-register-tabs{background:#c0c0c0;border:0;padding:0 0 2px;gap:3px}
+body.desktop95 #office-register .log,body.desktop95 #office-messages{background:#fff;border:1px solid #808080;flex:1;min-height:0}
+#desktop-taskbar{display:flex;align-items:center;gap:8px;min-height:26px;flex-shrink:0;padding:2px 0 0}
+#desktop-city-status{font-size:12px;border:1px solid;border-color:#808080 #fff #fff #808080;padding:2px 8px}
+body.desktop95 #desktop-task{min-width:140px;text-align:left;font-size:12px;min-height:23px;padding:1px 8px}
+body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:112px minmax(0,1fr)}
+body.office.desktop95 dialog{background:#c0c0c0;border:3px solid;border-color:#fff #404040 #404040 #fff;padding:10px;color:#000}
+body.office.desktop95 dialog h2{background:#000080;color:#fff;font-size:13px;font-weight:bold;padding:4px 6px;border:0}
+body.desktop95 dialog .entry-languages{border-bottom:1px solid #808080}
+body.desktop95 .tag,body.desktop95 .scenario-index{background:#dfdfdf;color:#000;border:1px solid #808080}
+body.desktop95 .scene-clock{background:#c0c0c0!important;border:2px solid!important;border-color:#fff #404040 #404040 #fff!important;color:#000!important}
+@media(max-width:1000px){body.office.desktop95 .layout{grid-template-columns:94px minmax(0,1fr) minmax(290px,48%)}body.office.desktop95 #desk-nav button{font-size:12px;padding:4px}body.desktop95 #office-status .stat-label{display:none}}
+@media(max-width:650px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 111px;gap:3px}body.office.desktop95 .layout{grid-template-columns:80px minmax(0,1fr);grid-template-rows:minmax(125px,35%) minmax(0,1fr);gap:3px}body.office.desktop95 #desk-nav{grid-column:1;grid-row:1/3;padding:2px}body.office.desktop95 #desk-map{grid-column:2;grid-row:1}body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:2;grid-row:2}body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:80px minmax(0,1fr)}body.office.desktop95 .layout:not([data-window=open]) #desk-map{grid-row:1/3}body.desktop95 #desk-alerts{position:static;pointer-events:auto}body.desktop95 #desk-map .map-wrap{margin:0}body.desktop95 #desk-content{padding:4px}body.desktop95 #desktop-city-status{font-size:11px;padding:2px 4px}body.desktop95 #desktop-task{min-width:100px}body.desktop95 #office-status .stat-value{font-size:12px}body.desktop95 #desk-map #district-controls{padding:1px}}
+@media(max-height:500px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 78px}body.desktop95 #office-register-tabs button{min-height:20px;padding:0 5px}#desktop-taskbar{min-height:23px}}
