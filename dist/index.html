@@ -188,6 +188,17 @@ body.desktop95 #desk-map .scene-progress-track{background:#808080;border:1px sol
 body.desktop95 #desk-map .scene-progress-track i{background:#000080;transition:none}
 @media(max-width:650px){body.desktop95 #city-readout{font-size:10px;min-height:22px}body.desktop95 #city-readout .scene-clock span{display:none}body.desktop95 #city-readout .scene-clock strong{font-size:11px}body.office.desktop95 #desk-map .map-pin{font-size:9px;padding:0 2px;min-height:17px}body.desktop95 #desk-map #district-controls h2{display:none}}
 
+/* Letterbox the composition at 800:520, with a maximum 1.5x artwork scale. */
+body.desktop95 #desk-map .map-wrap{display:flex;align-items:center;justify-content:center;background:#687878!important}
+#city-stage{position:relative;flex:none;overflow:hidden;isolation:isolate}
+#city-stage .city{width:100%;height:100%;display:block}
+#city-stage #pins{position:absolute;inset:0;pointer-events:none}
+#city-stage #pins .map-pin{pointer-events:auto}
+
+body.office.desktop95 #desk-map .compact-city .map-pin{font-size:0;padding:0;width:19px;min-width:19px;max-width:19px;height:19px;min-height:19px;line-height:15px}
+body.office.desktop95 #desk-map .compact-city .map-pin::before{display:none}
+body.office.desktop95 #desk-map .compact-city .map-pin::after{content:attr(data-number);font-size:10px}
+
 </style>
 </head>
 <body>
@@ -195,7 +206,7 @@ body.desktop95 #desk-map .scene-progress-track i{background:#000080;transition:n
 <main>
 <section class="intro"><div><div class="eyebrow">SMALL MACHINE, BIG DREAM</div><h1>당신의 첫 번째 자판기 제국.</h1><p>골목의 작은 한 칸에서, 도시 곳곳의 일상이 되기까지.</p></div><div class="day-control"><div><strong id="day">DAY 01</strong> <small>/ 30</small></div><button class="primary next" id="game-menu">게임 메뉴</button></div></section>
 <section class="stats" aria-label="회사 현황"><div class="stat"><div class="stat-label">보유 현금 <span>$</span></div><div class="stat-value mono" id="cash"></div><div class="stat-foot">설치와 재고 구매에 사용하는 자금</div></div><div class="stat"><div class="stat-label">지난 영업 순이익 <span>↗</span></div><div class="stat-value mono" id="profit"></div><div class="stat-foot">매출 − 판매 원가 − 임대료</div></div><div class="stat"><div class="stat-label">운영 중인 자판기 <span>▦</span></div><div class="stat-value mono" id="count"></div><div class="stat-foot" id="stock-total"></div></div><div class="stat"><div class="stat-label">회사 순자산 <span>◈</span></div><div class="stat-value mono" id="assets"></div><div class="stat-foot">현금 + 재고 원가 + 설비 잔존가치</div></div></section>
-<div class="layout"><div><section class="panel"><div class="panel-head"><h2>우리 동네 사업 지도</h2><span class="tag">● 상권 탐색 중</span></div><div id="district-controls"></div><div class="map-wrap"><svg class="city" viewBox="0 0 800 340" preserveAspectRatio="none" aria-label="공원, 대학, 오피스, 역, 주거지로 이루어진 동네 지도" role="img">
+<div class="layout"><div><section class="panel"><div class="panel-head"><h2>우리 동네 사업 지도</h2><span class="tag">● 상권 탐색 중</span></div><div id="district-controls"></div><div class="map-wrap"><svg class="city" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" aria-label="공원, 대학, 오피스, 역, 주거지로 이루어진 동네 지도" role="img">
 <defs><pattern id="grass" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="5" cy="7" r="1" fill="#c5d3b8" opacity=".5"/></pattern><pattern id="windows" width="16" height="16" patternUnits="userSpaceOnUse"><rect x="5" y="4" width="5" height="7" rx="1" fill="var(--scene-windows,#eeeede)"/></pattern><g id="tree"><ellipse cx="0" cy="9" rx="13" ry="5" fill="#aec09b" opacity=".4"/><path d="M0 0v14" stroke="#879777" stroke-width="3"/><circle cy="-4" r="13" fill="var(--scene-leaf,#9eb788)"/><circle cx="-4" cy="-8" r="9" fill="var(--scene-leafLight,#b1c898)"/></g><g id="house"><path d="M0 0l30-14 29 14-29 15z" fill="var(--scene-roof,#d89b76)"/><path d="M0 0v30l30 15V15z" fill="#f0dcc0"/><path d="M30 15v30l29-15V0z" fill="#dcc8ac"/><path d="M9 12v10m12-5v10m21-4v10m10-15v10" stroke="#92a7a0" stroke-width="5"/></g></defs><g class="city-base">
 <rect width="800" height="340" fill="var(--scene-land,#e8eedf)"/><rect width="800" height="340" fill="url(#grass)"/><path d="M650-30Q560 100 690 210T695 390" stroke="var(--scene-river,#c3dce0)" stroke-width="64" fill="none"/><path d="M650-30Q560 100 690 210T695 390" stroke="var(--scene-water,#d5e7e5)" stroke-width="47" fill="none"/>
 <path d="M-40 180H820M280-30V390M510-30V390" stroke="#d9d9ce" stroke-width="36" fill="none"/><path d="M-40 180H820M280-30V390M510-30V390" stroke="var(--scene-road,#fdfbf0)" stroke-width="29" fill="none"/><path d="M-40 180H820M280-30V390M510-30V390" stroke="#d7d8c9" stroke-width="1.5" stroke-dasharray="9 9" fill="none"/>
@@ -435,7 +446,7 @@ function paintDistrict(){const layer=$('district-scenery');if(!layer)return;docu
  if(selectedMap===3){art+=`<path d="M660 0q-60 130 25 190t-15 170h130V0z" fill="${PALETTES[sceneSeason()].water}"/><ellipse cx="390" cy="95" rx="65" ry="30" fill="${PALETTES[sceneSeason()].river}"/>`;for(const [x,y] of [[80,65],[180,95],[350,40],[440,65],[555,88],[150,250],[220,300],[345,272],[430,250],[570,240],[640,310]])art+=`<use href="#tree" x="${x}" y="${y}"/>`;for(const [x,y] of [[100,110],[375,255],[560,120]])art+=`<path d="M${x} ${y+25}l27-37 30 37z" fill="#d5a46d"/><path d="M${x+15} ${y+25}l12-22 15 22z" fill="#f1dcc2"/>`;}
  layer.innerHTML=art;
 }
-function paintScene(time){paintSceneBase(time);if(!$('scene-npc'))return;$('scene-npc').innerHTML=rivalLocations().filter(id=>LOCATIONS[id].map===selectedMap).map(id=>cityMachine(...STOPS[id%6],'#000080',null)).join('');$('scene-workers').innerHTML=state.jobs.filter(j=>LOCATIONS[j.loc].map===selectedMap).map((j,i)=>{const pt=pathPoint(customerPath(j.loc,i),1-j.remaining/j.duration);return `<g>${personSvg(...pt,5,time,false,state.weather===2&&sceneSeason()!==3,sceneSeason()===3)}<text x="${pt[0]}" y="${pt[1]-29}" font-size="10" text-anchor="middle" fill="#28684e">${j.type==='collect'?'$':'▣'}</text></g>`;}).join('');}
+function paintScene(time){paintSceneBase(time);if(!$('scene-npc'))return;$('scene-npc').innerHTML=rivalLocations().filter(id=>LOCATIONS[id].map===selectedMap).map(id=>cityMachine(...STOPS[id%6],'#000080',null)).join('');$('scene-workers').innerHTML=state.jobs.filter(j=>LOCATIONS[j.loc].map===selectedMap).map((j,i)=>{const pt=pathPoint(customerPath(j.loc,i),1-j.remaining/j.duration);return `<g>${personSvg(...pt,5,time,false,state.weather===2&&sceneSeason()!==3,sceneSeason()===3)}<text x="${isoPoint(...pt)[0]}" y="${isoPoint(...pt)[1]-29}" font-size="10" text-anchor="middle" fill="#28684e">${j.type==='collect'?'$':'▣'}</text></g>`;}).join('');}
 function initWorld(){menuOpen=true;openModal('menu');$('reset').onclick=()=>{menuOpen=true;openModal(inGameSession?'pause':'menu');};$('game-menu').onclick=()=>{menuOpen=true;openModal(inGameSession?'pause':'menu');};$('scene-report').onclick=()=>{if(state.report)openModal('report');};$('modal').addEventListener('cancel',e=>{if(['menu','pause','newrun','tutorialOffer','tutorial','settings'].includes(modalView)){e.preventDefault();}});}
 document.addEventListener('change',e=>{if(e.target.id==='run-duration')chosenDuration=Number(e.target.value);if(e.target.id==='menu-language')changeLanguage(e.target.value);});
 document.addEventListener('click',e=>{const el=e.target.closest('button');if(!el)return;if(el.dataset.map!==undefined)chooseMap(Number(el.dataset.map));if(el.dataset.staff)hire(el.dataset.staff,Number(el.dataset.delta));if(el.dataset.bank)bankAction(el.dataset.bank);if(el.dataset.job)dispatch(el.dataset.job,Number(el.dataset.loc));if(el.dataset.complaint)respondComplaint(Number(el.dataset.complaint));if(el.dataset.acquire)acquireNpc(Number(el.dataset.acquire));switch(el.id){case'menu-new':openModal('newrun');break;case'menu-load':if(state.started){inGameSession=true;menuOpen=false;closeModal();livePaused=false;if(state.ended)openModal('end');else if(!state.live)startBusiness();render();}break;case'menu-settings':openModal('settings');break;case'menu-back':openModal(inGameSession?'pause':'menu');break;case'launch-new':launchNew();break;case'tutorial-start':tutorialStep=0;openModal('tutorial');break;case'tutorial-next':if(tutorialStep<5){tutorialStep++;drawModal();}else completeTutorial();break;case'tutorial-skip':completeTutorial();break;case'accept-offer':acceptOffer();break;}});
@@ -494,8 +505,8 @@ function paintSceneBase(time){
  $('scene-machines').innerHTML=visibleMachines().map(m=>cityMachine(...STOPS[m.loc%6],product(m).color,m.stock)).join('');
  const people=[],bubbles=[];
  if(sceneMotion){for(let i=0;i<7;i++){const progress=((time/23000+i/7)%1),route=i%2?[[280,-25],[280,180],[825,180]]:[[-25,180],[510,180],[510,365]],pt=pathPoint(route,progress);people.push({y:pt[1],svg:personSvg(...pt,i,clock,false,raining,si===3)});}}
- if(l){const total=l.rows.reduce((n,r)=>n+r.n,0),stride=Math.max(1,Math.ceil(total/150));for(const r of sceneCustomerRows(l).filter(r=>LOCATIONS[r.loc].map===selectedMap)){for(let i=0;i<r.n;i++){if(state.enterprise.operations?.market&&!state.enterprise.operations.market.legacy&&!r.bought.some(b=>b.i===i))continue;if(i%stride!==0&&i!==r.n-1)continue;const due=sceneCustomerDue(r,i),age=clock-due;if(age< -3000||age>2200)continue;const seed=r.loc*43+i,route=customerPath(r.loc,seed),t=age<0?(age+3000)/3000:age<650?1:1-(age-650)/1550,pt=pathPoint(route,sceneMotion?t:1);people.push({y:pt[1],svg:personSvg(...pt,seed,clock,age>=0&&age<650,raining,si===3)});if(age>=0&&age<1200&&r.bought?.some(b=>b.i===i)){bubbles[r.loc]=(`<g transform="translate(${STOPS[r.loc%6][0]} ${STOPS[r.loc%6][1]-30-(sceneMotion?age/60:0)})" opacity="${Math.max(0,1-age/1200)}"><rect x="-28" y="-12" width="56" height="18" rx="8" fill="#fffef4"/><text text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="700" fill="#37765c">+${money(r.bought.find(b=>b.i===i).price)}</text></g>`);}}
- if(r.lost?.stock>0&&clock>21000&&clock<23200){const pt=pathPoint(customerPath(r.loc,r.loc),Math.min(1,(clock-21000)/1100));people.push({y:pt[1],svg:personSvg(...pt,r.loc,clock,false,raining,si===3)});bubbles[r.loc]=(`<text x="${STOPS[r.loc%6][0]}" y="${STOPS[r.loc%6][1]-27}" text-anchor="middle" fill="#aa4d3d" font-size="10" font-family="sans-serif">${T('품절','売り切れ')}</text>`);}
+ if(l){const total=l.rows.reduce((n,r)=>n+r.n,0),stride=Math.max(1,Math.ceil(total/150));for(const r of sceneCustomerRows(l).filter(r=>LOCATIONS[r.loc].map===selectedMap)){for(let i=0;i<r.n;i++){if(state.enterprise.operations?.market&&!state.enterprise.operations.market.legacy&&!r.bought.some(b=>b.i===i))continue;if(i%stride!==0&&i!==r.n-1)continue;const due=sceneCustomerDue(r,i),age=clock-due;if(age< -3000||age>2200)continue;const seed=r.loc*43+i,route=customerPath(r.loc,seed),t=age<0?(age+3000)/3000:age<650?1:1-(age-650)/1550,pt=pathPoint(route,sceneMotion?t:1);people.push({y:pt[1],svg:personSvg(...pt,seed,clock,age>=0&&age<650,raining,si===3)});if(age>=0&&age<1200&&r.bought?.some(b=>b.i===i)){bubbles[r.loc]=(`<g transform="translate(${isoPoint(...STOPS[r.loc%6])[0]} ${isoPoint(...STOPS[r.loc%6])[1]-30-(sceneMotion?age/60:0)})" opacity="${Math.max(0,1-age/1200)}"><rect x="-28" y="-12" width="56" height="18" rx="8" fill="#fffef4"/><text text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="700" fill="#37765c">+${money(r.bought.find(b=>b.i===i).price)}</text></g>`);}}
+ if(r.lost?.stock>0&&clock>21000&&clock<23200){const pt=pathPoint(customerPath(r.loc,r.loc),Math.min(1,(clock-21000)/1100));people.push({y:pt[1],svg:personSvg(...pt,r.loc,clock,false,raining,si===3)});bubbles[r.loc]=(`<text x="${isoPoint(...STOPS[r.loc%6])[0]}" y="${isoPoint(...STOPS[r.loc%6])[1]-27}" text-anchor="middle" fill="#aa4d3d" font-size="10" font-family="sans-serif">${T('품절','売り切れ')}</text>`);}
  }}
  $('scene-people').innerHTML=people.sort((a,b)=>a.y-b.y).slice(0,65).map(p=>p.svg).join('');$('scene-bubbles').innerHTML=bubbles.slice(-22).join('');
  const afternoon=l?Math.max(0,(clock/DAY_MS-.5)*2):0;$('scene-tint').setAttribute('fill',wi===2?'#43566f':afternoon>.55?'#694e80':'#efaa65');$('scene-tint').setAttribute('opacity',String(wi===2?.14:afternoon*.20));
@@ -2677,7 +2688,7 @@ const cityBeforePaint=paintScene;
 paintScene=function(time){cityBeforePaint(time);paintDistrict();};
 function cityWeather(clock,season,weather){
  const t=sceneMotion?clock:0,snow=weather===2&&season===3,rain=weather===2&&!snow;let art='';
- if(rain||snow||season===0||season===2){const count=rain?65:snow?55:22;for(let i=0;i<count;i++){const x=Math.round((i*149+t*.012)%850-25),y=Math.round((i*89+t*(rain?.3:snow?.035:.021))%390-25);art+=rain?`<path d="M${x} ${y}v6h-2v6" fill="none" stroke="#b0d0e0" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="${snow?2:4}" height="2" fill="${snow?'#fff':PALETTES[season].particle}"/>`;}}
+ if(rain||snow||season===0||season===2){const count=rain?65:snow?55:22;for(let i=0;i<count;i++){const x=Math.round((i*149+t*.012)%850-25),y=Math.round((i*89+t*(rain?.3:snow?.035:.021))%570-25);art+=rain?`<path d="M${x} ${y}v6h-2v6" fill="none" stroke="#b0d0e0" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="${snow?2:4}" height="2" fill="${snow?'#fff':PALETTES[season].particle}"/>`;}}
  if(weather<2)art+=`<path d="M715 20h20v5h5v20h-5v5h-20v-5h-5V25h5z" fill="${weather===1?'#e8a828':'#e0c858'}" stroke="#907028" stroke-width="2"/><path d="M725 12v5m0 36v5m-23-23h5m36 0h5" stroke="#e0c858" stroke-width="2"/>`;
  else {const drift=sceneMotion?Math.round(Math.sin(clock/12000)*25):0;art+=`<g transform="translate(${drift} 0)" fill="${rain?'#788898':'#b0b8b8'}" stroke="#586870" stroke-width="2"><path d="M630 26h12V16h25V8h30v8h30v10h22v12H630z"/><path d="M60 24h15V14h28v6h30v8h18v10H60z"/></g>`;}
  return art;
@@ -2688,6 +2699,55 @@ cityReadout.append(document.querySelector('.map-label'),document.querySelector('
 document.querySelector('.map-wrap').before(cityReadout);
 document.querySelector('.city').setAttribute('shape-rendering','crispEdges');
 paintDistrict();
+
+// One camera rectangle owns both SVG artwork and HTML hit targets; no independent stretching.
+const cityViewport=document.querySelector('.map-wrap'),cityStage=document.createElement('div');cityStage.id='city-stage';
+cityStage.append(document.querySelector('.city'),$('pins'));cityViewport.append(cityStage);
+function cityFit(){const scale=Math.min(cityViewport.clientWidth/800,cityViewport.clientHeight/340,1.5);cityStage.style.width=(800*scale)+'px';cityStage.style.height=(340*scale)+'px';}
+const cityResizeObserver=typeof ResizeObserver!=='undefined'?new ResizeObserver(()=>cityFit()):null;cityResizeObserver?.observe(cityViewport);cityFit();
+
+/* Visual projection only; saved locations and simulation distances stay in world coordinates. */
+function isoPoint(x,y,z=0){return [400+(x-400)*.65-(y-170)*.75,260+(x-400)*.27+(y-170)*.40-z];}
+function isoPoly(points,fill,stroke='#45545b'){return `<polygon points="${points.map(p=>isoPoint(...p).join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`;}
+function isoGround(x,y,w,h,fill){return isoPoly([[x,y],[x+w,y],[x+w,y+h],[x,y+h]],fill);}
+function isoLine(points,color,width=1,dash=''){return `<polyline points="${points.map(p=>isoPoint(...p).join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;}
+function isoBuilding(x,y,w,d,h,label,roof){
+ let svg=isoPoly([[x,y,h],[x+w,y,h],[x+w,y+d,h],[x,y+d,h]],roof)+isoPoly([[x+w,y,0],[x+w,y+d,0],[x+w,y+d,h],[x+w,y,h]],'#788b96')+isoPoly([[x,y+d,0],[x+w,y+d,0],[x+w,y+d,h],[x,y+d,h]],'#b8c2bf');
+ svg+=isoPoly([[x+6,y+6,h+2],[x+w-6,y+6,h+2],[x+w-6,y+d-6,h+2],[x+6,y+d-6,h+2]],'#cad0c5');
+ for(let z=23;z<h-9;z+=13){for(let u=9;u<w-9;u+=16)svg+=isoPoly([[x+u,y+d,z],[x+u+8,y+d,z],[x+u+8,y+d,z+7],[x+u,y+d,z+7]],'var(--scene-windows,#cdd9c7)','#617784');for(let v=7;v<d-8;v+=15)svg+=isoPoly([[x+w,y+v,z],[x+w,y+v+8,z],[x+w,y+v+8,z+7],[x+w,y+v,z+7]],'#a7bdc4','#526979');}
+ svg+=isoPoly([[x+9,y+d,0],[x+w-9,y+d,0],[x+w-9,y+d,16],[x+9,y+d,16]],'#385669')+isoPoly([[x-2,y+d+9,18],[x+w+2,y+d+9,18],[x+w+2,y+d,23],[x-2,y+d,23]],roof);
+ const [tx,ty]=isoPoint(x+w/2,y+d,28);svg+=`<text x="${tx}" y="${ty}" text-anchor="middle" font-size="9" fill="#243743" paint-order="stroke" stroke="#e3e4d5" stroke-width="3">${label}</text>`;
+ return {depth:isoPoint(x+w,y+d)[1],svg:`<g class="iso-building">${svg}</g>`};
+}
+let isoKey='',isoObjects=[];
+function isoScenery(){const key=selectedMap+':'+sceneSeason()+':'+lang;if(key===isoKey)return;isoKey=key;const p=PALETTES[sceneSeason()],map=selectedMap;
+ let ground=isoGround(0,0,800,340,p.land)+isoGround(685,0,115,340,p.water);
+ for(let x=20;x<680;x+=28)ground+=isoLine([[x,0],[x,340]],p.park,.35);
+ for(let y=12;y<340;y+=22)ground+=isoLine([[0,y],[680,y]],p.park,.35);
+ for(const [x,y,w,h] of [[0,159,800,42],[259,0,42,340],[489,0,42,340]])ground+=isoGround(x,y,w,h,'#b6b9aa');
+ for(const [x,y,w,h] of [[0,167,800,26],[267,0,26,340],[497,0,26,340]])ground+=isoGround(x,y,w,h,'#65717a');
+ ground+=isoLine([[0,180],[800,180]],'#ece1ad',1,'9 9')+isoLine([[280,0],[280,340]],'#ece1ad',1,'9 9')+isoLine([[510,0],[510,340]],'#ece1ad',1,'9 9');
+ for(const x of [280,510])for(let d=-10;d<=10;d+=5)ground+=isoLine([[x+d,153],[x+d,164]],'#e6e3d4',2)+isoLine([[x+d,196],[x+d,207]],'#e6e3d4',2);
+ if(map===2){ground+=isoGround(0,5,665,25,'#847f71');for(let x=0;x<660;x+=12)ground+=isoLine([[x,7],[x,27]],'#c8c1a5',2);ground+=isoLine([[0,10],[665,10]],'#394c58',2)+isoLine([[0,23],[665,23]],'#394c58',2);}
+ if(map===4)ground+=isoGround(0,0,800,50,p.water)+isoGround(15,46,640,12,'#aaa898');
+ const labels=map===1?[T('오피스','オフィス'),T('본사','本社'),T('은행','銀行')]:map===2?[T('중앙역','中央駅'),T('백화점','百貨店'),T('호텔','ホテル')]:map===3?[T('공원','公園'),T('박물관','博物館'),T('호텔','ホテル')]:map===4?[T('창고','倉庫'),T('물류','物流'),T('공장','工場')]:[T('대학','大学'),T('주택','住宅'),T('상점','店舗')];
+ const taller=map===1?22:map===2?12:0;isoObjects=[isoBuilding(70,55,124,66,map===4?36:59+taller,labels[0],'#637e86'),isoBuilding(334,42,103,77,68+taller,labels[1],'#847889'),isoBuilding(558,48,86,69,58+taller,labels[2],'#6c8790'),isoBuilding(122,227,81,51,42,labels[2],'#a16f5d'),isoBuilding(339,235,88,49,44,T('상점가','商店街'),'#628576'),isoBuilding(558,228,54,39,34,T('찻집','喫茶店'),'#997958')];
+ if(map===0||map===3){isoObjects.shift();ground+=isoGround(42,48,182,93,p.park)+isoGround(65,72,75,32,p.water);ground+=isoLine([[56,130],[197,130],[197,65]],'#c5b995',7);}
+ for(const [x,y]of [[35,122],[235,85],[310,70],[463,88],[650,110],[25,276],[230,304],[310,316],[652,305],[755,85],[755,273],...(map===0||map===3?[[55,65],[165,66],[175,106]]:[])]){const pt=isoPoint(x,y);isoObjects.push({depth:pt[1],svg:cityTree(...pt)});}
+ if(map===2)isoObjects.push(isoBuilding(80,7,170,16,14,'','#527f77'));
+ $('district-scenery').innerHTML=ground;for(const o of isoObjects){o.node=document.createElementNS('http://www.w3.org/2000/svg','g');o.node.dataset.isoDepth=o.depth;o.node.innerHTML=o.svg;}
+}
+const isoPersonBefore=personSvg;personSvg=function(x,y,...args){const pt=isoPoint(x,y);return `<g data-depth="${pt[1]}">${isoPersonBefore(...pt,...args)}</g>`;};
+const isoMachineBefore=cityMachine;cityMachine=function(x,y,...args){const pt=isoPoint(x,y);return `<g data-depth="${pt[1]}">${isoMachineBefore(...pt,...args)}</g>`;};
+const isoDepth=document.createElementNS('http://www.w3.org/2000/svg','g');isoDepth.id='iso-depth';$('scene-tint').before(isoDepth);
+for(const id of ['scene-machines','scene-npc','scene-people','scene-workers'])$(id).style.display='none';
+paintDistrict=isoScenery;
+const isoPaintBefore=paintScene;paintScene=function(time){isoPaintBefore(time);isoScenery();const actors=[];for(const id of ['scene-machines','scene-npc','scene-people','scene-workers'])for(const node of $(id).children){const actor=node.matches('[data-depth]')?node:node.querySelector('[data-depth]'),depth=Number(actor?.dataset.depth||0);node.dataset.isoDepth=depth;actors.push({depth,node});}isoDepth.replaceChildren(...[...isoObjects,...actors].sort((a,b)=>a.depth-b.depth).map(o=>o.node));};
+function isoPins(){for(const pin of $('pins').children){const pt=isoPoint(...STOPS[Number(pin.dataset.select)%6]);pin.dataset.number=String(Number(pin.dataset.select)%6+1);pin.title=pin.textContent;pin.setAttribute('aria-label',pin.textContent);pin.style.left=(pt[0]/8)+'%';pin.style.top=((pt[1]+18)/520*100)+'%';}}
+const isoMapBefore=render;render=function(){isoMapBefore();isoPins();};
+document.querySelector('.city').setAttribute('viewBox','0 0 800 520');$('scene-tint').setAttribute('height','520');
+cityFit=function(){const scale=Math.min(cityViewport.clientWidth/800,cityViewport.clientHeight/520,1.5);cityStage.style.width=(800*scale)+'px';cityStage.style.height=(520*scale)+'px';cityStage.classList.toggle('compact-city',800*scale<500);};
+cityFit();isoScenery();isoPins();
 
 /* Stable IDs are shared by saves, quotes, effects and the event register. */
 function businessEventCatalog(){return [

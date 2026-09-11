@@ -15,3 +15,14 @@ body.desktop95 #scene-bubbles text{font-family:Tahoma,'MS UI Gothic','Malgun Got
 body.desktop95 #desk-map .scene-progress-track{background:#808080;border:1px solid;border-color:#404040 #fff #fff #404040;height:7px;border-radius:0}
 body.desktop95 #desk-map .scene-progress-track i{background:#000080;transition:none}
 @media(max-width:650px){body.desktop95 #city-readout{font-size:10px;min-height:22px}body.desktop95 #city-readout .scene-clock span{display:none}body.desktop95 #city-readout .scene-clock strong{font-size:11px}body.office.desktop95 #desk-map .map-pin{font-size:9px;padding:0 2px;min-height:17px}body.desktop95 #desk-map #district-controls h2{display:none}}
+
+/* Letterbox the composition at 800:520, with a maximum 1.5x artwork scale. */
+body.desktop95 #desk-map .map-wrap{display:flex;align-items:center;justify-content:center;background:#687878!important}
+#city-stage{position:relative;flex:none;overflow:hidden;isolation:isolate}
+#city-stage .city{width:100%;height:100%;display:block}
+#city-stage #pins{position:absolute;inset:0;pointer-events:none}
+#city-stage #pins .map-pin{pointer-events:auto}
+
+body.office.desktop95 #desk-map .compact-city .map-pin{font-size:0;padding:0;width:19px;min-width:19px;max-width:19px;height:19px;min-height:19px;line-height:15px}
+body.office.desktop95 #desk-map .compact-city .map-pin::before{display:none}
+body.office.desktop95 #desk-map .compact-city .map-pin::after{content:attr(data-number);font-size:10px}

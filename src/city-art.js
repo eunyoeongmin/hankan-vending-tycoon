@@ -41,7 +41,7 @@ const cityBeforePaint=paintScene;
 paintScene=function(time){cityBeforePaint(time);paintDistrict();};
 function cityWeather(clock,season,weather){
  const t=sceneMotion?clock:0,snow=weather===2&&season===3,rain=weather===2&&!snow;let art='';
- if(rain||snow||season===0||season===2){const count=rain?65:snow?55:22;for(let i=0;i<count;i++){const x=Math.round((i*149+t*.012)%850-25),y=Math.round((i*89+t*(rain?.3:snow?.035:.021))%390-25);art+=rain?`<path d="M${x} ${y}v6h-2v6" fill="none" stroke="#b0d0e0" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="${snow?2:4}" height="2" fill="${snow?'#fff':PALETTES[season].particle}"/>`;}}
+ if(rain||snow||season===0||season===2){const count=rain?65:snow?55:22;for(let i=0;i<count;i++){const x=Math.round((i*149+t*.012)%850-25),y=Math.round((i*89+t*(rain?.3:snow?.035:.021))%570-25);art+=rain?`<path d="M${x} ${y}v6h-2v6" fill="none" stroke="#b0d0e0" stroke-width="2"/>`:`<rect x="${x}" y="${y}" width="${snow?2:4}" height="2" fill="${snow?'#fff':PALETTES[season].particle}"/>`;}}
  if(weather<2)art+=`<path d="M715 20h20v5h5v20h-5v5h-20v-5h-5V25h5z" fill="${weather===1?'#e8a828':'#e0c858'}" stroke="#907028" stroke-width="2"/><path d="M725 12v5m0 36v5m-23-23h5m36 0h5" stroke="#e0c858" stroke-width="2"/>`;
  else {const drift=sceneMotion?Math.round(Math.sin(clock/12000)*25):0;art+=`<g transform="translate(${drift} 0)" fill="${rain?'#788898':'#b0b8b8'}" stroke="#586870" stroke-width="2"><path d="M630 26h12V16h25V8h30v8h30v10h22v12H630z"/><path d="M60 24h15V14h28v6h30v8h18v10H60z"/></g>`;}
  return art;
@@ -52,3 +52,9 @@ cityReadout.append(document.querySelector('.map-label'),document.querySelector('
 document.querySelector('.map-wrap').before(cityReadout);
 document.querySelector('.city').setAttribute('shape-rendering','crispEdges');
 paintDistrict();
+
+// One camera rectangle owns both SVG artwork and HTML hit targets; no independent stretching.
+const cityViewport=document.querySelector('.map-wrap'),cityStage=document.createElement('div');cityStage.id='city-stage';
+cityStage.append(document.querySelector('.city'),$('pins'));cityViewport.append(cityStage);
+function cityFit(){const scale=Math.min(cityViewport.clientWidth/800,cityViewport.clientHeight/340,1.5);cityStage.style.width=(800*scale)+'px';cityStage.style.height=(340*scale)+'px';}
+const cityResizeObserver=typeof ResizeObserver!=='undefined'?new ResizeObserver(()=>cityFit()):null;cityResizeObserver?.observe(cityViewport);cityFit();
