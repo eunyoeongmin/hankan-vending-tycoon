@@ -7,6 +7,7 @@
 - [공개 게임](https://hankan-vending-tycoon.eym7443.chatgpt.site)
 - [공개 소스](https://github.com/eunyoeongmin/hankan-vending-tycoon)
 - [현재 구현·검사·공개 상태](DEVELOPMENT.md)
+- [멀티에이전트 개발 지침과 전체 게임 담당 범위](docs/QUALITY_ROLES.md)
 - [10.0 장기 경영 설계](docs/MANAGEMENT_REDESIGN.md), [기반 시스템 대조표](docs/REFERENCE_IMPLEMENTATION.md)
 
 신규 회사는 일시정지·수동 운영으로 시작합니다. 회사 설립 화면에서 자동 운영·연구 단계 자동 승인·즉시 시간 진행을 선택할 수 있습니다. 상단 자동 운영 버튼에서 현재 설정을 확인하고 운영 규정을 열 수 있습니다. 기존 저장의 운영 설정은 유지합니다.
