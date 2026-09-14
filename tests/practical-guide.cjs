@@ -33,6 +33,9 @@ assert.ok(ev('refDispatchRoute(playerFirm(),refFirm(playerFirm()).routes[0].id)'
 assert.ok(ev('!guideActive()&&livePaused&&machine(state.guide.target).total>0&&valid(state)'));
 ev('selectDesk("research")');assert.equal(ev('deskTab'),'research');
 assert.deepEqual(g.errors,[]);g.dom.window.close();
+g=make();ev('launchNew();guideStart();document.querySelector("#guide-exit").click()');
+assert.ok(ev('!guideActive()&&livePaused&&state.cash===5000000'));ev('selectDesk("research")');assert.equal(ev('deskTab'),'research');
+assert.deepEqual(g.errors,[]);g.dom.window.close();
 console.log('PASS practical guide: actual sale/collection/order/receipt/route/site/machine/install/refill/new sale; locks, funds, save resume and duplicate/insufficient installation');
 
 })().catch(e=>{console.error(e);process.exit(1)});
