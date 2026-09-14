@@ -221,6 +221,12 @@ body.office.desktop95 #desk-map .pixel-stage .map-pin{max-width:110px;white-spac
 #guide-text{margin:5px 0;color:#000;font-size:13px}#guide-status{font-size:12px}#practical-guide .buttons{display:flex;gap:6px;margin-top:4px}
 body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}.guide-target{outline:3px solid #000080!important;outline-offset:2px}
 @media(max-width:600px){#practical-guide img{width:48px;height:72px}#practical-guide{max-height:190px;gap:6px}#guide-text{font-size:12px}#practical-guide .buttons{flex-wrap:wrap}body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}}
+#guide-spotlight{position:fixed;inset:0;width:100vw;height:100vh;z-index:9000;pointer-events:none;display:none}
+body:has(dialog[open]) #guide-spotlight{display:none!important}
+#guide-status{display:block;line-height:1.4;color:#000080}
+#guide-progress{display:block;width:100%;height:10px;margin:3px 0;accent-color:#000080}
+#guide-progress[hidden]{display:none}
+.guide-target{outline-color:#fff!important;box-shadow:0 0 0 5px #000080!important}
 
 </style>
 </head>
@@ -3375,26 +3381,50 @@ drawModal=function(){
 
 /* Persistent, action-gated lessons. All transactions use the ordinary game engine. */
 const GUIDE_LESSONS=[
- ['manage',B('내 자판기 선택','自分の自販機を選択'),B('지도에서 강조된 내 자판기를 누르세요. 이 창에서 재고와 기기 안 매출을 확인합니다.','地図の強調された自販機を押してください。在庫と機内売上を確認できます。')],
- ['manage',B('첫 판매 확인','最初の販売'),B('상단 ▶ 계속을 누르세요. 손님이 구매하면 재고가 줄고 매출이 기기 안에 쌓입니다. 첫 판매 후 멈춥니다.','上の▶続けるを押します。購入で在庫が減り、売上が機内に貯まります。最初の販売で停止します。')],
- ['manage',B('매출 회수 출발','売上回収へ出発'),B('기기 관리의 직접 회수하러 이동을 누르세요. 보관 매출은 회수해야 회사 현금이 됩니다.','機械管理の「自分で回収に向かう」を押します。機内売上は回収すると会社の現金になります。')],
- ['manage',B('회수 완료 기다리기','回収完了を待つ'),B('▶ 계속으로 이동 시간을 진행하세요. 도착해 실제 회수가 끝나야 다음 단계로 갑니다.','▶続けるで移動を進めます。到着し、回収が完了すると次へ進みます。')],
- ['supply',B('판매할 음료 발주','販売する飲料を発注'),B('발주에서 현재 판매 중인 탄산음료, 수량 200개, 첫 창고를 확인하고 발주를 누르세요. 돈을 내도 즉시 기기에 들어가지는 않습니다.','発注で販売中の炭酸飲料・数量200本・最初の倉庫を確認し、発注を押します。支払後すぐ機械に入るわけではありません。')],
- ['supply',B('창고 입고 확인','倉庫への入荷'),B('▶ 계속으로 배송을 기다리세요. 기다리는 동안 상단 배속을 16배로 올릴 수 있습니다. 입고 완료 후 자동 정지합니다.','▶続けるで配送を待ちます。待機中は上の速度を16倍にできます。入荷後に自動停止します。')],
- ['logistics',B('배송 경로 편성','配送ルートを編成'),B('물류에서 첫 차량의 담당 기기 경로 편성을 누르세요. 첫 거점의 두 대까지는 사장이 직접 배송할 수 있습니다.','物流で最初の車両の「担当機械のルート編成」を押します。最初の拠点の2台までは社長が配送できます。')],
- ['logistics',B('음료를 싣고 출발','飲料を積んで出発'),B('같은 차량의 출발을 누르세요. 창고 재고가 운송 중 재고로 이동하고 운송비가 나갑니다.','同じ車両の出発を押します。倉庫在庫が輸送中在庫に変わり、運送費を支払います。')],
- ['logistics',B('기기 보충 완료','自販機への補充完了'),B('▶ 계속으로 배송을 완료하세요. 실제 기기에 음료가 들어간 것을 확인한 뒤 확장으로 넘어갑니다.','▶続けるで配送を完了します。実際に機械へ補充されたことを確認してから拡張します。')],
- ['equipment',B('두 번째 입지 계약','2か所目の立地契約'),B('기기 조달에서 강조된 같은 상권의 빈 입지를 계약하세요. 장소 계약과 기기 구매는 별도입니다.','機械調達で強調された同じ商圏の空き立地を契約します。場所の契約と機械購入は別です。')],
- ['equipment',B('새 자판기 주문','新しい自販機を注文'),B('Koyo S80의 가격을 확인하고 구매를 누르세요. 주문 내역에 기기 배송이 생깁니다.','Koyo S80の価格を確認し購入を押します。注文一覧に機械配送が追加されます。')],
- ['equipment',B('기기 도착 기다리기','機械の到着を待つ'),B('▶ 계속으로 2일의 배송을 진행하세요. 설치 대기 기기가 1대 생겨야 설치할 수 있습니다.','▶続けるで2日間の配送を進めます。設置待ち機械が1台届くと設置できます。')],
- ['equipment',B('계약한 장소에 설치','契約した場所へ設置'),B('계약한 입지의 기기 설치를 누르세요. 외주 설치비와 작업 시간을 확인하세요.','契約した立地の機械設置を押します。外注設置費と作業時間を確認してください。')],
- ['equipment',B('설치 완료 확인','設置完了を確認'),B('▶ 계속으로 설치 작업을 끝내세요. 지도에 나타나도 음료를 보충하기 전에는 판매할 수 없습니다.','▶続けるで設置を完了します。地図に現れても飲料を補充するまでは販売できません。')],
- ['logistics',B('새 기기에 첫 보충','新しい機械へ初回補充'),B('창고에 탄산음료가 부족하면 추가 발주하고 입고를 기다리세요. 물류에서 경로를 다시 편성해 두 기기를 포함하고 출발하세요. 실제 보충까지 완료합니다.','炭酸飲料が足りなければ追加発注して入荷を待ちます。物流でルートを再編成して2台を含め、出発し補充を完了してください。')],
- ['manage',B('새 기기에서 첫 매출','新しい機械で初売上'),B('▶ 계속으로 새 기기의 첫 판매를 확인하세요. 이제 발주→입고→배송→판매→회수와 출점 과정을 직접 수행했습니다.','▶続けるで新しい機械の最初の販売を確認します。発注→入荷→配送→販売→回収と出店を実行できました。')]
+ ['manage',B('내 자판기 선택','自分の自販機を選択'),B('사장님, 제가 옆에서 하나씩 도와드릴게요. 먼저 지도에서 밝게 표시된 우리 자판기를 눌러 볼까요? 재고와 기기 안 매출부터 함께 살펴봐요.','社長、私が一つずつお手伝いしますね。まずは地図で明るくなっている自販機を押してみましょう。在庫と機内売上を一緒に確認しましょうね。')],
+ ['manage',B('첫 판매 확인','最初の販売'),B('이제 문을 열어 볼까요? 위의 재개 버튼을 누르면 영업 시간이 흘러요. 지도와 아래 영업 상황을 보며 첫 손님을 기다려 봐요. 판매가 생기면 제가 멈출게요.','それでは営業を始めましょうか。上の再開ボタンで時間が進みます。地図と下の営業状況を見ながら、最初のお客さまを待ちましょう。売れたら私が止めますね。')],
+ ['manage',B('매출 회수 출발','売上回収へ出発'),B('첫 매출이 생겼어요! 다만 아직 돈은 자판기 안에 있어요. 기기 관리에서 직접 회수하러 이동을 눌러, 회사로 가져와 볼까요?','初めての売上ですね！でも、お金はまだ自販機の中です。機械管理の「自分で回収に向かう」で、会社へ持ち帰りましょうか。')],
+ ['manage',B('회수 완료 기다리기','回収完了を待つ'),B('회수를 위해 이동 중이에요. 재개를 눌러 시간을 흘려 주세요. 도착해서 돈을 가져오면 회사 현금이 늘어나는 걸 확인할 수 있어요.','回収のために移動中です。再開を押して時間を進めてくださいね。到着して回収すると、会社の現金が増えますよ。')],
+ ['supply',B('판매할 음료 발주','販売する飲料を発注'),B('잘하셨어요. 이번에는 팔 음료를 미리 준비해 볼까요? 탄산음료 200개와 첫 창고를 확인한 뒤 발주를 눌러 주세요. 음료는 먼저 창고로 도착해요.','できましたね。次は販売する飲料を用意しましょうか。炭酸飲料200本と最初の倉庫を確認して、発注を押してくださいね。飲料はまず倉庫に届きます。')],
+ ['supply',B('창고 입고 확인','倉庫への入荷'),B('주문이 들어갔어요! 재개를 누르면 공급사가 창고로 보내 줘요. 아래에서 남은 시간을 볼 수 있어요. 기다림이 길면 배속을 올려도 괜찮아요.','注文できました！再開を押すと、仕入先が倉庫へ届けてくれます。残り時間は下に出ますよ。長いときは速度を上げても大丈夫です。')],
+ ['logistics',B('배송 경로 편성','配送ルートを編成'),B('창고에 음료가 도착했어요. 이제 자판기로 옮길 차례예요. 첫 차량의 담당 기기 경로 편성을 눌러 볼까요? 첫 거점 두 대까지는 사장님이 직접 배송할 수 있어요.','倉庫に飲料が届きました。次は自販機へ運びましょう。最初の車両の「担当機械のルート編成」を押してくださいね。最初の拠点の2台までは社長が配送できますよ。')],
+ ['logistics',B('음료를 싣고 출발','飲料を積んで出発'),B('경로가 준비됐어요. 같은 차량의 출발을 눌러 주세요. 음료를 차에 싣고 운송비를 지불하면 배송을 시작해요.','ルートができましたね。同じ車両の出発を押してください。飲料を積み込み、運送費を払って配送に出かけます。')],
+ ['logistics',B('기기 보충 완료','自販機への補充完了'),B('음료를 싣고 가는 중이에요. 재개를 눌러 배송을 마쳐 볼까요? 도착하면 창고에서 가져온 음료가 기기 재고로 들어가요.','飲料を運んでいるところです。再開を押して配送を終えましょうか。到着すると、倉庫から運んだ飲料が機械の在庫になりますよ。')],
+ ['equipment',B('두 번째 입지 계약','2か所目の立地契約'),B('보충까지 잘 마쳤어요! 이제 두 번째 자판기를 준비해 봐요. 밝게 표시된 빈 입지를 계약해 주세요. 먼저 자리를 확보하고 기기는 따로 주문할 거예요.','補充もできましたね！今度は2台目を準備しましょう。明るくなっている空き立地を契約してください。先に場所を確保して、機械は別に注文しますよ。')],
+ ['equipment',B('새 자판기 주문','新しい自販機を注文'),B('자리를 확보했으니 기기를 골라 볼까요? 이번에는 Koyo S80을 써 봐요. 가격을 확인하고 구매를 누르면 배송 주문이 생겨요.','場所が決まったので、機械を選びましょうか。今回はKoyo S80を使ってみましょう。価格を確認して購入を押すと、配送が始まりますよ。')],
+ ['equipment',B('기기 도착 기다리기','機械の到着を待つ'),B('기기 주문도 끝났어요. 배송에는 게임 시간으로 2일이 걸려요. 재개를 눌러 기다려 주세요. 도착하면 설치할 수 있도록 제가 알려드릴게요.','機械も注文できました。配送にはゲーム内で2日かかります。再開を押して待ってくださいね。届いたら設置できるようご案内します。')],
+ ['equipment',B('계약한 장소에 설치','契約した場所へ設置'),B('새 자판기가 도착했어요! 계약한 입지의 기기 설치를 눌러 주세요. 외주 설치비와 작업 시간이 드니 함께 확인해 봐요.','新しい自販機が届きました！契約した立地の機械設置を押してください。外注設置費と作業時間も一緒に確認しましょうね。')],
+ ['equipment',B('설치 완료 확인','設置完了を確認'),B('지금 설치 작업을 하고 있어요. 재개를 눌러 마무리를 기다려 봐요. 기기가 놓이면 다음에는 음료를 채워 줄 거예요.','いま設置作業をしています。再開を押して完成を待ちましょう。機械が置けたら、次は飲料を入れてあげましょうね。')],
+ ['logistics',B('새 기기에 첫 보충','新しい機械へ初回補充'),B('이제 두 대가 됐네요! 경로를 다시 편성해 새 기기도 포함하고 출발해 주세요. 창고의 탄산음료가 모자라면 추가 발주부터 해요. 배송을 마치려면 재개도 눌러 주세요.','2台になりましたね！ルートを組み直して新しい機械も含め、出発してください。倉庫の炭酸飲料が足りなければ追加発注から始めましょう。配送には再開も押してくださいね。')],
+ ['manage',B('새 기기에서 첫 매출','新しい機械で初売上'),B('새 기기도 영업 준비가 됐어요. 재개를 누르고 첫 손님을 기다려 볼까요? 여기서도 판매가 생기면 기본 실습은 끝이에요. 두 대의 자판기로 계속 경영하실 수 있어요.','新しい機械も営業の準備ができました。再開を押して最初のお客さまを待ちましょうか。こちらでも売れたら基本実習は終了です。この2台で経営を続けられますよ。')]
 ];
 const guidePanel=document.createElement('section');guidePanel.id='practical-guide';guidePanel.hidden=true;
 guidePanel.innerHTML='<img alt=""><div><strong id="guide-title"></strong><p id="guide-text"></p><span id="guide-status" role="status"></span><div class="buttons"><button id="guide-focus"></button><button id="guide-exit"></button></div></div>';
 officeRegister.prepend(guidePanel);
+const guideSpot=document.createElementNS('http://www.w3.org/2000/svg','svg');guideSpot.id='guide-spotlight';guideSpot.setAttribute('aria-hidden','true');guideSpot.innerHTML='<defs><mask id="guide-mask" maskUnits="userSpaceOnUse"><rect width="100%" height="100%" fill="white"/><g id="guide-holes"></g></mask></defs><rect width="100%" height="100%" fill="black" fill-opacity=".40" mask="url(#guide-mask)"/>';document.body.append(guideSpot);
+const guideMeter=document.createElement('progress');guideMeter.id='guide-progress';guideMeter.max=100;guideMeter.hidden=true;guideMeter.setAttribute('aria-label',T('작업 진행','作業の進み具合'));$('guide-status').after(guideMeter);
+function guideWaiting(){return guideActive()&&[1,3,5,8,11,13,15].includes(guideState().step);}
+let guideSpotKey='';
+function guideSpotlight(){
+ const visible=guideActive()&&!modalView&&!menuOpen;guideSpot.style.display=visible?'block':'none';if(!visible)return;
+ const els=[guidePanel,document.querySelector(guideTarget()),$('guide-focus'),$('game-menu')];
+ if(guideWaiting()||guideState().step===14)els.push(document.querySelector('.map-wrap'),$('scene-speed'),$('scene-pause'));
+ const holes=els.filter(Boolean).map(el=>{const r=el.getBoundingClientRect();if(!r.width||!r.height)return '';const x=Math.max(0,r.left-5),y=Math.max(0,r.top-5),right=Math.min(innerWidth,r.right+5),bottom=Math.min(innerHeight,r.bottom+5);return right>x&&bottom>y?`<rect x="${x}" y="${y}" width="${right-x}" height="${bottom-y}" fill="black"/>`:'';}).join('');
+ const h=document.getElementById('guide-holes');if(guideSpotKey!==holes){h.innerHTML=holes;guideSpotKey=holes;}
+}
+document.addEventListener('scroll',guideSpotlight,true);window.addEventListener('resize',guideSpotlight);
+function guideProgress(){
+ const g=guideState(),f=playerFirm(),r=refFirm(f),c=chainFirm(f),s=g.step,paused=livePaused||!!modalView||menuOpen;
+ const prefix=paused?T('잠깐 멈춰 있어요. 위의 재개 버튼을 눌러 주세요. ','いまは一時停止中です。上の再開ボタンを押してくださいね。 '):T('진행 중이에요. 끝나면 제가 시간을 멈출게요. ','進んでいます。終わったら私が時間を止めますね。 ');
+ let j=s===3?state.jobs.find(j=>j.type==='collect'&&j.loc===g.first):s===5?r.work.find(j=>j.id===g.order):s===11?c.orders.find(j=>j.id===g.kit):s===13?c.orders.find(j=>j.kind==='installation'&&j.loc===g.target):[8,14].includes(s)?r.work.find(j=>j.kind==='route'):null;
+ guideMeter.hidden=true;
+ if([1,15].includes(s)){
+  const m=machine(s===1?g.first:g.target),clock=$('scene-clock')?.textContent||'08:00';
+  return prefix+T(`영업 ${clock} · 재고 ${m?.stock||0}개 · 첫 판매 대기 중. 손님이 구매하면 기기 매출이 늘어요. 구매 시점은 손님마다 달라요.`,`営業 ${clock}・在庫 ${m?.stock||0}本・最初の購入待ちです。買ってもらえると機内売上が増えます。購入のタイミングはお客さま次第です。`);
+ }
+ if(j){const days=Math.max(0,j.remaining)/DAY_MS;guideMeter.hidden=!j.duration;if(j.duration)guideMeter.value=Math.max(0,Math.min(100,(1-j.remaining/j.duration)*100));return prefix+T(`남은 작업 시간 ${days.toFixed(2)}일 · 오래 걸리면 상단 배속을 올려도 좋아요.`,`残り作業時間 ${days.toFixed(2)}日・長いときは上の速度を上げても大丈夫ですよ。`);}
+ return guideWaiting()?prefix:T('밝게 표시된 곳을 눌러 보세요. 찾기 어려우면 아래 버튼으로 안내해 드릴게요.','明るくなっている場所を押してみましょう。見つからないときは下のボタンでご案内しますね。');
+}
 guidePanel.querySelector('img').src=ADVISOR_PORTRAIT;
 function guideState(){const g=state.guide;return g?.version===1&&int(g.step,0,16)&&typeof g.active==='boolean'&&g.flags&&typeof g.flags==='object'&&!Array.isArray(g.flags)&&int(g.target,-1,LOCATIONS.length-1)&&int(g.first,0,LOCATIONS.length-1)?g:null;}
 function guideActive(){return !!guideState()?.active&&guideState().step<16&&mgEnabled();}
@@ -3412,6 +3442,7 @@ function guideStart(){
 }
 function guideAllowedTabs(){const s=guideState()?.step||0;return ['manage','fleet','finance','alerts','journal',...(s>=4?['supply']:[]),...(s>=6?['logistics']:[]),...(s>=9?['equipment']:[])];}
 function guideTarget(){const g=guideState();if(!g)return '';const vehicle=refFirm(playerFirm()).vehicles[0]?.id;
+ if(g.step===14){const r=refFirm(playerFirm());if(r.work.some(j=>j.kind==='route'&&j.stops.some(s=>s.loc===g.target)))return '#scene-pause';if(r.routes.some(route=>route.vehicle===vehicle&&route.stops.includes(g.target)))return '[data-ref-action="route-run"][data-arg="'+vehicle+'"]';}
  return ['#pins [data-select="'+g.first+'"]','#scene-pause','[data-job="collect"][data-loc="'+g.first+'"]','#scene-pause','[data-ref-action="order"]','#scene-pause','[data-ref-action="route-auto"][data-arg="'+vehicle+'"]','[data-ref-action="route-run"][data-arg="'+vehicle+'"]','#scene-pause','[data-chain="site"][data-arg="'+g.target+'"]','[data-chain="machine"][data-arg="koyo:0"]','#scene-pause','[data-chain="install"][data-arg="'+g.target+'"]','#scene-pause','[data-ref-action="route-auto"]','#scene-pause'][g.step]||'';
 }
 function guideFocus(){if(!guideActive())return;const g=guideState();if(g.step===0){setDesktopWindow('closed');}else{selected=g.step>=14?g.target:g.first;selectedMap=LOCATIONS[selected].map;selectDesk(GUIDE_LESSONS[g.step][0]);}render();const el=document.querySelector(guideTarget());el?.scrollIntoView({block:'nearest',inline:'nearest'});el?.focus();}
@@ -3425,9 +3456,9 @@ let guideHighlight=null;
 function guidePaint(){const active=guideActive(),g=guideState();guidePanel.hidden=!active;document.body.classList.toggle('guide-active',active);
  if(!active&&guideHighlight){guideHighlight.classList.remove('guide-target');guideHighlight=null;}
  for(const b of deskNav.querySelectorAll('[data-desk]')){const locked=active&&!guideAllowedTabs().includes(b.dataset.desk);if(b.disabled!==locked)b.disabled=locked;b.title=locked?T('기본 실습 후 사용할 수 있습니다.','基本実習後に利用できます。'):'';}
- guideLockControls(active);if(!active)return;
+ guideLockControls(active);guideSpotlight();if(!active)return;
  const lesson=GUIDE_LESSONS[g.step];controlText('guide-title',T('경영 비서 · 실습 ','経営秘書・実習 ')+(g.step+1)+'/16 · '+tr(lesson[1]));controlText('guide-text',tr(lesson[2]));controlText('guide-focus',T('조작할 곳 보기','操作する場所を表示'));controlText('guide-exit',T('실습 종료 · 자유 경영','実習終了・自由経営'));
- controlText('guide-status',livePaused?T('시간 정지 · 안내된 조작을 직접 수행하세요.','時間停止・案内された操作を行ってください。'):T('진행 중 · 완료되면 자동으로 멈춥니다.','進行中・完了すると自動停止します。'));
+ controlText('guide-status',guideProgress());
  const selector=guideTarget(),target=selector?document.querySelector(selector):null;if(target!==guideHighlight||(target&&!target.classList.contains('guide-target'))){guideHighlight?.classList.remove('guide-target');guideHighlight=target;target?.classList.add('guide-target');}
 }
 function guideMark(flag,value=true){if(!guideActive())return;guideState().flags[flag]=value;guideCheck();}

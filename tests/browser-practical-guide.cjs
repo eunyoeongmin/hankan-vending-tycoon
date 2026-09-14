@@ -7,7 +7,13 @@ for(const language of ['ko','ja']){
  for(let step=0;step<16;step++){
   assert.equal(await p.evaluate(()=>state.guide.step),step);
   if([1,3,5,8,11,13,15].includes(step)){
-   await p.locator('#guide-focus').click();await p.locator('#scene-pause').click();
+   await p.locator('#guide-focus').click();
+   assert.equal(await p.locator('#guide-spotlight').evaluate(el=>getComputedStyle(el).pointerEvents),'none');
+   assert.ok(await p.locator('#guide-holes rect').count()>=3);
+   if(step===1){assert.match(await p.locator('#guide-status').innerText(),language==='ko'?/첫 판매 대기/:/最初の購入待ち/);assert.equal(await p.locator('#guide-progress').isVisible(),false);}
+   if(step===5){assert.equal(await p.locator('#guide-progress').isVisible(),true);assert.match(await p.locator('#guide-status').innerText(),language==='ko'?/남은 작업 시간/:/残り作業時間/);}
+   await p.locator('#scene-pause').click();
+   if(step===1||step===5){await p.waitForTimeout(400);await p.screenshot({path:`artifacts/practical-guide/${language}-waiting-${step}.png`});}
    await p.evaluate(step=>{for(let i=0;i<1800&&state.guide.step===step;i++){if(!state.live)startBusiness();advanceBusiness(1000);guideCheck();}},step);
   }else{
    await p.locator('#guide-focus').click();
