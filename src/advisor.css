@@ -1,0 +1,7 @@
+.advisor-portrait{float:left;width:112px;margin:0 14px 10px 0;background:#b4c0b8;border:2px solid;border-color:#808080 #fff #fff #808080}
+.advisor-portrait img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:contain;image-rendering:pixelated}
+.advisor-portrait figcaption{background:#000080;color:#fff;font:12px/1.5 Tahoma,'MS UI Gothic',sans-serif;text-align:center;padding:2px}
+.with-advisor{display:flow-root}
+.with-advisor p{color:#000}
+.with-advisor .buttons{clear:both}
+@media(max-width:480px){.advisor-portrait{width:76px;margin-right:10px}.advisor-portrait figcaption{font-size:11px}}

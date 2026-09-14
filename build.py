@@ -1,4 +1,5 @@
 from pathlib import Path
+import base64
 root=Path(__file__).resolve().parent
 base=(root/'src/base.html').read_text(encoding='utf-8')
 engine=(root/'src/enterprise.js').read_text(encoding='utf-8')+'\n'+(root/'src/rivalry.js').read_text(encoding='utf-8')+'\n'+(root/'src/scenario.js').read_text(encoding='utf-8')
@@ -26,12 +27,15 @@ for part in ['art-lab/assets','pixel-district-assets','pixel-world','pixel-traff
 engine+='})();\n'
 for module in ['catalog','core','choices','actions','hooks','ui']:
     engine+='\n'+(root/('src/business-events-'+module+'.js')).read_text(encoding='utf-8')
+portrait='data:image/png;base64,'+base64.b64encode((root/'src/assets/advisor/secretary-v1.png').read_bytes()).decode('ascii')
+engine+='\n'+(root/'src/advisor.js').read_text(encoding='utf-8').replace('__ADVISOR_PORTRAIT__',portrait)
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/reference.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/desktop.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/city-art.css').read_text(encoding='utf-8')
+css+='\n'+(root/'src/advisor.css').read_text(encoding='utf-8')
 marker="render();if(loadWarning)"
 assert base.count(marker)==1
 out=base.replace(marker,engine+'\n'+marker).replace('</style>',css+'\n</style>',1)
