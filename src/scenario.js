@@ -5,7 +5,7 @@ const RULE_PRESETS={easy:{...STANDARD_RULES,rivalCompanies:1,playerFunds:750000,
 const PRESET_NAMES={easy:B('입문','入門'),standard:B('표준','標準'),hard:B('도전','挑戦'),extreme:B('극한','極限'),custom:B('사용자 설정','カスタム')};
 const RULE_FIELDS=[
  ['rivalCompanies',B('경쟁 회사 수','競合会社数'),[[1,B('1곳','1社')],[2,B('2곳','2社')],[3,B('3곳','3社')]],B('회사별 현금·재고·전략을 독립 운영합니다.','各社が資金・在庫・戦略を独立して運営。')],
- ['playerFunds',B('플레이어 초기 현금','プレイヤー初期現金'),[[150000,'$150'],[350000,'$350'],[750000,'$750'],[1500000,'$1,500']],B('모든 조건에서 기본 자판기 1대와 재고 60개로 시작합니다.','どの条件でも基本自販機1台と在庫60本で開始。')],
+ ['playerFunds',B('플레이어 초기 현금','プレイヤー初期現金'),[[150000,'$150'],[350000,'$350'],[750000,'$750'],[1500000,'$1,500'],[5000000,'$5,000']],B('모든 조건에서 기본 자판기 1대와 재고 60개로 시작합니다.','どの条件でも基本自販機1台と在庫60本で開始。')],
  ['events',B('무작위 사건 빈도','ランダム事件の頻度'),[[0,B('없음','なし')],[1,B('드묾','少ない')],[2,B('보통','普通')],[3,B('빈번','頻繁')]],B('선택형 사건·도난·고장·민원의 발생 확률을 조절합니다.','選択式事件・盗難・故障・相談の発生確率を調整。')],
  ['cycle',B('경기 변동','景気変動'),[[0,B('꺼짐','オフ')],[1,B('켜짐','オン')]],B('켜면 45일 주기의 경기 변화로 양쪽 회사 방문 수요가 최대 ±12% 변합니다.','オンでは45日周期の景気変動で両社の来訪需要が最大±12%変化。')],
  ['inflation',B('연간 비용 상승률','年間コスト上昇率'),[[0,'0%'],[3,'3%'],[8,'8%']],B('경기 변동을 켰을 때 설정. 365영업일 기준으로 매입비·임금·운영비가 상승합니다. 원가 지수의 단기 등락은 별도입니다.','景気変動オン時に設定。365営業日を基準に仕入費・賃金・営業費が上昇。原価指数の短期変動とは別です。')],
@@ -27,7 +27,7 @@ function rivalCostFactor(){return [1.1,1,.88][runRules().expertise];}
 function inflationFactor(){return state.scenario&&runRules().cycle?Math.pow(1+runRules().inflation/100,(state.day-1)/365):1;}
 function cycleFactor(){return runRules().cycle?1+.12*Math.sin((state.day-1)*Math.PI/22.5):1;}
 function rulesIndex(r){return Math.max(20,Math.round(100+((r.rivalCompanies??1)-1)*12+(350000-r.playerFunds)/20000+(r.rivalFunds-500000)/50000+(r.rivalMachines-2)*8+(r.aggression-1)*15+(r.expertise-1)*15+(r.events-2)*8+(r.supply-1)*8+r.cycle*8+r.inflation));}
-function validScenario(x){const r=x?.rules;return !!(x&&x.version===1&&['easy','standard','hard','extreme','custom'].includes(x.preset)&&r&&(r.rivalCompanies===undefined||[1,2,3].includes(r.rivalCompanies))&&[150000,350000,750000,1500000].includes(r.playerFunds)&&[150000,500000,1500000,3000000].includes(r.rivalFunds)&&[1,2,4,6].includes(r.rivalMachines)&&[0,1,2].includes(r.aggression)&&[0,1,2].includes(r.expertise)&&[0,1,2,3].includes(r.events)&&[0,1,2].includes(r.supply)&&[0,1].includes(r.cycle)&&[0,3,8].includes(r.inflation)&&(r.cycle||r.inflation===0));}
+function validScenario(x){const r=x?.rules;return !!(x&&x.version===1&&['easy','standard','hard','extreme','custom'].includes(x.preset)&&r&&(r.rivalCompanies===undefined||[1,2,3].includes(r.rivalCompanies))&&[150000,350000,750000,1500000,5000000].includes(r.playerFunds)&&[150000,500000,1500000,3000000].includes(r.rivalFunds)&&[1,2,4,6].includes(r.rivalMachines)&&[0,1,2].includes(r.aggression)&&[0,1,2].includes(r.expertise)&&[0,1,2,3].includes(r.events)&&[0,1,2].includes(r.supply)&&[0,1].includes(r.cycle)&&[0,3,8].includes(r.inflation)&&(r.cycle||r.inflation===0));}
 const demandBeforeScenario=demand;demand=m=>demandBeforeScenario(m)*cycleFactor();
 const rentBeforeScenario=dailyRent;dailyRent=m=>state.scenario?Math.round(dailyRentBase(m)*inflationFactor()):rentBeforeScenario(m);
 const procurementBeforeScenario=procurementPrice;procurementPrice=(p,s)=>Math.round(procurementBeforeScenario(p,s)*inflationFactor());

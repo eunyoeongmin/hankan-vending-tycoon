@@ -1,0 +1,6 @@
+#practical-guide{display:flex;gap:10px;padding:6px;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;overflow:auto;flex:0 0 auto;max-height:190px}
+#practical-guide img{width:72px;height:108px;object-fit:contain;image-rendering:pixelated;align-self:flex-start}
+#practical-guide>div{min-width:0;flex:1}#guide-title{display:block;background:#000080;color:#fff;padding:2px 5px;font-size:13px}
+#guide-text{margin:5px 0;color:#000;font-size:13px}#guide-status{font-size:12px}#practical-guide .buttons{display:flex;gap:6px;margin-top:4px}
+body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}.guide-target{outline:3px solid #000080!important;outline-offset:2px}
+@media(max-width:600px){#practical-guide img{width:48px;height:72px}#practical-guide{max-height:190px;gap:6px}#guide-text{font-size:12px}#practical-guide .buttons{flex-wrap:wrap}body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}}
