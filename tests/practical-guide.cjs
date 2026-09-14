@@ -4,6 +4,15 @@ let g=make(),ev=s=>g.ev(s);
 function at(n){assert.equal(ev('state.guide.step'),n);}
 function wait(n){ev('livePaused=false;if(!state.live)startBusiness()');for(let i=0;i<1500&&ev('state.guide.step')===n;i++)ev('if(!state.live)startBusiness();advanceBusiness(1000);guideCheck()');assert.ok(ev('state.guide.step')>n,`stuck at ${n}: `+ev('JSON.stringify({guide:state.guide,jobs:state.jobs,work:refFirm(playerFirm()).work})'));}
 ev('launchNew();guideStart()');at(0);assert.equal(ev('state.cash'),5000000);assert.ok(ev('livePaused&&!mgFirm(playerFirm()).enabled&&valid(state)'));
+assert.ok(ev('guideIntro()'));assert.equal(ev('guideTarget()'),'');
+ev('document.querySelector("#scene-pause").click();document.querySelector("#pins button").click();guideCheck()');
+assert.ok(ev('livePaused&&!state.guide.flags.selected'));at(0);
+ev('document.querySelector("#guide-question").click()');assert.equal(ev('state.guide.intro'),'reassure');
+const introSave=ev('save();localStorage.getItem(KEY)');g.dom.window.close();g=make(introSave);ev('document.querySelector("#menu-load").click()');
+assert.ok(ev('guideIntro()&&livePaused'));assert.equal(ev('state.guide.intro'),'reassure');
+ev('document.querySelector("#guide-question").click()');assert.equal(ev('state.guide.intro'),'plan');
+ev('document.querySelector("#guide-time").click()');assert.equal(ev('state.guide.intro'),'time');
+ev('document.querySelector("#guide-ready").click()');assert.ok(ev('!guideIntro()&&livePaused'));at(0);
 ev('selectDesk("research")');assert.notEqual(ev('deskTab'),'research');at(0);
 ev('document.querySelector("#pins button").click()');
 // Browser click schedules the selection evaluation; evaluate explicitly in this synchronous harness.
