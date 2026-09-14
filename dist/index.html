@@ -170,6 +170,9 @@ body.desktop95 .scene-clock{background:#c0c0c0!important;border:2px solid!import
 @media(max-width:650px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 111px;gap:3px}body.office.desktop95 .layout{grid-template-columns:80px minmax(0,1fr);grid-template-rows:minmax(125px,35%) minmax(0,1fr);gap:3px}body.office.desktop95 #desk-nav{grid-column:1;grid-row:1/3;padding:2px}body.office.desktop95 #desk-map{grid-column:2;grid-row:1}body.office.desktop95 #desk-side,body.office.desktop95 .layout:not([data-screen=manage]):not([data-screen=fleet]):not([data-screen=market]) #desk-side{grid-column:2;grid-row:2}body.office.desktop95 .layout[data-window=minimized],body.office.desktop95 .layout[data-window=closed]{grid-template-columns:80px minmax(0,1fr)}body.office.desktop95 .layout:not([data-window=open]) #desk-map{grid-row:1/3}body.desktop95 #desk-alerts{position:static;pointer-events:auto}body.desktop95 #desk-map .map-wrap{margin:0}body.desktop95 #desk-content{padding:4px}body.desktop95 #desktop-city-status{font-size:11px;padding:2px 4px}body.desktop95 #desktop-task{min-width:100px}body.desktop95 #office-status .stat-value{font-size:12px}body.desktop95 #desk-map #district-controls{padding:1px}}
 @media(max-height:500px){body.desktop95 main{grid-template-rows:auto minmax(0,1fr) 78px}body.desktop95 #office-register-tabs button{min-height:20px;padding:0 5px}#desktop-taskbar{min-height:23px}}
 
+body.desktop95 #desk-fleet .section-head{align-items:flex-start;gap:6px}
+body.desktop95 #fleet-count{display:block;font-size:12px;font-weight:400;white-space:normal}
+
 body.desktop95 #city-readout{display:flex;align-items:center;justify-content:space-between;gap:3px;padding:2px 0;background:#c0c0c0;flex-shrink:0;min-height:25px;font:11px Tahoma,'MS UI Gothic','Malgun Gothic',sans-serif}
 body.desktop95 #city-readout .map-label,body.desktop95 #city-readout .scene-clock{position:static;display:flex;align-items:center;flex-direction:row;gap:6px;max-width:none;background:#c0c0c0!important;color:#000;padding:3px!important;border:1px solid!important;border-color:#808080 #fff #fff #808080!important;min-width:0;border-radius:0!important}
 body.desktop95 #city-readout .map-label #scene-mode{display:none}
@@ -233,6 +236,19 @@ body.guide-intro main{grid-template-rows:auto minmax(0,1fr) 240px!important}
 body.guide-intro #practical-guide{max-height:230px}
 body.guide-intro #practical-guide .buttons{flex-wrap:wrap}
 @media(max-width:600px){body.guide-intro main{grid-template-rows:auto minmax(0,1fr) 280px!important}body.guide-intro #practical-guide{max-height:270px}}
+
+#operating-advisor-toggle{white-space:nowrap;font-size:11px!important;width:auto!important;min-width:0!important;padding:2px 5px!important}
+#operating-advisor{border-bottom:1px solid #808080;background:#ffffe9;padding:6px;max-height:190px;overflow:auto;flex-shrink:0;font-size:12px;line-height:1.45}
+#operating-advisor[hidden]{display:none}
+#operating-advisor p{margin:0 0 5px}
+#operating-advisor .operating-advisor-facts{font-weight:bold}
+#operating-advisor button{margin:2px;padding:3px 5px;font-size:11px}
+#operating-advisor small{display:block;font-size:11px;margin-top:4px}
+@media(max-width:650px){#operating-advisor{max-height:145px}#operating-advisor-toggle{font-size:10px!important;padding:2px!important}}
+
+.company-goal{border-top:1px solid #808080;padding:7px 0}
+.company-goal h3{margin:3px 0;font-size:14px}
+.company-goal p{color:#111!important;margin:5px 0;line-height:1.45}
 
 </style>
 </head>
@@ -2517,7 +2533,10 @@ const mgBeforeBorrow=refBorrow;refBorrow=function(f,amount,kind='loan'){return m
 const mgBeforeRepay=refRepay;refRepay=function(f,id){return mgEnabled()?mgRepay(f,id):mgBeforeRepay(f,id);};
 const mgBeforeBankBorrow=borrowCompany;borrowCompany=function(f,amount){return mgEnabled()?mgBorrow(f,amount,'working'):mgBeforeBankBorrow(f,amount);};
 const mgBeforeBankRepay=repayCompany;repayCompany=function(f,amount){if(!mgEnabled())return mgBeforeBankRepay(f,amount);let left=amount,paid=0;for(const n of [...refFirm(f).notes].sort((a,b)=>a.due-b.due)){const cash=f.account.cash;if(mgRepay(f,n.id,left)){paid+=cash-f.account.cash;left-=cash-f.account.cash;}if(left<=0)break;}return paid;};
-const mgBeforeRoom=companyBorrowRoom;companyBorrowRoom=function(f){if(!mgEnabled())return mgBeforeRoom(f);const r=refFirm(f);return f.meta.credit<40||r.notes.length>=12||r.notes.some(n=>n.missed)||r.bills.some(b=>b.due<state.day)?0:Math.max(0,mgCreditLimit(f)-mgDebt(f));};
+const mgBeforeRoom=companyBorrowRoom;companyBorrowRoom=function(f){if(!mgEnabled())return mgBeforeRoom(f);const r=refFirm(f);if(state.ended||f.meta.credit<40||r.notes.length>=12||r.notes.some(n=>n.missed)||r.bills.some(b=>b.due<state.day))return 0;const room=Math.floor(Math.max(0,Math.min(refWorld().bankCash,mgCreditLimit(f)-mgDebt(f))));return room>=10000?room:0;};
+// Recovery covers obligations payable now, not the entire future loan balance.
+function mgPayableNow(f){const r=refFirm(f);return r.bills.filter(b=>b.due<=state.day).reduce((n,b)=>n+b.amount,0)+r.notes.reduce((sum,n)=>sum+(n.due<=state.day?n.principal:Math.min(n.principal,n.duePrincipal||0)),0);}
+const mgBeforeRecoverable=companyRecoverable;companyRecoverable=function(f){const value=mgBeforeRecoverable(f);if(!mgEnabled())return value;return value+f.bank.arrears+(state.day>=f.meta.due?f.bank.principal:0)-mgPayableNow(f);};
 const mgBeforeReview=companyFinanceReview;companyFinanceReview=function(f){if(!mgEnabled())return mgBeforeReview(f);if(f.meta.lastFinance>=state.day)return;f.meta.lastFinance=state.day;const bad=f.account.cash<0||refFirm(f).notes.some(n=>n.missed)||refFirm(f).bills.some(b=>b.due<state.day);f.meta.credit=refClamp(f.meta.credit+(bad?-2:1),0,100);f.meta.distress=bad?f.meta.distress+1:0;};
 const mgBeforeRestructure=refRestructure;refRestructure=function(f,id){if(!mgEnabled())return mgBeforeRestructure(f,id);const n=refFirm(f).notes.find(n=>n.id===id);if(!n?.calendar)return mgBeforeRestructure(f,id);if(!n.missed||n.restructured||f.account.cash<n.principal*.1)return false;mgRepay(f,id,Math.ceil(n.principal*.1));n.restructured=true;n.start=state.day;n.due=mgAddMonths(state.day,12);n.next=mgAddMonths(state.day,1);n.grace=state.day;n.installment=Math.ceil(n.principal/12);n.product='equipment';n.rate=Math.min(.25/365,n.rate*1.25);n.duePrincipal=0;n.missed=0;f.meta.credit=Math.max(0,f.meta.credit-10);return true;};
 
@@ -2657,6 +2676,7 @@ officeRegister.append(desktopTaskbar);
 let desktopWindowState='open';
 function updateDesktop(){
  const tab=visibleDeskTabs().find(t=>t[0]===deskTab),title=tab?tr(tab[1]):T('회사','会社');
+ controlText('fleet-count',T('현재 상권 '+visibleMachines().length+'대 · 회사 전체 '+state.machines.length+'대','この商圏 '+visibleMachines().length+'台・会社全体 '+state.machines.length+'台'));
  controlText('desktop-title',title);controlText('desktop-task',title);
  controlText('desktop-city-status',T('도시 · 영업 현황','都市 · 営業状況'));
  $('desktop-minimize').setAttribute('aria-label',T('업무 창 최소화','業務ウィンドウを最小化'));
@@ -3534,6 +3554,124 @@ function guideLockControls(active){const g=guideState();for(const b of document.
  if(!allowed){if(!b.dataset.guideLocked)b.dataset.guideDisabled=String(b.disabled);b.dataset.guideLocked='1';b.disabled=true;b.title=T('비서 실습에서 필요한 기능부터 사용할 수 있습니다.','秘書実習で必要な機能から利用できます。');}
  else if(b.dataset.guideLocked){b.disabled=b.dataset.guideDisabled==='true';delete b.dataset.guideLocked;delete b.dataset.guideDisabled;b.title='';}
 }}
+
+/* Modern management goals share daily assessment; free play never ends without a choice. */
+const COMPANY_GOALS=[
+ {id:'enterprise',name:B('도시의 대표 기업','街を代表する企業'),rule:B('자판기 8대 · 기업가치 $10,000 · 당일 흑자','自販機8台・企業価値$10,000・当日黒字')},
+ {id:'market',name:B('시장의 선두 기업','市場を率いる企業'),rule:B('판매 점유율 60% 이상과 당일 흑자를 60일 연속 유지','販売シェア60%以上と当日黒字を60日連続で維持')},
+ {id:'industry',name:B('제조와 유통의 완성','製造と流通の完成'),rule:B('음료·기기 공장 보유 · 누적 생산 3,000개 · 기기 10대 · 당일 흑자를 30일 연속 유지','飲料・機械工場保有・累計生産3,000個・自販機10台・当日黒字を30日連続で維持')}
+];
+function lifecycleValid(x){return x&&x.version===1&&int(x.lastDay,-1,1000000)&&Array.isArray(x.achievements)&&x.achievements.length<=3&&new Set(x.achievements.map(a=>a.id)).size===x.achievements.length&&x.achievements.every(a=>a&&COMPANY_GOALS.some(g=>g.id===a.id)&&int(a.day,1,1000000));}
+function lifecycleState(){if(!lifecycleValid(state.lifecycle))state.lifecycle={version:1,lastDay:-1,achievements:[]};return state.lifecycle;}
+const lifecycleValidBefore=valid;valid=function(s){return lifecycleValidBefore(s)&&(!s.lifecycle||lifecycleValid(s.lifecycle));};
+function lifecycleProgress(){const f=playerFirm(),i=state.enterprise.industry,e=state.enterprise.expansion,x=expansionFirm(f);return [
+ {complete:f.machines.length>=8&&companyValue(f)>=10000000&&state.profit>0,text:T(`기기 ${f.machines.length}/8 · 기업가치 ${money(companyValue(f))} / $10,000 · 전일 손익 ${money(state.profit)}`,`機械 ${f.machines.length}/8・企業価値 ${money(companyValue(f))} / $10,000・前日損益 ${money(state.profit)}`)},
+ {complete:i.shareDays>=60,text:T(`연속 달성 ${i.shareDays}/60일`,`連続達成 ${i.shareDays}/60日`)},
+ {complete:e.dominanceDays>=30,text:T(`음료 공장 ${x.plants.drink} · 기기 공장 ${x.plants.machine} · 생산 ${x.produced}/3,000 · 기기 ${f.machines.length}/10 · 연속 ${e.dominanceDays}/30일`,`飲料工場 ${x.plants.drink}・機械工場 ${x.plants.machine}・生産 ${x.produced}/3,000・自販機 ${f.machines.length}/10・連続 ${e.dominanceDays}/30日`)}
+ ];}
+function lifecycleFinish(type,reason){if(!mgEnabled()||state.ended)return false;state.ending={type,reason,day:state.day,assets:assets()};state.ended=true;state.live=null;livePaused=true;businessCarry=0;lastSceneFrame=null;
+ if(type==='success'&&!state.runWinRecorded){state.runWinRecorded=true;profile.clears=Math.min(20,profile.clears+1);saveProfile();}save();render();openModal('end');return true;}
+function lifecycleClaim(id){if(!mgEnabled()||!lifecycleState().achievements.some(a=>a.id===id))return false;return lifecycleFinish('success',id);}
+const lifecycleCheckBefore=checkEnding;checkEnding=function(timeCheck=false){
+ if(!mgEnabled())return lifecycleCheckBefore(timeCheck);
+ // Retain finance reviews, creditor actions, real streaks and failure checks; replace only legacy success/time stops.
+ const continued=state.continued;let stopped;state.continued=true;try{stopped=lifecycleCheckBefore(timeCheck);}finally{state.continued=continued;}
+ if(stopped||state.ended)return true;
+ const l=lifecycleState();if(timeCheck&&l.lastDay<state.day){l.lastDay=state.day;
+  if(!state.enterprise.expansion.debug){const values=lifecycleProgress();COMPANY_GOALS.forEach((goal,index)=>{if(values[index].complete&&!l.achievements.some(a=>a.id===goal.id)){l.achievements.push({id:goal.id,day:state.day});log(B(`경영 성과 달성: ${goal.name[0]} · 회사 목표에서 결산할 수 있어요.`,`経営成果達成：${goal.name[1]}・会社目標で決算できます。`));toast(B('새 경영 성과를 달성했어요. 회사 목표를 확인해 주세요.','新しい経営成果を達成しました。会社目標をご覧ください。'));}});}
+  if(!refWorld().management.free&&!continued&&state.day>=state.duration){const best=['industry','market','enterprise'].find(id=>l.achievements.some(a=>a.id===id));return lifecycleFinish(best?'success':'time',best||'assessment');}
+  save();
+ }
+ lifecyclePaint();return false;
+};
+const lifecycleButton=document.createElement('button');lifecycleButton.id='company-goals-button';officeStatus.append(lifecycleButton);
+function lifecyclePaint(){lifecycleButton.hidden=!mgEnabled();if(mgEnabled()){controlText('company-goals-button',T('회사 목표','会社目標')+' '+lifecycleState().achievements.length+'/3');lifecycleButton.disabled=!state.started;}}
+function lifecycleGoalsHTML(){const l=lifecycleState(),values=lifecycleProgress();return `<h2>${T('회사 목표와 경영 기록','会社目標と経営記録')}</h2><p>${refWorld().management.free?T('기간 제한 없이 운영합니다. 성과를 달성하면 결산을 선택하거나 다음 목표에 도전할 수 있어요.','期限なしで経営できます。成果を達成したら決算を選ぶか、次の目標に挑戦できます。'):T('평가 예정일: ','評価予定日：')+mgDateText(state.duration)}</p>`+COMPANY_GOALS.map((goal,index)=>{const a=l.achievements.find(a=>a.id===goal.id);return `<section class="company-goal"><h3>${tr(goal.name)}</h3><p>${tr(goal.rule)}</p><p>${esc(values[index].text)}</p>${a?`<strong>${T('달성일 ','達成日 ')+mgDateText(a.day)}</strong> <button data-lifecycle-claim="${goal.id}" ${disabled(state.ended)}>${T('이 성과로 결산','この成果で決算')}</button>`:`<span>${T('도전 중 · 매일 결산 시 판정','挑戦中・日次決算時に判定')}</span>`}</section>`;}).join('')+`<p>${T('달성 기록은 계속 경영해도 남습니다. 파산과 경영권 상실은 성과와 별도로 판정됩니다.','達成記録は経営を続けても残ります。倒産と経営権喪失は成果と別に判定します。')}</p>`+buttons(closeButton()+`<button id="lifecycle-retire" ${disabled(state.ended)}>${T('사업 종료 검토','事業終了を検討')}</button>`);}
+function lifecycleEndHTML(){const ending=state.ending||{},f=playerFirm(),goal=COMPANY_GOALS.find(g=>g.id===ending.reason),loss=['bankrupt','bank','control'].includes(ending.type),retired=ending.reason==='retired';
+ const title=ending.type==='control'?T('경영권 상실','経営権喪失'):loss?T('회사를 더 운영하기 어렵게 됐습니다','会社の経営を続けることが難しくなりました'):retired?T('이번 경영을 마치며','今回の経営を終えて'):goal?tr(goal.name):T('평가 기간의 경영 기록','評価期間の経営記録');
+ const message=ending.type==='control'?T('다른 주주가 과반 의결권을 확보했습니다.','他の株主が過半数の議決権を取得しました。'):loss?T('자금 경색이 이어지고 회복 가능한 자금이 소진되어 경영이 종료됐습니다.','資金難が続き、回復に使える資金が尽きたため経営が終了しました。'):retired?T('사장님이 선택한 시점의 기록이에요. 원하시면 이 회사로 다시 이어갈 수 있어요.','社長が選んだ時点での記録です。よろしければ、この会社で経営を続けられます。'):goal?T('함께 쌓아 온 성과가 회사의 기록이 됐어요. 결산 뒤에도 다른 목표에 도전할 수 있어요.','積み重ねた成果が会社の記録になりました。決算後も別の目標に挑戦できますよ。'):T('이번 평가 기간을 마쳤어요. 달성한 것과 다음에 보완할 점을 확인하고 계속할 수 있어요.','今回の評価期間が終わりました。成果と次に改善する点を確認して、経営を続けられます。');
+ return `<h2>${title}</h2><p>${message}</p>${row(T('결산일','決算日'),mgDateText(ending.day||state.day))}${row(T('현금 / 순자산','現金／純資産'),money(f.account.cash)+' / '+money(companyEquity(f)))}${row(T('차입 원금 / 현재 지급액','借入元金／現在の支払額'),money(mgDebt(f))+' / '+money(typeof mgPayableNow==='function'?mgPayableNow(f):0))}${row(T('기기 / 누적 매출','自販機／累計売上'),f.machines.length+' / '+money(state.enterprise.industry.totalRevenue))}${ending.type==='control'?row(T('경영권 확보 주주','経営権を取得した株主'),esc(companyName(ending.controller))):loss?row(T('자금 경색 / 회복 여력','資金難／回復余力'),f.meta.distress+T('일','日')+' / '+money(companyRecoverable(f))):''}<h3>${T('달성한 경영 성과','達成した経営成果')}</h3><p>${lifecycleState().achievements.map(a=>esc(tr(COMPANY_GOALS.find(g=>g.id===a.id).name))+' · '+mgDateText(a.day)).join('<br>')||T('아직 기록된 성과가 없습니다.','まだ記録された成果はありません。')}</p>`+buttons(`<button id="menu-new">${T('새 회사 설립','新会社を設立')}</button>`+(!loss?`<button id="continue">${T('이 회사로 계속 경영','この会社で経営を続ける')}</button>`:''));
+}
+const lifecycleModalBefore=drawModal;drawModal=function(){lifecycleModalBefore();if(!mgEnabled())return;if(modalView==='company-goals')$('modal-body').innerHTML=lifecycleGoalsHTML();if(modalView==='end')$('modal-body').innerHTML=lifecycleEndHTML();};
+const lifecycleRenderBefore=render;render=function(){lifecycleRenderBefore();lifecyclePaint();};
+const lifecycleContinueBefore=continueGame;continueGame=function(){const modern=mgEnabled(),wasEnded=state.ended;lifecycleContinueBefore();if(modern&&wasEnded&&!state.ended){livePaused=true;businessCarry=0;sceneSpeed=1;save();render();}};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='company-goals-button')openModal('company-goals');if(b.dataset.lifecycleClaim)lifecycleClaim(b.dataset.lifecycleClaim);if(b.id==='lifecycle-retire')openModal('retirement');});
+lifecyclePaint();
+
+/* Optional, state-aware conversations. No simulated lesson completion or new clock. */
+const operatingAdvisorButton=document.createElement('button');
+operatingAdvisorButton.id='operating-advisor-toggle';operatingAdvisorButton.type='button';
+operatingAdvisorButton.setAttribute('aria-controls','operating-advisor');
+desktopTitlebar.insertBefore(operatingAdvisorButton,$('desktop-minimize'));
+const operatingAdvisorPanel=document.createElement('section');
+operatingAdvisorPanel.id='operating-advisor';operatingAdvisorPanel.hidden=true;
+operatingAdvisorPanel.setAttribute('aria-label',T('비서와 업무 상담','秘書と業務相談'));
+desktopTitlebar.after(operatingAdvisorPanel);
+let operatingAdvisorOpen=false;
+function operatingAdvice(tab=deskTab){
+ const f=playerFirm(),r=refFirm(f),out=f.machines.filter(m=>m.stock===0).length;
+ const topic=(tabs,ko,ja,steps)=>tabs.includes(tab)?{text:T(ko,ja),steps}:null;
+ const step=(desk,ko,ja)=>({desk,label:T(ko,ja)});
+ const fact=T(`운영 기기 ${f.machines.length}대 · 품절 ${out}대`,`稼働機 ${f.machines.length}台・品切れ ${out}台`);
+ return topic(['manage','fleet','supply','products','logistics'],
+  out?'사장님, 품절된 기기가 있네요. 발주는 창고 입고까지예요. 같은 상품이 창고에 도착하면 경로에 기기를 넣고 차량을 출발시켜 주세요.':'사장님, 판매할 상품과 보충 경로를 함께 살펴볼까요? 주문한 음료는 먼저 창고로 와요. 입고 뒤 차량으로 기기까지 보내야 판매할 수 있어요.',
+  out?'社長、品切れの機械がありますね。発注だけでは倉庫への入荷までです。同じ商品が届いたら、ルートに機械を入れて車を出発させましょう。':'社長、販売する商品と補充ルートを一緒に確認しましょうか。注文した飲料はまず倉庫へ届きます。その後、車で機械へ届けると販売できますよ。',
+  [step('supply','1. 상품·입고 확인','1. 商品・入荷を確認'),step('logistics','2. 경로·출발 확인','2. ルート・出発を確認'),step('fleet','3. 기기 재고 확인','3. 機械在庫を確認')]) ||
+ topic(['equipment','maintenance','sites','contracts'],
+  '출점은 입지 계약, 기기 도착, 설치, 음료 배송 순서예요. 설치만 끝난 기기는 비어 있어요. 버튼을 누를 수 없다면 바로 옆 사유와 진행 중 작업부터 확인해 볼까요?',
+  '出店は立地契約、機械の到着、設置、飲料配送の順です。設置直後の機械は空ですよ。押せないボタンは、そばの理由と進行中の作業を確認しましょうか。',
+  [step('equipment','1. 계약·기기·설치','1. 契約・機械・設置'),step('logistics','2. 새 기기에 배송','2. 新しい機械へ配送'),step('maintenance','3. 정비·수명 확인','3. 整備・寿命を確認')]) ||
+ topic(['finance'],
+  '빌릴 수 있는 금액과 갚을 수 있는 금액은 달라요. 계약의 연 이율, 다음 지급일, 만기를 먼저 봐 주세요. 운전자금은 만기에 원금을 한꺼번에 갚으니 그 돈을 남겨 두어야 해요. 연체가 있다면 확장 전에 상환·재조정 조건부터 살펴봐요.',
+  '借りられる額と返せる額は違います。契約の年利、次回支払日、満期を先に確認してくださいね。運転資金は満期に元金をまとめて返すので、その分を残しましょう。延滞中なら、拡張より先に返済・再調整の条件を確認しましょう。',
+  [step('finance','1. 지급 일정·상환','1. 支払予定・返済'),step('reports','2. 손익·현금흐름','2. 損益・資金繰り'),step('policies','3. 자동 지출·유보','3. 自動支出・留保')]) ||
+ topic(['staff'],
+  '채용 뒤에는 일할 사업장과 직무도 정해 주세요. 직원이 있어도 배치·교육·피로 상태에 따라 작업이 멈출 수 있어요. 새 인원을 늘리기 전에 대기 원인과 월말 급여를 함께 볼까요?',
+  '採用したら、働く事業所と職種も決めてくださいね。人がいても配置・研修・疲労によって作業が止まることがあります。増員の前に、待機の原因と月末の給与を一緒に見ましょうか。',
+  [step('staff','1. 채용·직무·배치','1. 採用・職種・配置'),step('reports','2. 작업 대기 원인','2. 作業待機の原因'),step('finance','3. 급여 지급 예정','3. 給与の支払予定')]) ||
+ topic(['research'],
+  '연구는 투자 즉시 완성되는 상품이 아니에요. 협력사와 예산을 정하고, 진행 중 과제의 검토 요청을 확인해 주세요. 완성 뒤에도 직접 제조하려면 공장과 생산 준비가 필요해요. 타사 음료는 자체 상품 연구 없이 발주할 수 있어요.',
+  '研究は投資した瞬間に完成するものではありません。提携先と予算を決め、進行中の課題の審査依頼を確認してくださいね。完成後も自社製造には工場と生産準備が必要です。他社の飲料は自社商品研究なしで仕入れられますよ。',
+  [step('research','1. 과제·검토·사용권','1. 課題・審査・利用権'),step('staff','2. 연구 인력 확인','2. 研究人員を確認'),step('manufacture','3. 제조 준비 확인','3. 製造準備を確認')]) ||
+ topic(['manufacture'],
+  '공장이 있어도 바로 음료가 나오지는 않아요. 생산 상품, 원재료, 담당 인력부터 갖춰 주세요. 생산이 멈췄다면 부족한 조건을 확인하고, 완제품은 판매 기기까지 배송해야 매출이 돼요.',
+  '工場があっても、すぐに飲料はできません。製品、原材料、担当人員をそろえましょう。止まったら不足条件を確認し、完成品は販売機まで配送して初めて売上になりますよ。',
+  [step('manufacture','1. 상품·자재·생산','1. 製品・資材・生産'),step('staff','2. 생산 인력 배치','2. 生産人員を配置'),step('logistics','3. 완제품 배송','3. 完成品を配送')]) ||
+ topic(['market','rivalry','securities','group','development'],
+  '경쟁사 가격을 따라 내리기 전에 우리 원가와 현금을 확인해 볼까요? 가격을 낮춰도 이익이 줄 수 있어요. 주식과 기업 인수는 자금을 묶고, 신주 발행은 내 지분을 낮출 수 있으니 의결권도 살펴봐 주세요.',
+  '競合に合わせて値下げする前に、自社の原価と現金を確認しましょうか。安くしても利益が減ることがあります。株式や企業買収は資金を拘束し、新株発行は持分を下げる場合があるので議決権も見てくださいね。',
+  [step('market','1. 시장·가격 비교','1. 市場・価格を比較'),step('reports','2. 우리 회사 수익 확인','2. 自社の利益を確認'),step('group','3. 지분·경영권 확인','3. 持分・経営権を確認')]) ||
+ topic(['alerts'],
+  '사건마다 지금 내는 비용과 나중에 생길 효과가 달라요. 선택지의 비용·기간을 비교해 보세요. 민원은 해당 기기의 재고와 정비부터 살펴보고, 처리 후 기록에서 실제 결과를 함께 확인해요.',
+  '事件ごとに今払う費用と後の効果が違います。選択肢の費用・期間を比べてくださいね。相談は対象の機械の在庫と整備から調べ、対応後は記録で実際の結果も確認しましょう。',
+  [step('alerts','1. 사건·민원 확인','1. 事件・相談を確認'),step('fleet','2. 대상 기기 확인','2. 対象の機械を確認'),step('journal','3. 처리 결과 확인','3. 対応結果を確認')]) ||
+ {text:T('사장님, 다음 투자 전에 지금 회사가 잘 돌아가는지 살펴볼까요? 손익이 좋아도 상환과 발주 때문에 현금이 부족할 수 있어요. 장기 목표와 달성 조건도 언제든 다시 확인하실 수 있어요.','社長、次の投資の前に会社の状態を確認しましょうか。黒字でも返済や仕入れで現金が足りなくなる場合があります。長期目標と達成条件も、いつでも確認できますよ。'),steps:[step('reports','손익·대기 원인','損益・待機の原因'),step('finance','지급 예정·회복 수단','支払予定・回復手段'),step('company-goals','회사 목표·계속 경영','会社目標・経営継続')],fact};
+}
+function operatingAdvisorFacts(){
+ const f=playerFirm(),r=refFirm(f),out=f.machines.filter(m=>m.stock===0).length;
+ if(deskTab==='finance')return T(`현금 ${money(f.account.cash)} · 차입 잔액 ${money(r.notes.reduce((s,n)=>s+n.principal,0))} · 연체 계약 ${r.notes.filter(n=>n.missed>0).length}건`,`現金 ${money(f.account.cash)}・借入残高 ${money(r.notes.reduce((s,n)=>s+n.principal,0))}・延滞契約 ${r.notes.filter(n=>n.missed>0).length}件`);
+ if(deskTab==='research')return T(`진행 과제 ${r.projects.filter(p=>!p.complete).length}건 · 검토 대기 ${r.projects.filter(p=>!p.complete&&p.review).length}건`,`進行課題 ${r.projects.filter(p=>!p.complete).length}件・審査待ち ${r.projects.filter(p=>!p.complete&&p.review).length}件`);
+ if(deskTab==='staff')return T(`직원 ${chainFirm(f).staff.length}명 · 진행 작업 ${r.work.length}건`,`従業員 ${chainFirm(f).staff.length}人・進行作業 ${r.work.length}件`);
+ if(deskTab==='manufacture')return T(`공장 ${r.sites.filter(s=>!s.closed&&['drink','machine'].includes(s.kind)).length}개 · 생산 작업 ${r.work.filter(w=>w.kind==='production').length}건`,`工場 ${r.sites.filter(s=>!s.closed&&['drink','machine'].includes(s.kind)).length}か所・生産作業 ${r.work.filter(w=>w.kind==='production').length}件`);
+ return T(`운영 기기 ${f.machines.length}대 · 품절 ${out}대 · 진행 작업 ${r.work.length}건`,`稼働機 ${f.machines.length}台・品切れ ${out}台・進行作業 ${r.work.length}件`);
+}
+function paintOperatingAdvisor(){
+ const available=refEnabled()&&!guideActive();operatingAdvisorButton.hidden=!available;
+ operatingAdvisorButton.textContent=T('비서에게 질문','秘書に相談');
+ operatingAdvisorButton.setAttribute('aria-expanded',String(available&&operatingAdvisorOpen));
+ operatingAdvisorPanel.hidden=!available||!operatingAdvisorOpen;
+ if(operatingAdvisorPanel.hidden)return;
+ const advice=operatingAdvice(),routes=visibleDeskTabs().map(t=>t[0]);
+ patchPanel(operatingAdvisorPanel,`<p class="operating-advisor-message">${esc(advice.text)}</p><p class="operating-advisor-facts">${esc(operatingAdvisorFacts())}</p><div>${advice.steps.filter(s=>s.desk==='company-goals'||routes.includes(s.desk)).map(s=>`<button type="button" data-advisor-route="${s.desk}">${esc(s.label)}</button>`).join('')}</div><small>${T('상담 중에도 영업은 계속돼요. 천천히 보려면 상단에서 일시정지해 주세요.','相談中も営業は続きます。ゆっくり読むときは上の一時停止を使ってくださいね。')}</small>`);
+}
+const operatingAdvisorUpdate=updateDesk;updateDesk=function(){operatingAdvisorUpdate();paintOperatingAdvisor();};
+const operatingAdvisorSelect=selectDesk;selectDesk=function(tab){operatingAdvisorSelect(tab);paintOperatingAdvisor();};
+document.addEventListener('click',event=>{
+ const b=event.target.closest('button');if(!b)return;
+ if(b.id==='operating-advisor-toggle'){operatingAdvisorOpen=!operatingAdvisorOpen;paintOperatingAdvisor();}
+ if(b.dataset.advisorRoute){if(b.dataset.advisorRoute==='company-goals')openModal('company-goals');else selectDesk(b.dataset.advisorRoute);}
+});
+paintOperatingAdvisor();
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 

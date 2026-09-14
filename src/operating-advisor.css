@@ -1,0 +1,8 @@
+#operating-advisor-toggle{white-space:nowrap;font-size:11px!important;width:auto!important;min-width:0!important;padding:2px 5px!important}
+#operating-advisor{border-bottom:1px solid #808080;background:#ffffe9;padding:6px;max-height:190px;overflow:auto;flex-shrink:0;font-size:12px;line-height:1.45}
+#operating-advisor[hidden]{display:none}
+#operating-advisor p{margin:0 0 5px}
+#operating-advisor .operating-advisor-facts{font-weight:bold}
+#operating-advisor button{margin:2px;padding:3px 5px;font-size:11px}
+#operating-advisor small{display:block;font-size:11px;margin-top:4px}
+@media(max-width:650px){#operating-advisor{max-height:145px}#operating-advisor-toggle{font-size:10px!important;padding:2px!important}}

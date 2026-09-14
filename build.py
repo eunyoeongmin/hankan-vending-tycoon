@@ -30,6 +30,8 @@ for module in ['catalog','core','choices','actions','hooks','ui']:
 portrait='data:image/png;base64,'+base64.b64encode((root/'src/assets/advisor/secretary-v1.png').read_bytes()).decode('ascii')
 engine+='\n'+(root/'src/advisor.js').read_text(encoding='utf-8').replace('__ADVISOR_PORTRAIT__',portrait)
 engine+='\n'+(root/'src/practical-guide.js').read_text(encoding='utf-8').replace('__ADVISOR_PORTRAIT__',portrait)
+engine+='\n'+(root/'src/lifecycle.js').read_text(encoding='utf-8')
+engine+='\n'+(root/'src/operating-advisor.js').read_text(encoding='utf-8')
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')
@@ -38,6 +40,8 @@ css+='\n'+(root/'src/desktop.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/city-art.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/advisor.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/practical-guide.css').read_text(encoding='utf-8')
+css+='\n'+(root/'src/operating-advisor.css').read_text(encoding='utf-8')
+css+='\n'+(root/'src/lifecycle.css').read_text(encoding='utf-8')
 marker="render();if(loadWarning)"
 assert base.count(marker)==1
 out=base.replace(marker,engine+'\n'+marker).replace('</style>',css+'\n</style>',1)

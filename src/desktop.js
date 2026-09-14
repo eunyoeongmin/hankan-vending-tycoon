@@ -9,6 +9,7 @@ officeRegister.append(desktopTaskbar);
 let desktopWindowState='open';
 function updateDesktop(){
  const tab=visibleDeskTabs().find(t=>t[0]===deskTab),title=tab?tr(tab[1]):T('회사','会社');
+ controlText('fleet-count',T('현재 상권 '+visibleMachines().length+'대 · 회사 전체 '+state.machines.length+'대','この商圏 '+visibleMachines().length+'台・会社全体 '+state.machines.length+'台'));
  controlText('desktop-title',title);controlText('desktop-task',title);
  controlText('desktop-city-status',T('도시 · 영업 현황','都市 · 営業状況'));
  $('desktop-minimize').setAttribute('aria-label',T('업무 창 최소화','業務ウィンドウを最小化'));
