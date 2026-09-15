@@ -1,0 +1,18 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+(async()=>{const b=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}),p=await b.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));const output=process.env.ARTIFACT_DIR||path.join(process.cwd(),'artifacts','business-review');fs.mkdirSync(output,{recursive:true});try{
+await p.goto(process.env.GAME_URL||'http://127.0.0.1:8765/');await p.evaluate(()=>{profile.tutorialSeen=true;setupRules={...RULE_PRESETS.easy,events:0,supply:0};mgStartOptions={automation:true,review:false,running:false};launchNew();closeModal();menuOpen=false;livePaused=false;});
+const run=await p.evaluate(()=>{for(let i=0;i<31&&!state.ended;i++){businessCarry+=DAY_MS;mgConsumeClock();}livePaused=true;render();return {day:state.day,sold:state.totalSold,ended:state.ended,cash:state.cash,months:mgFirm(playerFirm()).month,valid:valid(state)};});fs.writeFileSync(path.join(output,'31-day-engine.json'),JSON.stringify(run,null,2));assert.equal(run.day,32);assert.ok(run.sold>0&&run.valid&&!run.ended);assert.ok(run.months.some(m=>m.closed));
+for(const language of ['ko','ja']){await p.locator('#language').selectOption(language);for(const [width,height] of [[1280,900],[390,844]]){await p.setViewportSize({width,height});await p.locator('#desk-nav [data-desk="reports"]').click();
+ assert.ok(await p.locator('#ref-review-month').isVisible());
+ assert.ok(await p.evaluate(()=>[...document.querySelectorAll('.review-ledger')].every(el=>el.scrollWidth<=el.clientWidth+1)),'comparison ledgers fit their container');await p.screenshot({path:path.join(output,`${language}-${width}-report-top.png`)});
+ const month=run.months.find(m=>m.closed).key;await p.locator('#ref-review-month').selectOption(month);assert.match(await p.locator('#desk-content').innerText(),new RegExp(month));
+ await p.locator('#ref-review-investment').fill('1000');await p.locator('#ref-review-gross').fill('20');await p.locator('#ref-review-expense').fill('5');await p.locator('#ref-review-expense').blur();
+ assert.match(await p.locator('#desk-content').innerText(),language==='ko'?/67일/:/67日/);
+ const stable=await p.evaluate(()=>{const node=$('ref-review-expense');for(let i=0;i<10;i++)refreshLiveNumbers();return node===$('ref-review-expense')&&node.value==='5';});assert.ok(stable,'calculator input stable across refresh');
+ await p.screenshot({path:path.join(output,`${language}-${width}-calculator.png`)});
+ await p.evaluate(()=>deskContent.scrollTop=deskContent.scrollHeight);await p.screenshot({path:path.join(output,`${language}-${width}-report-bottom.png`)});
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));assert.ok(await p.evaluate(()=>{const r=document.querySelector('.map-wrap').getBoundingClientRect();return r.width>100&&r.height>40;}));
+ await p.locator('[data-review-desk="finance"]').first().click();assert.equal(await p.evaluate(()=>deskTab),'finance');await p.locator('#desk-nav [data-desk="reports"]').click();await p.locator('[data-review-desk="company-goals"]').click();assert.equal(await p.evaluate(()=>modalView),'company-goals');await p.evaluate(()=>closeModal());
+}}
+assert.equal(await p.evaluate(()=>state.cash),run.cash,'calculator never spends company cash');assert.equal(await p.evaluate(()=>state.day),32);assert.deepEqual(errors,[]);console.log('PASS business review: actual31days auto trading, closed month, KO/JA desktop/mobile, period/input/payback/routes/stable controls');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exit(1)});

@@ -29,7 +29,7 @@ function mgOperate(f){if(!mgEnabled()||f.policy?.defeated)return;const a=mgFirm(
  for(const s of r.sites.filter(s=>s.kind==='warehouse'&&!s.closed&&!s.build&&s.policy.enabled)){
   if(!mgManaged(f,s)){mgBlock(f,s.id,'manager');continue;}mgPurchase(f,s);
   const machines=f.machines.filter(m=>m.ref.hub===s.id);
-  for(const m of machines){if(m.condition<s.policy.repair)mgDo(f,15000,()=>chainRepair(f,m.loc));if(a.pricing!=='manual')for(const slot of m.slots){const cost=slot.stock?slot.value/slot.stock:PRODUCTS[slot.product].cost;slot.price=refClamp(Math.round(cost*(a.pricing==='share'?1.7:2.2)),800,4000);}}
+  for(const m of machines){if(m.condition<s.policy.repair)mgDo(f,15000,()=>chainRepair(f,m.loc));if(a.pricing!=='manual')for(const slot of m.slots){const cost=slot.stock?slot.value/slot.stock:PRODUCTS[slot.product].cost;const reference=PRODUCTS[slot.product].price*(refSKU(slot.sku)?.volume||350)/350;slot.price=refClamp(Math.round(a.pricing==='share'?Math.max(cost*1.7,reference*.85):Math.max(cost*2.2,reference)),800,4000);}}
   if(s.maintenance<40)mgDo(f,15000,()=>refRepairSite(f,s.id));
   if(!r.routes.some(t=>t.hub===s.id)){const vehicle=r.vehicles.find(v=>v.hub===s.id&&!v.busy),staff=chainFirm(f).staff.some(w=>refEmployeeEligible(w,s.id,'restock'));if(vehicle&&machines.length){const id=refRoute(f,s.id,vehicle.id,machines.slice(0,staff?12:2).map(m=>m.loc));const route=r.routes.find(t=>t.id===id);if(route)route.managed=true;}}
   for(const route of r.routes.filter(t=>t.hub===s.id&&t.managed)){const staffed=chainFirm(f).staff.some(w=>refEmployeeEligible(w,s.id,'restock'));route.stops=machines.slice(0,staffed?12:2).map(m=>m.loc);}if(machines.some(m=>!r.routes.some(t=>t.enabled&&t.stops.includes(m.loc))))mgBlock(f,s.id,'delivery');

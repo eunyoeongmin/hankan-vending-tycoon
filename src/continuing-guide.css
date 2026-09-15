@@ -1,0 +1,5 @@
+#continuing-guide{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:4px;background:#ffffe9;border-bottom:1px solid #808080;font-size:12px;max-height:115px;overflow:auto}
+#continuing-guide[hidden]{display:none}#continuing-guide>span{flex:1 1 230px}#continuing-guide button{font-size:11px;padding:3px}#continuing-guide small{font-size:11px}
+.continuing-target{outline:3px solid #000080!important;outline-offset:2px}
+body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 210px}
+@media(max-width:650px){body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 190px}#continuing-guide{max-height:95px}}

@@ -1,0 +1,13 @@
+.review-ledger{container-type:inline-size;max-width:100%;margin:8px 0}
+body.management #reference-panel .review-table{min-width:0;width:100%;font-variant-numeric:tabular-nums}
+body.management #reference-panel .review-table th,body.management #reference-panel .review-table td{white-space:normal;overflow-wrap:anywhere}
+.review-actions p{margin:6px 0}
+@container (max-width:480px){
+ .review-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .review-table,.review-table tbody{display:block}
+ .review-table tr{display:block;border:1px solid #808080;margin-bottom:5px}
+ body.management #reference-panel .review-table td{display:flex;justify-content:space-between;gap:8px;min-width:0;padding:3px 5px;text-align:right;border:0}
+ body.management #reference-panel .review-table td::before{content:attr(data-label);text-align:left;max-width:58%}
+ body.management #reference-panel .review-table td:first-child{display:block;text-align:left;background:#a9a9a9;color:#000;font-weight:bold}
+ body.management #reference-panel .review-table td:first-child::before{content:none}
+}

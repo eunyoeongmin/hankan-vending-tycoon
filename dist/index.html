@@ -250,6 +250,29 @@ body.guide-intro #practical-guide .buttons{flex-wrap:wrap}
 .company-goal h3{margin:3px 0;font-size:14px}
 .company-goal p{color:#111!important;margin:5px 0;line-height:1.45}
 
+.goal-workflows{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.goal-workflows button{font-size:12px}
+
+.review-ledger{container-type:inline-size;max-width:100%;margin:8px 0}
+body.management #reference-panel .review-table{min-width:0;width:100%;font-variant-numeric:tabular-nums}
+body.management #reference-panel .review-table th,body.management #reference-panel .review-table td{white-space:normal;overflow-wrap:anywhere}
+.review-actions p{margin:6px 0}
+@container (max-width:480px){
+ .review-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .review-table,.review-table tbody{display:block}
+ .review-table tr{display:block;border:1px solid #808080;margin-bottom:5px}
+ body.management #reference-panel .review-table td{display:flex;justify-content:space-between;gap:8px;min-width:0;padding:3px 5px;text-align:right;border:0}
+ body.management #reference-panel .review-table td::before{content:attr(data-label);text-align:left;max-width:58%}
+ body.management #reference-panel .review-table td:first-child{display:block;text-align:left;background:#a9a9a9;color:#000;font-weight:bold}
+ body.management #reference-panel .review-table td:first-child::before{content:none}
+}
+
+#continuing-guide{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:4px;background:#ffffe9;border-bottom:1px solid #808080;font-size:12px;max-height:115px;overflow:auto}
+#continuing-guide[hidden]{display:none}#continuing-guide>span{flex:1 1 230px}#continuing-guide button{font-size:11px;padding:3px}#continuing-guide small{font-size:11px}
+.continuing-target{outline:3px solid #000080!important;outline-offset:2px}
+body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 210px}
+@media(max-width:650px){body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 190px}#continuing-guide{max-height:95px}}
+
 </style>
 </head>
 <body>
@@ -2023,10 +2046,10 @@ function refOperationsAdvance(f,ms){
  for(const j of r.work.filter(j=>['route','recruit'].includes(j.kind))){if(j.kind==='route'&&!(mgEnabled()&&j.employee===0)&&!chainFirm(f).staff.some(w=>w.id===j.employee)){for(const stop of j.stops)for(const cargo of stop.cargo)for(const batch of cargo.batches)refAdd(f.ops.warehouse[batch.product],[batch]);const vehicle=r.vehicles.find(v=>v.id===j.vehicle);if(vehicle)vehicle.busy=0;j.cancelled=true;j.remaining=0;}else j.remaining-=ms;}
  for(const j of r.work.filter(j=>['route','recruit'].includes(j.kind)&&j.remaining<=0&&!j.cancelled)){
   if(j.kind==='route'){for(const stop of j.stops){const m=f.machines.find(m=>m.loc===stop.loc);for(const c of stop.cargo){const slot=m?.slots[c.slot];for(const b of c.batches){if(slot&&slot.product===b.product&&(slot.sku.startsWith('legacy:')||slot.sku===b.sku)){if(!j.cold&&b.product===4)b.expires=Math.min(b.expires,state.day+1);refAdd(slot,[b],true);}else refAdd(f.ops.warehouse[b.product],[b]);}}if(m){const cash=m.vault;m.vault=0;refIncome(f,cash,'collection',j.site,false);syncMachine(m);m.ref.observedStock=m.stock;m.ref.observedDay=state.day;refSite(f,j.site).metrics.throughput++;}}const employee=chainFirm(f).staff.find(w=>w.id===j.employee);if(employee)employee.fatigue=refClamp(employee.fatigue+5,0,100);}
-  if(j.kind==='recruit'){const other=allFirms().find(v=>v.id===j.from),employee=other&&chainFirm(other).staff.find(w=>w.id===j.employee);if(employee?.notice){chainFirm(other).staff=chainFirm(other).staff.filter(w=>w.id!==j.employee);other.ops.jobs=other.ops.jobs.filter(w=>w.employee!==j.employee);Object.assign(employee,{site:j.site,map:refSite(f,j.site).map,salary:j.salary,notice:0,satisfaction:80});chainFirm(f).staff.push(employee);}}
+  if(j.kind==='recruit'){const other=allFirms().find(v=>v.id===j.from),employee=other&&chainFirm(other).staff.find(w=>w.id===j.employee);if(employee?.notice){chainFirm(other).staff=chainFirm(other).staff.filter(w=>w.id!==j.employee);if(other.id==='player')state.jobs=state.jobs.filter(w=>w.employee!==j.employee);else other.ops.jobs=other.ops.jobs.filter(w=>w.employee!==j.employee);Object.assign(employee,{site:j.site,map:refSite(f,j.site).map,salary:j.salary,notice:0,satisfaction:80});chainFirm(f).staff.push(employee);}}
  }r.work=r.work.filter(j=>!['route','recruit'].includes(j.kind)||j.remaining>0);syncChainStaff();
 }
-function refOperationsDay(f){const r=refFirm(f);for(const s of r.sites.filter(s=>!s.closed&&!s.build)){const cost=(s.kind==='warehouse'?500:s.kind==='research'?1000:0)*(1+s.capacity/2000);if(cost){companyExpense(f,cost);refPost(f,'site-overhead',-cost,'operating',s.id);s.metrics.overhead+=cost;}s.age++;s.maintenance=refClamp(s.maintenance-.1,0,100);const depreciate=Math.min(s.book,s.original/3600);s.book-=depreciate;expenseBookLoss(f,depreciate);}
+function refOperationsDay(f){const r=refFirm(f);for(const s of r.sites.filter(s=>!s.closed&&!s.build)){const cost=(mgEnabled()&&['drink','machine'].includes(s.kind)?2000:(s.kind==='warehouse'?500:s.kind==='research'?1000:0)*(1+s.capacity/2000));if(cost){companyExpense(f,cost);refPost(f,'site-overhead',-cost,'operating',s.id);s.metrics.overhead+=cost;}s.age++;s.maintenance=refClamp(s.maintenance-.1,0,100);const depreciate=Math.min(s.book,s.original/3600);s.book-=depreciate;expenseBookLoss(f,depreciate);}
  for(const v of r.vehicles){v.age++;if(v.lease){companyExpense(f,v.lease.fee);refPost(f,'vehicle-lease',-v.lease.fee,'operating',v.hub);if(v.lease.until<=state.day&&!v.busy)v.expired=true;}else{const d=Math.min(v.book,20);v.book-=d;expenseBookLoss(f,d);}}r.vehicles=r.vehicles.filter(v=>!v.expired);
  for(const w of chainFirm(f).staff){const site=refSite(f,w.site),overtime=site?.policy.overtime||0;w.fatigue=refClamp(w.fatigue+(overtime?overtime*3:-12),0,100);const fair=chainRole(w.role)[0]*(.7+w.skill*.3)*refWorld().cities[site?.map||0].wage;w.satisfaction=refClamp(w.satisfaction+(w.salary>=fair*.95?1:-2)-(w.fatigue>70?2:0),0,100);if(w.satisfaction<20&&!w.notice){w.notice=state.day+7;refNotice(f,'퇴사 예고 · 급여와 업무량 확인','退職予告・給与と業務量を確認','people',w.id);}if(w.notice&&w.notice<=state.day&&!r.work.some(j=>j.employee===w.id)&&!allFirms().some(other=>refFirm(other).work.some(j=>j.kind==='recruit'&&j.employee===w.id)))w.leave=true;}
  chainFirm(f).staff=chainFirm(f).staff.filter(w=>!w.leave);if(!mgEnabled())for(const route of r.routes)if(route.enabled)refDispatchRoute(f,route.id);syncChainStaff();
@@ -2107,7 +2130,7 @@ function refFinanceDay(f){const r=refFirm(f);if(mgEnabled())mgDebtDay(f);for(con
  const rows=f.id==='player'?state.live?.rows:f.ops.market?.rows,revenue=(rows||[]).reduce((n,x)=>n+x.revenue,0),cost=(rows||[]).reduce((n,x)=>n+x.cost,0),payroll=chainPayroll(f),rent=f.machines.reduce((n,m)=>n+companyRent(f,m),0),expenses=f.id==='player'?f.ops.expenseToday:(f.ops.market?.extra||0),profit=revenue-cost-payroll-rent-expenses;
 
  const cashChange=f.account.cash-r.daybook.openingCash,financing=r.daybook.financing,investing=r.daybook.investing,internal=r.daybook.internal||0,operating=cashChange-financing-investing-internal;r.reports.unshift({day:state.day,openingCash:r.daybook.openingCash,revenue,cost,payroll,rent,expenses,profit,cash:f.account.cash,assets:companyStockAssets(f)+f.account.cash,liabilities:f.bank.principal+f.bank.arrears+r.notes.reduce((n,x)=>n+x.principal,0)+r.bills.reduce((n,x)=>n+x.amount,0),equity:companyEquity(f),operating,financing,investing,internal,cashChange});r.reports=r.reports.slice(0,120);r.daybook={openingCash:f.account.cash,operating:0,financing:0,investing:0};
- for(const site of r.sites){site.metrics.salary=chainFirm(f).staff.filter(w=>w.site===site.id).reduce((n,w)=>n+w.salary*(1+site.policy.overtime*.3),0)*inflationFactor();site.metrics.overhead+=(rows||[]).filter(row=>f.machines.some(m=>m.loc===row.loc&&m.ref.hub===site.id)).reduce((n,row)=>n+row.rent,0)+(['drink','machine'].includes(site.kind)?2000:0)+site.original/3600;}for(const u of r.units){u.integration=Math.max(0,u.integration-1);u.profit=u.sites.reduce((n,id)=>n+((refSite(f,id)?.metrics.revenue||0)-(refSite(f,id)?.metrics.cost||0)-(refSite(f,id)?.metrics.salary||0)-(refSite(f,id)?.metrics.overhead||0)),0);u.history.unshift({day:state.day,profit:u.profit,cash:u.cash});u.history=u.history.slice(0,60);if(u.cash<5000)refNotice(f,'자회사 운영자금 부족','子会社の運転資金不足','group',u.id);}for(const s of r.sites){s.history.unshift({day:state.day,...s.metrics,cashFlow:s.cashFlow});s.history=s.history.slice(0,60);s.cashFlow=0;s.metrics={revenue:0,cost:0,salary:0,overhead:0,throughput:0,wait:0};}
+ for(const site of r.sites){site.metrics.salary=chainFirm(f).staff.filter(w=>w.site===site.id).reduce((n,w)=>n+w.salary*(1+site.policy.overtime*.3),0)*inflationFactor();site.metrics.overhead+=(rows||[]).filter(row=>f.machines.some(m=>m.loc===row.loc&&m.ref.hub===site.id)).reduce((n,row)=>n+row.rent,0)+(!mgEnabled()&&['drink','machine'].includes(site.kind)?2000:0)+site.original/3600;}for(const u of r.units){u.integration=Math.max(0,u.integration-1);u.profit=u.sites.reduce((n,id)=>n+((refSite(f,id)?.metrics.revenue||0)-(refSite(f,id)?.metrics.cost||0)-(refSite(f,id)?.metrics.salary||0)-(refSite(f,id)?.metrics.overhead||0)),0);u.history.unshift({day:state.day,profit:u.profit,cash:u.cash});u.history=u.history.slice(0,60);if(u.cash<5000)refNotice(f,'자회사 운영자금 부족','子会社の運転資金不足','group',u.id);}for(const s of r.sites){s.history.unshift({day:state.day,...s.metrics,cashFlow:s.cashFlow});s.history=s.history.slice(0,60);s.cashFlow=0;s.metrics={revenue:0,cost:0,salary:0,overhead:0,throughput:0,wait:0};}
 }
 
 /* M/A/E/U: finite customers, remembered service and budgeted business policies. */
@@ -2174,7 +2197,7 @@ const refOldTransfer=transferExpansionAssets;transferExpansionAssets=function(bu
 function refResetFirm(f){const r=refNewFirm(f);refWorld().firms[f.id]=r;const hub=refNewSite('warehouse',LOCATIONS[f.machines[0]?.loc||chainFirm(f).sites[0]?.loc||0].map);r.sites.push(hub);r.vehicles.push({id:refId(),hub:hub.id,capacity:160,cold:true,book:0,age:0,busy:0,lease:null});for(const w of chainFirm(f).staff)Object.assign(w,{site:hub.id,fatigue:0,satisfaction:70,specialty:0,shift:0,manager:false,notice:0});for(let p=0;p<6;p++){const w=f.ops.warehouse[p];w.batches=w.qty?[refBatch(f,p,w.qty,w.value,w.quality||0,w.expiresDay||state.day+expiryLife(p),hub.id)]:[];}for(const m of f.machines)refInitializeMachine(f,m,hub.id);}
 const refOldRevive=reviveCompany;reviveCompany=function(f){const ok=refOldRevive(f);if(ok&&refEnabled())refResetFirm(rivalById(f.id));return ok;};
 const refOldClose=closeCompany;closeCompany=function(f,reason){if(refEnabled()&&!f.policy.defeated){const r=refFirm(f),recover=r.sites.filter(s=>['warehouse','research'].includes(s.kind)).reduce((n,s)=>n+s.book*.5,0)+r.vehicles.reduce((n,v)=>n+v.book*.5,0)+r.units.reduce((n,u)=>n+u.cash,0);f.account.cash+=recover;for(const t of refWorld().tenders)for(const bid of t.bids.filter(b=>b.firm===f.id)){f.account.cash+=bid.value;t.bids=t.bids.filter(b=>b!==bid);}refWorld().firms[f.id]=refNewFirm(f);}const result=refOldClose(f,reason);if(refEnabled())for(const w of f.ops.warehouse){w.batches=[];refSyncBucket(w);}return result;};
-const refOldDemand=demand;demand=function(m){const n=refOldDemand(m);return refEnabled()?Math.min(4800,n*(refWorld().cities[LOCATIONS[m.loc].map]?.demand||1)):n;};
+const refOldDemand=demand;demand=function(m){const n=refOldDemand(m);return refEnabled()?Math.min(4800,n*(refWorld().cities[LOCATIONS[m.loc].map]?.demand||1)*(mgEnabled()?.6:1)):n;};
 const refOldLiquidatePlant=liquidatePlant;liquidatePlant=function(f,kind){if(!refEnabled())return refOldLiquidatePlant(f,kind);const site=refFirm(f).sites.findLast(s=>s.kind===kind&&!s.closed&&!s.build);if(!site||site.owner||refFirm(f).work.some(j=>j.site===site.id))return false;const result=refOldLiquidatePlant(f,kind);if(result){site.closed=true;site.book=0;site.processInvestment=0;for(const w of chainFirm(f).staff)if(w.site===site.id){w.site=refHome(f).id;w.map=refHome(f).map;}}return result;};
 const refOldInstall=installKit;installKit=function(f,loc){if(refEnabled()){const kit=expansionFirm(f).kits[0],available=['station','office'].includes(LOCATIONS[loc]?.kind)?2:1;if(kit?.model===1&&available<2)return refError(B('대형 기기 설치 면적 부족','大型機械の設置面積不足'));}return refOldInstall(f,loc);};
 
@@ -2571,7 +2594,7 @@ function mgOperate(f){if(!mgEnabled()||f.policy?.defeated)return;const a=mgFirm(
  for(const s of r.sites.filter(s=>s.kind==='warehouse'&&!s.closed&&!s.build&&s.policy.enabled)){
   if(!mgManaged(f,s)){mgBlock(f,s.id,'manager');continue;}mgPurchase(f,s);
   const machines=f.machines.filter(m=>m.ref.hub===s.id);
-  for(const m of machines){if(m.condition<s.policy.repair)mgDo(f,15000,()=>chainRepair(f,m.loc));if(a.pricing!=='manual')for(const slot of m.slots){const cost=slot.stock?slot.value/slot.stock:PRODUCTS[slot.product].cost;slot.price=refClamp(Math.round(cost*(a.pricing==='share'?1.7:2.2)),800,4000);}}
+  for(const m of machines){if(m.condition<s.policy.repair)mgDo(f,15000,()=>chainRepair(f,m.loc));if(a.pricing!=='manual')for(const slot of m.slots){const cost=slot.stock?slot.value/slot.stock:PRODUCTS[slot.product].cost;const reference=PRODUCTS[slot.product].price*(refSKU(slot.sku)?.volume||350)/350;slot.price=refClamp(Math.round(a.pricing==='share'?Math.max(cost*1.7,reference*.85):Math.max(cost*2.2,reference)),800,4000);}}
   if(s.maintenance<40)mgDo(f,15000,()=>refRepairSite(f,s.id));
   if(!r.routes.some(t=>t.hub===s.id)){const vehicle=r.vehicles.find(v=>v.hub===s.id&&!v.busy),staff=chainFirm(f).staff.some(w=>refEmployeeEligible(w,s.id,'restock'));if(vehicle&&machines.length){const id=refRoute(f,s.id,vehicle.id,machines.slice(0,staff?12:2).map(m=>m.loc));const route=r.routes.find(t=>t.id===id);if(route)route.managed=true;}}
   for(const route of r.routes.filter(t=>t.hub===s.id&&t.managed)){const staffed=chainFirm(f).staff.some(w=>refEmployeeEligible(w,s.id,'restock'));route.stops=machines.slice(0,staffed?12:2).map(m=>m.loc);}if(machines.some(m=>!r.routes.some(t=>t.enabled&&t.stops.includes(m.loc))))mgBlock(f,s.id,'delivery');
@@ -2621,7 +2644,7 @@ refTable([T('계약','契約'),T('잔액 / 연 이율','残高／年利'),T('다
  refTable([T('지급 예정','支払予定'),T('기일','期日'),T('금액','金額')],r.bills.slice().sort((a,b)=>a.due-b.due).map(b=>[b.kind==='wages'?T('급여','給与'):b.kind==='interest'?T('이자','利息'):b.kind==='tax'?T('법인세','法人税'):T('매입·기타','仕入・その他'),mgDateText(b.due),money(b.amount)]));
 }
 function mgPoliciesUI(f){const a=mgFirm(f),r=refFirm(f);refInputs['mg-pricing']??=a.pricing;return `<h3>${T('운영 규정','運営規定')}</h3>`+row(T('자동 운영 / 연구 단계 자동 승인','自動運営／研究段階自動承認'),(a.enabled?T('켬','オン'):T('끔','オフ'))+' / '+(a.review?T('켬','オン'):T('끔','オフ')))+row(T('오늘 집행 / 일 예산','本日執行／日次予算'),money(a.spent)+' / '+money(a.dailyBudget))+
- `<div class="expansion-form">${mgButton('auto',a.enabled?T('자동 운영 중 · 정지','自動運営中・停止'):T('자동 운영 시작','自動運営を開始'))}${refNumber('mg-budget',T('일 예산 ($)','日次予算 ($)'),a.dailyBudget/1000,1,100000)}${refNumber('mg-reserve',T('최소 현금 ($)','最低現金 ($)'),a.reserve/1000,0,1000000)}${refField('mg-pricing',T('가격 정책','価格方針'),[['manual',T('직접 지정 가격 유지','手動指定価格を維持')],['margin',T('마진 확보 · 원가 ×2.2','利益確保・原価 ×2.2')],['share',T('판매 확대 · 원가 ×1.7','販売拡大・原価 ×1.7')]])}${mgButton('policy-save',T('규정 저장','規定を保存'))}${mgButton('review',a.review?T('연구 단계 자동 승인: 켬','研究段階自動承認：オン'):T('연구 단계 자동 승인: 끔','研究段階自動承認：オフ'))}${mgButton('month-pause',refWorld().management.pauseMonth?T('월말 자동 정지: 켬','月末自動停止：オン'):T('월말 자동 정지: 끔','月末自動停止：オフ'))}</div>`+
+ `<div class="expansion-form">${mgButton('auto',a.enabled?T('자동 운영 중 · 정지','自動運営中・停止'):T('자동 운영 시작','自動運営を開始'))}${refNumber('mg-budget',T('일 예산 ($)','日次予算 ($)'),a.dailyBudget/1000,1,100000)}${refNumber('mg-reserve',T('최소 현금 ($)','最低現金 ($)'),a.reserve/1000,0,1000000)}${refField('mg-pricing',T('가격 정책','価格方針'),[['manual',T('직접 지정 가격 유지','手動指定価格を維持')],['margin',T('마진 확보 · 원가×2.2와 기준가 중 높은 값','利益確保・原価×2.2と基準価格の高い方')],['share',T('판매 확대 · 원가×1.7과 기준가85% 중 높은 값','販売拡大・原価×1.7と基準価格85%の高い方')]])}${mgButton('policy-save',T('규정 저장','規定を保存'))}${mgButton('review',a.review?T('연구 단계 자동 승인: 켬','研究段階自動承認：オン'):T('연구 단계 자동 승인: 끔','研究段階自動承認：オフ'))}${mgButton('month-pause',refWorld().management.pauseMonth?T('월말 자동 정지: 켬','月末自動停止：オン'):T('월말 자동 정지: 끔','月末自動停止：オフ'))}</div>`+
  `<p>${T('자동 운영을 켜면 예산 안에서 상품 발주·배송·정비와 등록한 계속 생산을 실행합니다. 끄면 새 자동 작업만 중단하며 이미 발주·출발한 작업과 계약 지급은 계속됩니다. 7일 내 지급 예정액과 최소 현금은 유보합니다. 연구 단계 자동 승인은 자동 운영 중에만 선납 예산 안에서 실행합니다. 추가 연구비는 직접 승인합니다.','自動運営をオンにすると予算内で商品発注・配送・整備と登録済みの継続生産を実行します。オフでは新規の自動作業のみ停止し、発注・出発済みの作業や契約支払いは続きます。7日以内の支払予定額と最低現金を留保。研究段階の自動承認は自動運営中のみ前払い予算内で実行。研究追加費用は手動で承認します。')}</p>`+
  refTable([T('거점','拠点'),T('책임자','責任者'),T('공급사 / 정비 기준','仕入先／整備基準'),T('운영','運営')],r.sites.filter(s=>s.kind==='warehouse'&&!s.closed).map(s=>[`#${s.id} ${tr(MAPS[s.map].name)}`,s.id===refHome(f).id?T('사장 · 배송 최대 2대','社長・配送最大2台'):s.manager?'#'+s.manager:T('미배치','未配置'),['Aqua','Sun','Value'][s.policy.supplier]+' / '+s.policy.repair+'%',refButton('policy-toggle',s.policy.enabled?T('정지','停止'):T('가동','稼働'),s.id)]))+
  `<div class="expansion-form">${refField('policy-site',T('거점','拠点'),refSiteChoices(f,'warehouse'))}${refField('policy-supplier',T('주 공급사','主仕入先'),[[0,'Aqua'],[1,'Sun'],[2,'Value']])}${refField('policy-backup',T('예비 공급사','予備仕入先'),[[1,'Sun'],[0,'Aqua'],[2,'Value']])}${refNumber('policy-repair',T('정비 기준 (%)','整備基準 (%)'),35,0,100)}${mgButton('site-policy',T('거점 규정 저장','拠点規定を保存'))}</div>`+
@@ -3598,6 +3621,41 @@ const lifecycleContinueBefore=continueGame;continueGame=function(){const modern=
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='company-goals-button')openModal('company-goals');if(b.dataset.lifecycleClaim)lifecycleClaim(b.dataset.lifecycleClaim);if(b.id==='lifecycle-retire')openModal('retirement');});
 lifecyclePaint();
 
+/* Goal-to-operation links: display/navigation only; no new progression or clock. Load after lifecycle.js. */
+const GOAL_WORKFLOWS={
+ enterprise:[['equipment',B('기기 조달·설치','機械調達・設置')],['reports',B('손익·현금흐름 점검','損益・資金繰りを確認')]],
+ market:[['market',B('시장·가격 비교','市場・価格を比較')],['reports',B('흑자 유지 점검','黒字の維持を確認')]],
+ industry:[['manufacture',B('공장·생산 운영','工場・生産を運営')],['research',B('기술·개발 투자','技術・開発へ投資')]]
+};
+function goalMarketSnapshot(){
+ const market=state.enterprise.operations.market,rows=market&&!market.legacy?market.districts:[],player=rows.reduce((n,d)=>n+d.player,0),total=rows.reduce((n,d)=>n+d.player+d.rival,0);
+ const share=total?player/total:null,report=state.report;
+ return {share,day:market?.day||null,inProgress:!!(state.live&&market?.day===state.live.day),profit:report?state.profit:null,profitDay:report?.day||null};
+}
+const goalNavigationBefore=lifecycleGoalsHTML;
+lifecycleGoalsHTML=function(){
+ const host=document.createElement('div');host.innerHTML=goalNavigationBefore();
+ const visible=new Set(visibleDeskTabs().map(t=>t[0]));
+ host.querySelectorAll('.company-goal').forEach((section,index)=>{
+  const goal=COMPANY_GOALS[index];if(!goal)return;
+  if(goal.id==='market'){
+   const value=goalMarketSnapshot(),status=document.createElement('p');status.className='goal-market-status';
+   const period=value.day?mgDateText(value.day):'';
+   status.textContent=(value.share===null?T('판매 집계 대기 중','販売集計待ち'):T('판매 집계 ','販売集計 ')+period+(value.inProgress?T(' (진행 중)','（途中経過）'):T(' (최근 집계)','（直近集計）'))+' · '+(value.share*100).toFixed(2)+'% / 60% · '+(value.share>=.6?T('점유율 충족','シェア達成'):T('점유율 미달','シェア未達')))+' / '+(value.profit===null?T('첫 일 결산 전','初回の日次決算前'):T('최근 일 결산 ','直近日次決算 ')+mgDateText(value.profitDay)+' · '+money(value.profit)+' · '+(value.profit>0?T('흑자','黒字'):T('흑자 미충족','黒字未達')));
+   section.append(status);
+  }
+  const nav=document.createElement('div');nav.className='goal-workflows buttons';nav.setAttribute('aria-label',T('관련 업무','関連業務'));
+  for(const [desk,label] of GOAL_WORKFLOWS[goal.id]||[]){if(!visible.has(desk))continue;const b=document.createElement('button');b.type='button';b.dataset.goalDesk=desk;b.textContent=tr(label);b.disabled=state.ended||(guideActive()&&!guideAllowedTabs().includes(desk));if(b.disabled&&!state.ended)b.title=T('기본 실습을 마치면 함께 살펴봐요.','基本実習のあとで一緒に見てみましょう。');nav.append(b);}
+  section.append(nav);
+ });
+ return host.innerHTML;
+};
+document.addEventListener('click',event=>{
+ const b=event.target.closest('button[data-goal-desk]');if(!b||b.disabled)return;
+ const tab=b.dataset.goalDesk;if(!visibleDeskTabs().some(t=>t[0]===tab)||(guideActive()&&!guideAllowedTabs().includes(tab)))return;
+ closeModal();selectDesk(tab);deskNav.querySelector('[data-desk="'+tab+'"]')?.focus();
+});
+
 /* Optional, state-aware conversations. No simulated lesson completion or new clock. */
 const operatingAdvisorButton=document.createElement('button');
 operatingAdvisorButton.id='operating-advisor-toggle';operatingAdvisorButton.type='button';
@@ -3672,6 +3730,207 @@ document.addEventListener('click',event=>{
  if(b.dataset.advisorRoute){if(b.dataset.advisorRoute==='company-goals')openModal('company-goals');else selectDesk(b.dataset.advisorRoute);}
 });
 paintOperatingAdvisor();
+
+/* Decision support reads the real books. Forecasts never execute payments or advance time. */
+function reviewPayments(f, days=30){
+ const r=refFirm(f),until=state.day+days,items=r.bills.filter(b=>b.due<=until).map(b=>({day:b.due,kind:'bill',amount:b.amount}));
+ for(const original of r.notes){
+  const n={...original};let accrued=0;
+  for(let day=state.day;day<=until&&n.principal>0;day++){
+   if((n.accruedDay||0)<day){accrued+=n.principal*n.rate;n.accruedDay=day;}
+   const interestDue=n.calendar?Math.min(n.next,n.due):day;
+   if(interestDue<=day&&accrued>0){items.push({day,kind:'interest',amount:accrued});accrued=0;}
+   if(n.calendar&&n.next<=day){
+    if(day>n.grace&&n.product==='equipment')n.duePrincipal=Math.min(n.principal,(n.duePrincipal||0)+n.installment);
+    const start=mgDate(n.start),next=mgDate(n.next),months=(next.getUTCFullYear()-start.getUTCFullYear())*12+next.getUTCMonth()-start.getUTCMonth();
+    n.next=mgAddMonths(n.start,months+1);
+   }
+   if(n.due<=day)n.duePrincipal=n.principal;
+   const payment=Math.min(n.principal,n.duePrincipal||0);
+   if(payment>0){items.push({day,kind:'principal',amount:payment});n.principal-=payment;n.duePrincipal=0;}
+  }
+ }
+ const total=kind=>items.filter(x=>x.kind===kind).reduce((sum,x)=>sum+x.amount,0);
+ return {until,bills:total('bill'),principal:total('principal'),interest:total('interest'),total:items.reduce((sum,x)=>sum+x.amount,0),items};
+}
+function reviewInvestment(cost,dailyGross,dailyExpense){
+ const net=dailyGross-dailyExpense;
+ return {net,days:cost>=0&&net>0?Math.ceil(cost/net):null};
+}
+function reviewRoute(desk,ko,ja){return `<button type="button" data-review-desk="${desk}">${T(ko,ja)}</button>`;}
+function reviewTable(headers,rows){return `<div class="review-ledger"><table class="review-table"><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(cells=>`<tr>${cells.map((value,i)=>`<td data-label="${esc(headers[i])}">${value}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+function reviewMonthValues(month){
+ return [month.revenue,month.cost,month.revenue-month.cost,month.payroll,month.tax,month.revenue-month.cost-month.payroll-month.tax-month.profit,month.profit,month.operating,month.investing,month.financing];
+}
+function reviewAnalysis(f,month,previous){
+ const r=refFirm(f),actions=[];
+ if(r.bills.some(b=>b.due<=state.day)||r.notes.some(n=>n.missed||n.duePrincipal>0))actions.push([T('지급일이 된 채무가 있습니다. 다음 투자 전에 지급 일정을 확인하세요.','期日を迎えた債務があります。次の投資の前に支払日程を確認しましょう。'),'finance','지급·상환','支払・返済']);
+ const empty=f.machines.filter(m=>!m.stock).length;
+ if(empty)actions.push([T(`현재 ${empty}대가 품절입니다. 창고 재고와 배송 대기를 확인하세요.`,`現在${empty}台が品切れです。倉庫在庫と配送待ちを確認しましょう。`),'logistics','재고·배송','在庫・配送']);
+ if(month?.revenue>0&&month.cost>=month.revenue)actions.push([T('선택한 달의 상품 원가가 매출 이상입니다. 판매 가격과 매입 단가를 확인하세요.','選択月の商品原価が売上以上です。売価と仕入単価を確認しましょう。'),'manage','상품·가격','商品・価格']);
+ if(month?.profit<0)actions.push([T('선택한 달은 적자입니다. 아래 비용 내역과 작업 대기를 함께 확인하세요.','選択月は赤字です。下の費用内訳と作業待ちを確認しましょう。'),'policies','운영·예산','運営・予算']);
+ if(previous&&month?.days&&previous.days&&month.revenue/month.days<previous.revenue/previous.days*.9)actions.push([T('하루 평균 매출이 비교 월보다 10% 이상 줄었습니다. 가격·경쟁·품절을 확인하세요.','日平均売上が比較月より10%以上減っています。価格・競合・品切れを確認しましょう。'),'market','상권·경쟁','商圏・競合']);
+ if(!actions.length)actions.push([T('다음 투자에서는 지출 뒤 남는 현금과 회수 기간을 비교해 보세요.','次の投資では支出後の手元資金と回収期間を比べてみましょう。'),'equipment','출점 견적','出店見積']);
+ return `<div class="review-actions">${actions.slice(0,3).map(([text,desk,ko,ja])=>`<p>${esc(text)} ${reviewRoute(desk,ko,ja)}</p>`).join('')}</div>`;
+}
+const reviewReportsBefore=mgReportsUI;
+mgReportsUI=function(f){
+ if(!mgEnabled())return reviewReportsBefore(f);
+ const a=mgFirm(f),r=refFirm(f),months=a.month,closed=months.filter(m=>m.closed),options=[['latest',T('최근 마감월','直近の確定月')],...months.map(m=>[m.key,m.key+(m.closed?'':T(' · 집계 중','・集計中'))])];
+ const selector=refField('review-month',T('분석 월','分析月'),options),key=refValue('review-month','latest'),month=key==='latest'?closed[0]:months.find(m=>m.key===key),previous=month&&months.find(m=>m.key<month.key&&m.closed),due=reviewPayments(f),reserve=a.reserve,free=f.account.cash-due.total-reserve;
+ const labels=[T('매출','売上'),T('상품 원가','商品原価'),T('매출총이익','売上総利益'),T('급여','給与'),T('세금','税金'),T('기타 순비용','その他純費用'),T('순이익','純利益'),T('영업 현금흐름','営業キャッシュフロー'),T('투자 현금흐름','投資キャッシュフロー'),T('재무 현금흐름','財務キャッシュフロー')];
+ const values=month&&reviewMonthValues(month),prev=previous&&reviewMonthValues(previous);
+ const rawCost=Number(refValue('review-investment',0)),rawGross=Number(refValue('review-gross',0)),rawExpense=Number(refValue('review-expense',0)),inputs=[rawCost,rawGross,rawExpense].every(x=>Number.isFinite(x)&&x>=0&&x<=1000000),cost=rawCost*1000,estimate=reviewInvestment(cost,rawGross*1000,rawExpense*1000);
+ return `<h3>${T('월 결산 · 다음 투자 검토','月次決算・次の投資検討')}</h3><div class="expansion-form">${selector}${reviewRoute('finance','지급 일정','支払日程')}${reviewRoute('company-goals','회사 목표','会社目標')}</div>`+
+ (month?`<p>${esc(month.key)} · ${month.days}${T('일 집계','日集計')} · ${month.closed?T('마감','確定'):T('집계 중','集計中')} / ${T('비교','比較')}: ${previous?previous.key:'—'}</p>`+row(T('하루 평균 매출 / 비교 월','日平均売上／比較月'),money(month.revenue/Math.max(1,month.days))+' / '+(previous?money(previous.revenue/Math.max(1,previous.days)):'—'))+row(T('순이익률','純利益率'),month.revenue>0?(month.profit/month.revenue*100).toFixed(1)+'%':'—'):
+ `<p>${T('아직 마감한 달이 없습니다. 분석 월에서 이번 달의 진행 상황을 확인할 수 있어요.','まだ確定した月がありません。分析月から今月の途中経過を確認できますよ。')}</p>`)+reviewAnalysis(f,month,previous)+
+ (month?reviewTable([T('내역','内訳'),month.key,previous?previous.key:'—',T('증감','増減')],labels.map((label,i)=>[label,money(values[i]),prev?money(prev[i]):'—',prev?money(values[i]-prev[i]):'—']))+`<p class="helper">${T('기타 순비용은 임대·이자·정비 등과 영업 외 손익을 포함한 잔액입니다. 원금 상환은 비용이 아니라 재무 현금흐름입니다. 금액 증감은 월 합계이며 집계일수가 다를 수 있습니다.','その他純費用は賃料・利息・整備などと営業外損益を含む残額です。元金返済は費用ではなく財務キャッシュフローです。増減は月合計で、集計日数が異なる場合があります。')}</p>`:'')+
+ `<h4>${T('현재부터 30일 자금 계획','現在から30日間の資金計画')}</h4>`+row(T('현금','現金'),money(f.account.cash))+row(T('등록된 청구서','登録済み請求書'),money(due.bills))+row(T('상환 예정 원금','返済予定元金'),money(due.principal))+row(T('추가 발생 이자 예상','追加発生利息の見込み'),money(due.interest))+row(T('운영 규정의 현금 유보','運営規定の現金留保'),money(reserve))+row(T('위 지급·유보 차감 후','上記支払・留保の差引後'),money(free))+
+ `<p class="helper">${T('이자는 현재 금리와 정상 상환을 가정합니다. 앞으로 발생할 발주·급여·세금·운영비와 매출은 포함하지 않습니다. 전액을 투자 가능액으로 보지 마세요.','利息は現在の金利と予定どおりの返済を仮定。今後の仕入れ・給与・税金・運営費と売上は含みません。全額を投資可能額と考えないでください。')}</p>`+
+ `<h4>${T('투자 비교 계산','投資比較計算')}</h4><div class="expansion-form">${refNumber('review-investment',T('초기 투자 ($)','初期投資 ($)'),0,0,1000000)}${refNumber('review-gross',T('추가 일 매출총이익 ($)','追加の日次売上総利益 ($)'),0,0,1000000)}${refNumber('review-expense',T('추가 일 운영비 ($)','追加の日次運営費 ($)'),0,0,1000000)}</div>`+
+ (inputs?row(T('일 추가 손익 / 단순 회수 기간','日次追加損益／単純回収期間'),money(estimate.net)+' / '+(cost>0&&estimate.days!==null?estimate.days+T('일','日'):T('—','—')))+row(T('투자 후 위 자금 잔액','投資後の上記資金残高'),money(free-cost)):`<p>${T('0~1,000,000 사이의 금액을 입력하세요.','0〜1,000,000の金額を入力してください。')}</p>`)+
+ `<p class="helper">${T('견적과 기존 점포 실적을 참고해 직접 입력합니다. 매출총이익은 매출에서 상품 원가를 뺀 금액입니다. 회수 기간은 입력한 손익이 유지될 때의 단순 계산이며, 대출·세금·계절 변화는 별도입니다. 입력만으로 투자하지 않습니다.','見積もりと既存店舗の実績を参考に入力。売上総利益は売上から商品原価を引いた額です。回収期間は入力した損益が続く場合の単純計算で、借入・税金・季節変動は別途考慮します。入力だけで投資は実行されません。')}</p>`+
+ `<h4>${T('월별 기록','月別記録')}</h4>`+reviewTable([T('월','月'),T('매출','売上'),T('순이익','純利益'),T('영업 현금흐름','営業キャッシュフロー')],months.map(m=>[m.key+(m.closed?'':T(' 집계 중',' 集計中')),money(m.revenue),money(m.profit),money(m.operating)]))+
+ `<h4>${T('현재 작업 대기','現在の作業待ち')}</h4>`+refTable([T('원인','原因'),T('사업장','事業所'),T('확인','確認')],a.blocked.map(x=>[mgReason(x.key),'#'+x.site,reviewRoute(x.key==='staff'||x.key==='manager'?'staff':x.key==='delivery'?'logistics':x.key==='supply'?'supply':'manufacture','업무 열기','業務を開く')]));
+};
+document.addEventListener('click',event=>{const b=event.target.closest('[data-review-desk]');if(!b||b.disabled)return;if(b.dataset.reviewDesk==='company-goals')openModal('company-goals');else selectDesk(b.dataset.reviewDesk);});
+
+/* Optional follow-up goals observe real company state; they never execute transactions. */
+const CONTINUING_TOPICS={
+ refill:{name:B('품절에서 다시 판매까지','品切れから販売再開まで'),steps:[['supply',B('같은 상품의 입고 준비','同じ商品の入荷準備')],['logistics',B('창고 도착 확인','倉庫到着を確認')],['logistics',B('대상 기기에 배송','対象機へ配送')],['fleet',B('판매 재개 확인','販売再開を確認')]]},
+ finance:{name:B('차입금 상환 확인','借入金の返済を確認'),steps:[['finance',B('상환 계약과 지급일 확인','返済契約と支払日を確認')],['finance',B('실제 원금 상환 확인','実際の元金返済を確認')]]},
+ expansion:{name:B('새 기기의 첫 매출','新しい機械の初売上'),steps:[['equipment',B('입지·기기·설치','立地・機械・設置')],['logistics',B('새 기기에 재고 배송','新しい機械へ在庫配送')],['fleet',B('첫 판매 확인','初売上を確認')]]},
+ staff:{name:B('직원의 업무 배치','社員の業務配置'),steps:[['staff',B('직원 채용·배치','社員の採用・配置')],['reports',B('배치한 직원의 작업 진행','配置した社員の作業進行')]]},
+ research:{name:B('투자에서 연구 성과까지','投資から研究成果まで'),steps:[['research',B('진행할 연구 과제','進める研究課題')],['research',B('검토·연구 완료','審査・研究完了')]]},
+ manufacture:{name:B('생산 준비와 완제품','生産準備と完成品'),steps:[['manufacture',B('원재료·인력·생산 지시','原材料・人員・生産指示')],['manufacture',B('실제 완제품 생산','実際の完成品生産')]]}
+};
+function continuingState(){
+ const object=x=>x&&typeof x==='object'&&!Array.isArray(x),number=x=>Number.isFinite(x)&&x>=0&&x<=1e12;
+ if(!object(state.continuingGuide)||state.continuingGuide.version!==1)state.continuingGuide={version:1,enabled:true,snoozeUntil:0,active:null,done:{},welcomeSeen:false};
+ const c=state.continuingGuide;c.enabled=c.enabled!==false;c.welcomeSeen=c.welcomeSeen===true;c.snoozeUntil=number(c.snoozeUntil)?c.snoozeUntil:0;
+ if(!object(c.done))c.done={};for(const k of Object.keys(c.done))if(!Object.hasOwn(CONTINUING_TOPICS,k)||!object(c.done[k])||!number(c.done[k].day))delete c.done[k];
+ if(!Object.hasOwn(CONTINUING_TOPICS,c.last))c.last=null;
+ const x=c.active;
+ if(x&&(!object(x)||!Object.hasOwn(CONTINUING_TOPICS,x.kind)||!Number.isInteger(x.step)||x.step<0||x.step>=CONTINUING_TOPICS[x.kind].steps.length||!Array.isArray(x.locations)||!x.locations.every(number)||!Array.isArray(x.principal)||!x.principal.every(n=>object(n)&&number(n.id)&&number(n.principal))||!number(x.baselineSales)||!number(x.manufactured)||!number(x.started)||!(x.loc===null||number(x.loc))||!(x.project===null||number(x.project))||!(x.worker===null||number(x.worker))))c.active=null;
+ return c;
+}
+function continuingReady(){return refEnabled()&&!guideActive()&&!state.ended;}
+function continuingStock(m){if(!m)return 0;return playerFirm().ops.warehouse.reduce((sum,b)=>sum+(b.batches||[]).filter(x=>x.hub===m.ref.hub&&m.slots.some(s=>s.product===x.product&&(s.sku===x.sku||s.sku.startsWith('legacy:')))).reduce((n,x)=>n+x.qty,0),0);}
+function continuingCandidate(){
+ const c=continuingState(),f=playerFirm(),r=refFirm(f);
+ if(f.machines.some(m=>!m.stock)&&(!c.done.refill||state.day-c.done.refill.day>=7))return 'refill';
+ if(r.notes.some(n=>n.principal>0)&&!c.done.finance)return 'finance';
+ if(r.projects.some(p=>!p.complete)&&!c.done.research)return 'research';
+ if(r.work.some(w=>w.kind==='production')&&!c.done.manufacture)return 'manufacture';
+ if(chainFirm(f).staff.some(w=>['restock','drink','machine'].includes(w.role))&&!c.done.staff)return 'staff';
+ if(chainFirm(f).orders.some(o=>o.kind==='machine'||o.kind==='installation')&&!c.done.expansion)return 'expansion';
+ return null;
+}
+function continuingStart(kind){
+ if(!continuingReady()||!CONTINUING_TOPICS[kind])return false;
+ const c=continuingState(),f=playerFirm(),r=refFirm(f),m=f.machines.find(m=>!m.stock)||f.machines[0];
+ if(kind==='finance'&&!r.notes.some(n=>n.principal>0)){toast(T('현재 상환할 차입 계약이 없어요.','今は返済する借入契約がありません。'));return false;}
+ c.active={kind,step:0,loc:kind==='refill'?m?.loc:null,baselineSales:m?.total||0,locations:f.machines.map(m=>m.loc),project:null,worker:null,manufactured:r.stats.manufactured||0,principal:r.notes.filter(n=>n.principal>0).map(n=>({id:n.id,principal:n.principal})),started:state.day};
+ c.enabled=true;c.welcomeSeen=true;c.snoozeUntil=0;continuingPicker=false;continuingCheck();save();return true;
+}
+function continuingCheck(){
+ if(!continuingReady())return;const c=continuingState(),a=c.active;if(!a)return;
+ const f=playerFirm(),r=refFirm(f);let changed=false,done=false;
+ const next=()=>{a.step++;changed=true;};
+ if(a.kind==='refill'){
+  const m=f.machines.find(m=>m.loc===a.loc);if(m){
+   if(a.step===0&&(continuingStock(m)>0||r.work.some(w=>w.kind==='purchase'&&w.site===m.ref.hub&&m.slots.some(s=>s.product===w.product&&(s.sku===w.sku||s.sku.startsWith('legacy:'))))))next();
+   if(a.step===1&&(continuingStock(m)>0||m.stock>0||m.total>a.baselineSales))next();else if(a.step===1&&!r.work.some(w=>w.kind==='purchase'&&w.site===m.ref.hub)){a.step=0;changed=true;}
+   if(a.step===2&&(m.stock>0||m.total>a.baselineSales))next();
+   if(a.step===3&&m.total>a.baselineSales)done=true;
+  }
+ }
+ if(a.kind==='finance'){
+  if(a.step===0&&a.principal.length)next();
+  if(a.step===1&&a.principal.some(p=>(r.notes.find(n=>n.id===p.id)?.principal||0)<p.principal))done=true;
+ }
+ if(a.kind==='expansion'){
+  if(a.step===0){const m=f.machines.find(m=>!a.locations.includes(m.loc));if(m){a.loc=m.loc;a.baselineSales=0;next();}}
+  const m=f.machines.find(m=>m.loc===a.loc);if(a.step===1&&m&&(m.stock>0||m.total>0))next();if(a.step===2&&m?.total>0)done=true;
+ }
+ if(a.kind==='research'){
+  if(a.step===0){const p=r.projects.find(p=>!p.complete);if(p){a.project=p.id;next();}}
+  if(a.step===1&&r.projects.some(p=>p.id===a.project&&p.complete))done=true;else if(a.step===1&&!r.projects.some(p=>p.id===a.project)){a.step=0;a.project=null;changed=true;}
+ }
+ if(a.kind==='staff'){
+  if(a.step===0){const w=chainFirm(f).staff.find(w=>['restock','drink','machine'].includes(w.role)&&w.site&&refSite(f,w.site)&&!w.training&&!w.notice);if(w){a.worker=w.id;a.experience=w.experience||0;next();}}
+  if(a.step===1){const w=chainFirm(f).staff.find(w=>w.id===a.worker),job=w&&r.work.find(j=>j.employee===w.id||(j.site===w.site&&j.kind==='production'&&refEmployeeEligible(w,w.site,refSite(f,w.site)?.kind)));if(job){const progress=job.progress||0,remaining=job.remaining||0;if(a.job===job.id&&(progress!==a.jobProgress||remaining!==a.jobRemaining))done=true;else if(a.job!==job.id){a.job=job.id;a.jobProgress=progress;a.jobRemaining=remaining;changed=true;}}}
+ }
+ if(a.kind==='manufacture'){
+  if(a.step===0&&r.work.some(w=>w.kind==='production'))next();
+  if(a.step===1&&(r.stats.manufactured||0)>a.manufactured)done=true;
+ }
+ if(done){c.done[a.kind]={day:state.day};c.last=a.kind;c.active=null;c.snoozeUntil=state.day+2;changed=true;}
+ if(changed)save();
+}
+function continuingMessage(a){
+ const r=refFirm(playerFirm()),m=playerFirm().machines.find(m=>m.loc===a.loc);
+ if(a.kind==='refill')return [B('사장님, 이 기기가 품절이네요. 판매 상품과 같은 음료를 같은 거점으로 주문해 볼까요? 창고에 이미 있다면 발주는 건너뛸 수 있어요.','社長、この機械が品切れです。同じ飲料を同じ拠点へ注文しましょうか。倉庫にあれば発注は不要ですよ。'),B('주문은 들어갔어요. 입고 작업이 끝나면 다음은 차량 배송이에요. 기다리는 동안 경로에 이 기기가 있는지 확인해 주세요.','注文できました。入荷が終わったら車で配送します。待つ間に、この機械がルートにあるか確認してくださいね。'),B('이제 경로를 편성하고 차량을 출발시켜 주세요. 재고가 실려야 보충돼요. 배송이 안 되면 상품·거점·차량·인력을 함께 확인해요.','ルートを編成して車を出発させましょう。在庫を積んで初めて補充できます。商品・拠点・車両・人員も確認しましょう。'),B('재고가 도착했어요. 영업 시간을 진행하며 이 기기에서 다시 판매되는지 함께 지켜봐요.','在庫が届きました。営業を進めて、この機械で販売が再開するか一緒に見守りましょう。')][a.step];
+ if(a.kind==='finance')return B('사장님, 기존 계약의 지급 예정과 만기를 확인해 볼까요? 발주와 급여에 쓸 돈도 남겨 주세요. 일부 상환 또는 예정된 상환으로 실제 원금이 줄면 제가 확인할게요. 새 대출을 받으실 필요는 없어요.','社長、既存契約の支払予定と満期を確認しましょうか。仕入れと給与の分も残してくださいね。一部返済や予定の返済で元金が減ったら確認します。新しく借りる必要はありませんよ。');
+ if(a.kind==='expansion')return B('입지 계약과 기기 주문 뒤에는 도착을 기다려 설치해 주세요. 설치 후에는 음료를 배송하고 첫 매출까지 확인해요. 자금이 빠듯하면 다음에 해도 괜찮아요.','立地契約と機械発注の後は、到着を待って設置してくださいね。その後、飲料を配送して初売上まで確認します。資金が厳しければ後でも大丈夫ですよ。');
+ if(a.kind==='staff')return B('배송 담당 또는 공장 생산 직원을 사업장에 배치해 주세요. 배치된 직원의 배송 또는 생산 작업이 실제로 진행되면 확인해 드릴게요. 교육·이직 대기·피로 때문에 쉬고 있다면 먼저 그 상태를 살펴봐요.','配送担当か工場の生産担当を事業所に配置してくださいね。配置した社員の配送・生産作業が実際に進んだら確認します。研修・転職待ち・疲労で休んでいるなら、その状態から確認しましょう。');
+ if(a.kind==='research')return B('진행 중인 과제의 검토 요청을 봐 주세요. 승인이 필요하면 예산을 확인하고 결정해요. 이 과제의 실제 완료까지 함께 확인할게요. 중단했다면 다음에 하기를 눌러 다른 과제로 다시 시작할 수 있어요.','進行中の課題の審査依頼を見てくださいね。承認が必要なら予算を確認して決めましょう。この課題の完了まで見守ります。中止したら「また今度」で別の課題からやり直せますよ。');
+ return B('공장의 원재료와 담당 인력을 준비하고 생산을 지시해 주세요. 작업이 생긴 뒤 실제 완제품 수가 늘어나는지 확인할게요. 생산 완료 후에도 판매용 음료는 기기까지 배송해야 매출이 돼요.','工場の原材料と担当人員を準備して生産を指示してくださいね。作業が始まり、実際の完成品が増えたら確認します。販売用の飲料は機械へ配送して初めて売上になりますよ。');
+}
+let continuingPicker=false,continuingCompany=null;
+const continuingPanel=document.createElement('section');continuingPanel.id='continuing-guide';officeRegister.prepend(continuingPanel);
+function continuingPaint(){
+ if(continuingCompany!==state){continuingCompany=state;continuingPicker=false;document.querySelectorAll('.continuing-target').forEach(n=>n.classList.remove('continuing-target'));}continuingCheck();const c=continuingState();continuingPanel.hidden=!continuingReady()||!!modalView;if(continuingPanel.hidden){document.body.classList.remove('continuing-active');document.querySelectorAll('.continuing-target').forEach(n=>n.classList.remove('continuing-target'));return;}
+ document.body.classList.toggle('continuing-active',!!c.active);const a=c.active,candidate=c.enabled&&state.day>=c.snoozeUntil?continuingCandidate():null;
+ let html='';
+ if(a){const t=CONTINUING_TOPICS[a.kind],s=t.steps[Math.min(a.step,t.steps.length-1)];html=`<strong>${esc(tr(t.name))} · ${a.step+1}/${t.steps.length}</strong><span>${esc(tr(continuingMessage(a)))}</span><button data-continuing="go" data-route="${s[0]}">${esc(tr(s[1]))}</button><small>${esc(continuingEvidence(a))} · ${livePaused?T('일시정지 중 · 대기는 상단 재개','一時停止中・待機は上の再開'):T('영업 진행 중','営業中')}</small><button data-continuing="later">${T('다음에 하기','また今度')}</button>`;}
+ else if(!c.welcomeSeen&&c.enabled)html=`<span>${state.guide?.step>=16?T('기본 운영을 마쳤네요. 앞으로도 제가 곁에서 함께 확인할게요.','基本の運営を終えましたね。これからもそばで一緒に確認します。'):T('사장님, 필요할 때 실제 운영을 함께 확인해 드릴게요.','社長、必要なときに実際の運営を一緒に確認しますね。')} ${T('현재 자동 운영: ','現在の自動運営：')}${mgEnabled()&&mgFirm(playerFirm()).enabled?T('켜짐','オン'):T('꺼짐','オフ')}${T(' · 설정은 그대로 유지해요. 도움은 생략하거나 다시 열 수 있어요.','・設定はそのままです。案内は見送ったり開き直したりできますよ。')}</span><button data-continuing="welcome">${T('알겠어요','わかりました')}</button>`;
+ else if(candidate)html=`<strong>${T('사장님, 함께 확인해 볼까요?','社長、一緒に確認しましょうか？')}</strong><button data-continuing="${candidate}">${esc(tr(CONTINUING_TOPICS[candidate].name))}</button><button data-continuing="later">${T('이틀 뒤에','2日後に')}</button>`;
+ else if(c.last)html=`<span>${T('확인했어요: ','確認できました：')}${esc(tr(CONTINUING_TOPICS[c.last].name))}</span>`;
+ if(continuingMarketAvailable())html+=`<span>${T('실습 회사는 현재 사업사건 없음·공급 안정으로 운영 중이에요. 원하시면 시장 변화를 더할 수 있어요.','実習会社は今、事業事件なし・供給安定で営業しています。よろしければ市場の変化を加えられますよ。')}</span><button data-continuing="market">${T('시장 변화와 함께 운영','市場の変化とともに経営')}</button>`;
+ html+=`<button data-continuing="list">${T('비서와 함께하기','秘書と進める')}</button><button data-continuing="toggle">${c.enabled?T('제안 끄기','提案をオフ'):T('제안 켜기','提案をオン')}</button>`;
+ if(continuingPicker)html+=`<div>${Object.entries(CONTINUING_TOPICS).map(([k,t])=>`<button data-continuing="${k}">${esc(tr(t.name))}${c.done[k]?' ✓':''}</button>`).join('')}</div>`;
+ patchPanel(continuingPanel,html);
+}
+const continuingBeforeUpdate=updateDesk;updateDesk=function(){continuingBeforeUpdate();continuingPaint();};
+const continuingBeforeClose=closeModal;closeModal=function(){continuingBeforeClose();continuingPaint();};
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-continuing]');if(!b||!continuingReady())return;const c=continuingState(),k=b.dataset.continuing;
+ if(CONTINUING_TOPICS[k])continuingStart(k);if(k==='go'){selectDesk(b.dataset.route);continuingFocus(c.active);}
+ if(k==='welcome')c.welcomeSeen=true;
+ if(k==='market'&&continuingMarketAvailable())openModal('continuing-market');
+ if(k==='later'){c.welcomeSeen=true;c.active=null;c.last=null;c.snoozeUntil=state.day+2;}
+ if(k==='toggle'){c.welcomeSeen=true;c.enabled=!c.enabled;if(!c.enabled){c.active=null;c.last=null;}}
+ if(k==='list'){c.welcomeSeen=true;continuingPicker=!continuingPicker;}save();continuingPaint();});
+continuingPaint();
+
+function continuingEvidence(a){
+ const f=playerFirm(),r=refFirm(f),m=f.machines.find(m=>m.loc===a.loc);
+ if(a.kind==='finance')return T('현재 원금 ','現在元金 ')+money(r.notes.reduce((s,n)=>s+n.principal,0))+T(' · 현금 ','・現金 ')+money(f.account.cash);
+ if(a.kind==='refill'&&m){const j=r.work.find(j=>j.kind==='purchase'&&j.site===m.ref.hub&&m.slots.some(s=>s.product===j.product&&(s.sku===j.sku||s.sku.startsWith('legacy:'))));return tr(LOCATIONS[m.loc].short)+T(' · 기기 재고 ','・機械在庫 ')+m.stock+T(' · 같은 상품 창고 재고 ','・同商品の倉庫在庫 ')+continuingStock(m)+(j?T(' · 입고 잔여 ','・入荷残り ')+chainDays(j.remaining)+T('일','日'):'');}
+ if(a.kind==='research'){const p=r.projects.find(p=>p.id===a.project);return p?(p.review?T('검토 승인 대기','審査承認待ち'):T('연구 진행 중','研究進行中')):T('진행 과제 없음','進行課題なし');}
+ const j=r.work.find(j=>a.kind==='manufacture'?j.kind==='production':j.id===a.job);return j?(j.kind==='production'?T('공정 ','工程 ')+(j.stage+1)+' / 3':T('작업 잔여 ','作業残り ')+chainDays(j.remaining)+T('일','日')):T('업무 화면에서 조건 확인','業務画面で条件を確認');
+}
+function continuingFocus(a){
+ if(!a)return;const selectors={supply:'#ref-sku',logistics:'[data-ref-action="route-run"]',equipment:'[data-chain="machine"]',staff:'#ref-role',finance:'#ref-mg-amount',research:'[data-ref-action="research"]',manufacture:'#ref-factory'};
+ document.querySelectorAll('.continuing-target').forEach(n=>n.classList.remove('continuing-target'));
+ const n=document.querySelector(selectors[deskTab]||'#desktop-title');if(n){n.classList.add('continuing-target');n.scrollIntoView?.({block:'nearest'});n.focus?.({preventScroll:true});}
+}
+
+/* A deliberate player decision after the practice company. Existing operations are untouched. */
+function continuingMarketAvailable(){return continuingReady()&&state.guide?.step>=16&&validScenario(state.scenario)&&state.scenario.rules.events===0&&state.scenario.rules.supply===0;}
+function continuingApplyMarket(){
+ if(modalView!=='continuing-market'||!continuingMarketAvailable())return false;
+ const scenario={...state.scenario,preset:'custom',rules:{...state.scenario.rules,events:STANDARD_RULES.events,supply:STANDARD_RULES.supply}};
+ if(!validScenario(scenario))return false;
+ state.scenario.rules.events=scenario.rules.events;state.scenario.rules.supply=scenario.rules.supply;state.scenario.preset='custom';
+ log(B('사장님이 사업사건·공급 안정성을 보통으로 변경했습니다. 이후 사건 추첨과 신규 발주에 적용됩니다.','社長が事業事件・供給安定性を普通に変更しました。以後の事件抽選と新規発注に適用されます。'));
+ save();closeModal();continuingPaint();return true;
+}
+const continuingMarketDrawBefore=drawModal;drawModal=function(){
+ continuingMarketDrawBefore();if(modalView!=='continuing-market')return;
+ $('modal-body').innerHTML=`<h2>${T('시장 변화와 함께 운영할까요?','市場の変化とともに経営しますか？')}</h2><p>${T('사장님, 지금은 실습용으로 사업사건이 없고 공급도 안정적이에요. 아래 두 항목만 바꾸면 같은 회사에서 선택할 일이 더 생겨요. 지금 방식이 편하시면 그대로 두셔도 괜찮아요.','社長、今は実習用に事業事件がなく、供給も安定しています。下の2項目だけ変えると、同じ会社で判断する場面が増えます。今のままでも大丈夫ですよ。')}</p>${row(T('사업사건','事業事件'),T('없음 → 보통','なし → 普通'))}${row(T('공급 안정성','供給安定性'),T('안정 → 보통 (입고 지연 가능)','安定 → 普通（入荷遅延の可能性）'))}<p>${T('현재 자금·기기·직원·계약과 다른 난이도는 유지합니다. 자동 운영·자동 진행·배속도 바꾸지 않습니다.','現在の資金・機械・社員・契約と他の難易度は保持します。自動運営・自動進行・速度も変更しません。')}</p><p>${T('확인 후 다음 사건 추첨과 새 발주부터 적용해요. 즉시 사건을 만들거나 진행 중 배송을 지연시키지는 않아요.','確認後、次の事件抽選と新しい発注から適用します。すぐに事件を起こしたり、進行中の配送を遅らせたりはしません。')}</p>${buttons(`<button data-close>${T('지금 방식 유지','今のまま続ける')}</button><button id="continuing-market-confirm" ${disabled(!continuingMarketAvailable())}>${T('두 항목을 보통으로 변경','2項目を普通に変更')}</button>`+closeButton())}`;
+};
+document.addEventListener('click',e=>{if(e.target.closest('#continuing-market-confirm'))continuingApplyMarket();});
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 
