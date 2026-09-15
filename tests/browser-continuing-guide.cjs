@@ -16,7 +16,7 @@ for(const language of ['ko','ja']){
  assert.ok(await p.evaluate(()=>refFirm(playerFirm()).work.some(w=>w.kind==='purchase')));assert.ok(await p.evaluate(cash=>state.cash<cash,cash));assert.equal(await p.evaluate(()=>continuingState().active.step),1);assert.ok(await p.evaluate(()=>!continuingState().done.refill));
  await p.screenshot({path:path.join(output,`${language}-390-actual-order.png`)});await layout('ordered');
  await p.locator('#office-register-tabs button').first().click();
- await p.locator('#continuing-guide [data-continuing="toggle"]').click();assert.ok(await p.evaluate(()=>!continuingState().enabled&&!continuingState().active));await p.reload();await p.locator('#menu-load').click();assert.ok(await p.evaluate(()=>!continuingState().enabled&&!continuingState().active));
+ await p.locator('#advisor-restore').click();await p.locator('#continuing-guide [data-continuing="toggle"]').click();assert.ok(await p.evaluate(()=>!continuingState().enabled&&!continuingState().active));await p.reload();await p.locator('#menu-load').click();assert.ok(await p.evaluate(()=>!continuingState().enabled&&!continuingState().active));
  await p.locator('#continuing-guide [data-continuing="list"]').click();await p.locator('#continuing-guide [data-continuing="refill"]').last().click();assert.ok(await p.evaluate(()=>continuingState().enabled&&continuingState().active.kind==='refill'));await layout('resumed');
  // Keep the real outstanding order while testing the optional market transition.
  await p.evaluate(()=>{livePaused=true;sceneSpeed=4;render();});

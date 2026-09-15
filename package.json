@@ -1,6 +1,6 @@
 {
   "name": "hankan-enterprise",
-  "version": "10.8.0",
+  "version": "10.8.1",
   "private": true,
   "scripts": {
     "build": "python build.py",
@@ -11,7 +11,7 @@
     "test:scene": "node tests/run-scene-review.cjs",
     "test:audit-balance": "node tests/audit-balance.cjs",
     "test:strategies": "node tests/economy-strategies.cjs",
-    "test:polish": "node tests/browser-business-review.cjs && node tests/browser-continuing-guide.cjs && node tests/browser-goal-navigation.cjs"
+    "test:polish": "node tests/browser-advisor-window.cjs && node tests/browser-business-review.cjs && node tests/browser-continuing-guide.cjs && node tests/browser-goal-navigation.cjs"
   },
   "devDependencies": {
     "jsdom": "30.0.1"

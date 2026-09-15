@@ -20,7 +20,7 @@ for(const language of ['ko','ja']){
  for(let step=0;step<16;step++){
   assert.equal(await p.evaluate(()=>state.guide.step),step,await p.evaluate(()=>JSON.stringify({guide:state.guide,work:refFirm(playerFirm()).work,stock:state.machines.map(m=>({loc:m.loc,stock:m.stock}))})));
   if([1,3,5,8,11,13,15].includes(step)){
-   await p.locator('#guide-focus').click();
+   if(await p.locator('#advisor-restore').isVisible())await p.locator('#advisor-restore').click();await p.locator('#guide-focus').click();
    assert.equal(await p.locator('#guide-spotlight').evaluate(el=>getComputedStyle(el).pointerEvents),'none');
    assert.ok(await p.locator('#guide-holes rect').count()>=3);
    if(step===1){assert.match(await p.locator('#guide-status').innerText(),language==='ko'?/첫 판매 대기/:/最初の購入待ち/);assert.equal(await p.locator('#guide-progress').isVisible(),false);}
@@ -29,7 +29,7 @@ for(const language of ['ko','ja']){
    if(step===1||step===5){await p.waitForTimeout(400);await p.screenshot({path:`artifacts/practical-guide/${language}-waiting-${step}.png`});}
    await p.evaluate(step=>{for(let i=0;i<1800&&state.guide.step===step;i++){if(!state.live)startBusiness();advanceBusiness(1000);guideCheck();}},step);
   }else{
-   await p.locator('#guide-focus').click();
+   if(await p.locator('#advisor-restore').isVisible())await p.locator('#advisor-restore').click();await p.locator('#guide-focus').click();
    if(step===14){
     // The original order may be consumed while waiting for the second machine; follow the lesson's additional-order branch.
     await p.locator('[data-desk="supply"]').click();await p.locator('[data-ref-action="order"]').click();
@@ -37,7 +37,7 @@ for(const language of ['ko','ja']){
     await p.locator('#scene-pause').click();
     await p.evaluate(()=>{for(let i=0;i<1800&&refFirm(playerFirm()).work.some(j=>j.kind==='purchase');i++){if(!state.live)startBusiness();advanceBusiness(1000);}livePaused=true;render();});
     assert.ok(await p.evaluate(()=>!refFirm(playerFirm()).work.some(j=>j.kind==='purchase')));
-    await p.locator('#guide-focus').click();await p.locator('[data-ref-action="route-auto"]').first().click();await p.locator('[data-ref-action="route-run"]').first().click();assert.ok(await p.evaluate(()=>refFirm(playerFirm()).work.some(j=>j.kind==='route'&&j.stops.some(s=>s.loc===state.guide.target&&s.cargo.length))));await p.locator('#scene-pause').click();await p.evaluate(()=>{for(let i=0;i<90000&&state.guide.step===14;i++){if(!state.live)startBusiness();advanceBusiness(20);guideCheck();}});}
+    if(await p.locator('#advisor-restore').isVisible())await p.locator('#advisor-restore').click();await p.locator('#guide-focus').click();await p.locator('[data-ref-action="route-auto"]').first().click();await p.locator('[data-ref-action="route-run"]').first().click();assert.ok(await p.evaluate(()=>refFirm(playerFirm()).work.some(j=>j.kind==='route'&&j.stops.some(s=>s.loc===state.guide.target&&s.cargo.length))));await p.locator('#scene-pause').click();await p.evaluate(()=>{for(let i=0;i<90000&&state.guide.step===14;i++){if(!state.live)startBusiness();advanceBusiness(20);guideCheck();}});}
    else await p.locator('.guide-target').click();
   }
   if([0,4,9,13].includes(step))await p.screenshot({path:`artifacts/practical-guide/${language}-${step+1}.png`});

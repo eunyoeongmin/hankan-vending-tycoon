@@ -68,7 +68,7 @@ const operatingAdvisorUpdate=updateDesk;updateDesk=function(){operatingAdvisorUp
 const operatingAdvisorSelect=selectDesk;selectDesk=function(tab){operatingAdvisorSelect(tab);paintOperatingAdvisor();};
 document.addEventListener('click',event=>{
  const b=event.target.closest('button');if(!b)return;
- if(b.id==='operating-advisor-toggle'){operatingAdvisorOpen=!operatingAdvisorOpen;paintOperatingAdvisor();}
+ if(b.id==='operating-advisor-toggle'){operatingAdvisorOpen=!operatingAdvisorOpen||(typeof advisorFolded!=='undefined'&&advisorFolded);paintOperatingAdvisor();}
  if(b.dataset.advisorRoute){if(b.dataset.advisorRoute==='company-goals')openModal('company-goals');else selectDesk(b.dataset.advisorRoute);}
 });
 paintOperatingAdvisor();

@@ -222,8 +222,8 @@ body.office.desktop95 #desk-map .pixel-stage .map-pin{max-width:110px;white-spac
 #practical-guide img{width:72px;height:108px;object-fit:contain;image-rendering:pixelated;align-self:flex-start}
 #practical-guide>div{min-width:0;flex:1}#guide-title{display:block;background:#000080;color:#fff;padding:2px 5px;font-size:13px}
 #guide-text{margin:5px 0;color:#000;font-size:13px}#guide-status{font-size:12px}#practical-guide .buttons{display:flex;gap:6px;margin-top:4px}
-body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}.guide-target{outline:3px solid #000080!important;outline-offset:2px}
-@media(max-width:600px){#practical-guide img{width:48px;height:72px}#practical-guide{max-height:190px;gap:6px}#guide-text{font-size:12px}#practical-guide .buttons{flex-wrap:wrap}body.guide-active main{grid-template-rows:auto minmax(0,1fr) 200px!important}}
+.guide-target{outline:3px solid #000080!important;outline-offset:2px}
+@media(max-width:600px){#practical-guide img{width:48px;height:72px}#practical-guide{max-height:190px;gap:6px}#guide-text{font-size:12px}#practical-guide .buttons{flex-wrap:wrap}}
 #guide-spotlight{position:fixed;inset:0;width:100vw;height:100vh;z-index:9000;pointer-events:none;display:none}
 body:has(dialog[open]) #guide-spotlight{display:none!important}
 #guide-status{display:block;line-height:1.4;color:#000080}
@@ -232,10 +232,10 @@ body:has(dialog[open]) #guide-spotlight{display:none!important}
 .guide-target{outline-color:#fff!important;box-shadow:0 0 0 5px #000080!important}
 
 #practical-guide button[hidden]{display:none}
-body.guide-intro main{grid-template-rows:auto minmax(0,1fr) 240px!important}
+
 body.guide-intro #practical-guide{max-height:230px}
 body.guide-intro #practical-guide .buttons{flex-wrap:wrap}
-@media(max-width:600px){body.guide-intro main{grid-template-rows:auto minmax(0,1fr) 280px!important}body.guide-intro #practical-guide{max-height:270px}}
+@media(max-width:600px){body.guide-intro #practical-guide{max-height:270px}}
 
 #operating-advisor-toggle{white-space:nowrap;font-size:11px!important;width:auto!important;min-width:0!important;padding:2px 5px!important}
 #operating-advisor{border-bottom:1px solid #808080;background:#ffffe9;padding:6px;max-height:190px;overflow:auto;flex-shrink:0;font-size:12px;line-height:1.45}
@@ -270,8 +270,24 @@ body.management #reference-panel .review-table th,body.management #reference-pan
 #continuing-guide{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:4px;background:#ffffe9;border-bottom:1px solid #808080;font-size:12px;max-height:115px;overflow:auto}
 #continuing-guide[hidden]{display:none}#continuing-guide>span{flex:1 1 230px}#continuing-guide button{font-size:11px;padding:3px}#continuing-guide small{font-size:11px}
 .continuing-target{outline:3px solid #000080!important;outline-offset:2px}
-body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 210px}
-@media(max-width:650px){body.office.desktop95.continuing-active:not(.guide-active) main{grid-template-rows:auto minmax(0,1fr) 190px}#continuing-guide{max-height:95px}}
+
+@media(max-width:650px){#continuing-guide{max-height:95px}}
+
+#advisor-layer{position:fixed;inset:0;z-index:9010;pointer-events:none}
+#advisor-layer[hidden],#advisor-layer [hidden]{display:none!important}
+#advisor-window{position:absolute;right:12px;bottom:36px;width:min(480px,calc(100vw - 16px));max-height:calc(100dvh - 48px);display:flex;flex-direction:column;background:#c0c0c0;color:#000;border:2px solid;border-color:#fff #404040 #404040 #fff;pointer-events:auto;font:12px/1.45 Tahoma,'MS UI Gothic',sans-serif}
+#advisor-window-bar{display:flex;align-items:center;gap:6px;background:#000080;color:#fff;padding:3px;flex:none;cursor:move;touch-action:none;user-select:none}
+#advisor-window-title{flex:1;font-size:12px}#advisor-fold{font:bold 14px monospace;width:24px;height:22px;padding:0;color:#000}
+#advisor-window-layout{display:flex;gap:8px;padding:8px;min-height:0;overflow:hidden}
+#advisor-window-portrait{width:92px;height:138px;flex:none;object-fit:contain;image-rendering:pixelated;border:1px solid #808080;align-self:flex-start}
+#advisor-window-content{min-width:0;min-height:0;flex:1;overflow:auto;max-height:340px;scrollbar-gutter:stable}
+#advisor-layer #practical-guide,#advisor-layer #continuing-guide,#advisor-layer #operating-advisor{border:0;padding:0;max-height:none;background:transparent;overflow:visible;font-size:12px}
+#advisor-layer #practical-guide>img{display:none}#advisor-layer #practical-guide .buttons{flex-wrap:wrap;gap:4px}
+#advisor-layer #continuing-guide{display:block}#advisor-layer #continuing-guide>strong,#advisor-layer #continuing-guide>span,#advisor-layer #continuing-guide>small{display:block;margin:0 0 5px}#advisor-layer #continuing-guide button{margin:2px 3px 4px 0}
+#advisor-layer #guide-text{font-size:12px;line-height:1.5}#advisor-layer button{border-radius:0}
+#advisor-restore{position:absolute;right:8px;bottom:32px;pointer-events:auto;display:flex;align-items:center;gap:4px;padding:3px;background:#c0c0c0;color:#000;font-size:12px;border:2px solid;border-color:#fff #404040 #404040 #fff}
+#advisor-restore img{width:36px;height:54px;object-fit:contain;image-rendering:pixelated}
+@media(max-width:650px){#advisor-window{top:var(--advisor-top,160px);bottom:auto;right:8px;max-height:calc(100dvh - var(--advisor-top,160px) - 12px)}#advisor-window-content{max-height:min(300px,42dvh)}#advisor-window-portrait{width:60px;height:90px}#advisor-window-layout{gap:6px;padding:6px}}
 
 </style>
 </head>
@@ -3551,7 +3567,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.id==='guide-focus'){guideFocus();return;}
  if(b.id==='guide-exit'){state.guide.active=false;livePaused=true;save();render();return;}
  if(!guideActive())return;
- if(guideIntro()&&!modalView&&!menuOpen&&!['game-menu','help'].includes(b.id)){e.preventDefault();e.stopImmediatePropagation();return;}
+ if(guideIntro()&&!modalView&&!menuOpen&&!['game-menu','help','advisor-fold','advisor-restore'].includes(b.id)){e.preventDefault();e.stopImmediatePropagation();return;}
  const g=guideState();if(b.dataset.select!==undefined&&g.step===0&&+b.dataset.select===g.first){g.flags.selected=true;queueMicrotask(guideCheck);}
  const nav=b.dataset.desk||(b.dataset.refDesk&&REF_ROUTES[b.dataset.refDesk]);
  if(nav&&!guideAllowedTabs().includes(nav)||b.dataset.research||b.id==='mg-toggle-automation'||b.dataset.action==='sell'){e.preventDefault();e.stopImmediatePropagation();return;}
@@ -3726,7 +3742,7 @@ const operatingAdvisorUpdate=updateDesk;updateDesk=function(){operatingAdvisorUp
 const operatingAdvisorSelect=selectDesk;selectDesk=function(tab){operatingAdvisorSelect(tab);paintOperatingAdvisor();};
 document.addEventListener('click',event=>{
  const b=event.target.closest('button');if(!b)return;
- if(b.id==='operating-advisor-toggle'){operatingAdvisorOpen=!operatingAdvisorOpen;paintOperatingAdvisor();}
+ if(b.id==='operating-advisor-toggle'){operatingAdvisorOpen=!operatingAdvisorOpen||(typeof advisorFolded!=='undefined'&&advisorFolded);paintOperatingAdvisor();}
  if(b.dataset.advisorRoute){if(b.dataset.advisorRoute==='company-goals')openModal('company-goals');else selectDesk(b.dataset.advisorRoute);}
 });
 paintOperatingAdvisor();
@@ -3931,6 +3947,56 @@ const continuingMarketDrawBefore=drawModal;drawModal=function(){
  $('modal-body').innerHTML=`<h2>${T('시장 변화와 함께 운영할까요?','市場の変化とともに経営しますか？')}</h2><p>${T('사장님, 지금은 실습용으로 사업사건이 없고 공급도 안정적이에요. 아래 두 항목만 바꾸면 같은 회사에서 선택할 일이 더 생겨요. 지금 방식이 편하시면 그대로 두셔도 괜찮아요.','社長、今は実習用に事業事件がなく、供給も安定しています。下の2項目だけ変えると、同じ会社で判断する場面が増えます。今のままでも大丈夫ですよ。')}</p>${row(T('사업사건','事業事件'),T('없음 → 보통','なし → 普通'))}${row(T('공급 안정성','供給安定性'),T('안정 → 보통 (입고 지연 가능)','安定 → 普通（入荷遅延の可能性）'))}<p>${T('현재 자금·기기·직원·계약과 다른 난이도는 유지합니다. 자동 운영·자동 진행·배속도 바꾸지 않습니다.','現在の資金・機械・社員・契約と他の難易度は保持します。自動運営・自動進行・速度も変更しません。')}</p><p>${T('확인 후 다음 사건 추첨과 새 발주부터 적용해요. 즉시 사건을 만들거나 진행 중 배송을 지연시키지는 않아요.','確認後、次の事件抽選と新しい発注から適用します。すぐに事件を起こしたり、進行中の配送を遅らせたりはしません。')}</p>${buttons(`<button data-close>${T('지금 방식 유지','今のまま続ける')}</button><button id="continuing-market-confirm" ${disabled(!continuingMarketAvailable())}>${T('두 항목을 보통으로 변경','2項目を普通に変更')}</button>`+closeButton())}`;
 };
 document.addEventListener('click',e=>{if(e.target.closest('#continuing-market-confirm'))continuingApplyMarket();});
+
+/* A separate UI surface: no simulation state or main-grid size changes. */
+const advisorLayer=document.createElement('aside');advisorLayer.id='advisor-layer';advisorLayer.hidden=true;
+advisorLayer.innerHTML='<section id="advisor-window" role="region" aria-labelledby="advisor-window-title"><header id="advisor-window-bar"><strong id="advisor-window-title"></strong><button id="advisor-fold" type="button">_</button></header><div id="advisor-window-layout"><img id="advisor-window-portrait" alt=""><div id="advisor-window-content"></div></div></section><button id="advisor-restore" type="button" hidden><img alt=""><span></span></button>';
+document.body.append(advisorLayer);
+const advisorWindow=$('advisor-window'),advisorContent=$('advisor-window-content'),advisorRestore=$('advisor-restore');
+advisorContent.append(guidePanel,continuingPanel,operatingAdvisorPanel);
+$('advisor-window-portrait').src=ADVISOR_PORTRAIT;advisorRestore.querySelector('img').src=ADVISOR_PORTRAIT;
+let advisorFolded=false,advisorCompany=null,advisorLesson='',advisorPosition=null,advisorDrag=null;
+function advisorPlace(){
+ const top=Math.min(innerHeight-60,Math.max(8,(document.getElementById('office-status')?.getBoundingClientRect().bottom||0)+8));
+ advisorLayer.style.setProperty('--advisor-top',top+'px');
+ if(advisorPosition){const r=advisorWindow.getBoundingClientRect();advisorPosition.x=Math.max(4,Math.min(innerWidth-r.width-4,advisorPosition.x));advisorPosition.y=Math.max(4,Math.min(innerHeight-r.height-4,advisorPosition.y));advisorWindow.style.left=advisorPosition.x+'px';advisorWindow.style.top=advisorPosition.y+'px';advisorWindow.style.right='auto';advisorWindow.style.bottom='auto';}
+}
+function advisorWindowSync(){
+ if(advisorCompany!==state){advisorCompany=state;advisorFolded=false;advisorLesson='';advisorPosition=null;advisorWindow.removeAttribute('style');}
+ const tutorial=guideActive(),available=tutorial||continuingReady();
+ advisorLayer.hidden=!available||!!modalView||menuOpen;
+ const lesson=tutorial?guideState().step+':'+(guideState().intro||''):'';
+ if(lesson!==advisorLesson){advisorLesson=lesson;if(tutorial)advisorFolded=false;}
+ const consultation=!tutorial&&operatingAdvisorOpen;
+ guidePanel.hidden=!tutorial;continuingPanel.hidden=tutorial||consultation||!available;operatingAdvisorPanel.hidden=tutorial||!consultation;
+ advisorWindow.hidden=advisorFolded;advisorRestore.hidden=!advisorFolded;
+ operatingAdvisorButton.setAttribute('aria-expanded',String(consultation&&!advisorFolded&&!advisorLayer.hidden));
+ $('advisor-window-title').textContent=T('경영 비서','経営秘書');
+ $('advisor-window-portrait').alt=T('경영 비서','経営秘書');
+ $('advisor-fold').setAttribute('aria-label',T('비서 창 접기','秘書ウィンドウを折りたたむ'));
+ advisorRestore.querySelector('span').textContent=T('비서','秘書');
+ advisorRestore.setAttribute('aria-label',T('비서 창 열기','秘書ウィンドウを開く'));
+ advisorRestore.setAttribute('aria-expanded',String(!advisorFolded));
+ advisorPlace();
+}
+function advisorSetFolded(value){advisorFolded=value;advisorWindowSync();if(value)advisorRestore.focus({preventScroll:true});else $('advisor-fold').focus({preventScroll:true});guideSpotlight();}
+const advisorGuidePaint=guidePaint;guidePaint=function(){advisorGuidePaint();advisorWindowSync();};
+const advisorContinuingPaint=continuingPaint;continuingPaint=function(){advisorContinuingPaint();advisorWindowSync();};
+const advisorOperatingPaint=paintOperatingAdvisor;paintOperatingAdvisor=function(){advisorOperatingPaint();advisorWindowSync();};
+const advisorWindowDraw=drawModal;drawModal=function(){advisorWindowDraw();advisorWindowSync();};
+const advisorWindowClose=closeModal;closeModal=function(){advisorWindowClose();advisorWindowSync();};
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.id==='advisor-fold')advisorSetFolded(true);
+ if(b.id==='advisor-restore'){if(!guideActive())operatingAdvisorOpen=false;advisorSetFolded(false);}
+ if(b.id==='operating-advisor-toggle'&&operatingAdvisorOpen)advisorSetFolded(false);
+ if((b.id==='guide-focus'&&!guideWaiting())||b.dataset.continuing==='go'||b.dataset.advisorRoute){advisorFolded=true;advisorWindowSync();guideSpotlight();}
+});
+$('advisor-window-bar').addEventListener('pointerdown',e=>{if(e.target.closest('button')||e.button!==0)return;const r=advisorWindow.getBoundingClientRect();advisorDrag={id:e.pointerId,x:e.clientX-r.left,y:e.clientY-r.top};e.currentTarget.setPointerCapture(e.pointerId);});
+$('advisor-window-bar').addEventListener('pointermove',e=>{if(!advisorDrag||advisorDrag.id!==e.pointerId)return;advisorPosition={x:e.clientX-advisorDrag.x,y:e.clientY-advisorDrag.y};advisorPlace();guideSpotlight();});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])$('advisor-window-bar').addEventListener(event,()=>advisorDrag=null);
+window.addEventListener('resize',()=>{advisorPlace();guideSpotlight();});
+advisorWindowSync();
 
 render();if(loadWarning)toast(B('저장 내용을 읽지 못해 새 화면을 열었습니다. 기존 저장은 첫 조작 전까지 유지됩니다.','保存データを読み込めなかったため初期画面を開きました。既存の保存は最初の操作まで保持されます。'));if(state.ended)openModal('end');initScene();initWorld();
 

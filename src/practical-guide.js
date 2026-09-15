@@ -121,7 +121,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.id==='guide-focus'){guideFocus();return;}
  if(b.id==='guide-exit'){state.guide.active=false;livePaused=true;save();render();return;}
  if(!guideActive())return;
- if(guideIntro()&&!modalView&&!menuOpen&&!['game-menu','help'].includes(b.id)){e.preventDefault();e.stopImmediatePropagation();return;}
+ if(guideIntro()&&!modalView&&!menuOpen&&!['game-menu','help','advisor-fold','advisor-restore'].includes(b.id)){e.preventDefault();e.stopImmediatePropagation();return;}
  const g=guideState();if(b.dataset.select!==undefined&&g.step===0&&+b.dataset.select===g.first){g.flags.selected=true;queueMicrotask(guideCheck);}
  const nav=b.dataset.desk||(b.dataset.refDesk&&REF_ROUTES[b.dataset.refDesk]);
  if(nav&&!guideAllowedTabs().includes(nav)||b.dataset.research||b.id==='mg-toggle-automation'||b.dataset.action==='sell'){e.preventDefault();e.stopImmediatePropagation();return;}
