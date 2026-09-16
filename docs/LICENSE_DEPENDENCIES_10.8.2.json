@@ -1,0 +1,570 @@
+{
+  "date": "2026-09-16",
+  "basisCommit": "24b3ca9a3a71ad61a66a8486127b09d4f02f8014",
+  "scope": "Exact lockfile packages installed separately with npm ci --ignore-scripts --no-audit --no-fund. Metadata and root notice presence inspected; not a per-file legal clearance. Packages not bundled in dist. Separate browser tools from existing test environment.",
+  "packages": [
+    {
+      "package": "@asamuzakjp/css-color",
+      "version": "6.0.7",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "6.0.7",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "6.0.7"
+    },
+    {
+      "package": "@asamuzakjp/dom-selector",
+      "version": "8.3.2",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "8.3.2",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "8.3.2"
+    },
+    {
+      "package": "@bramus/specificity",
+      "version": "2.4.2",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "2.4.2",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "2.4.2"
+    },
+    {
+      "package": "@csstools/color-helpers",
+      "version": "6.1.1",
+      "license": "MIT-0",
+      "developmentOnly": true,
+      "installedVersion": "6.1.1",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT-0",
+      "lockVersionBeforeAudit": "6.1.1"
+    },
+    {
+      "package": "@csstools/css-calc",
+      "version": "3.3.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "3.3.0",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "3.3.0"
+    },
+    {
+      "package": "@csstools/css-color-parser",
+      "version": "4.2.2",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "4.2.2",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "4.2.2"
+    },
+    {
+      "package": "@csstools/css-parser-algorithms",
+      "version": "4.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "4.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "4.0.0"
+    },
+    {
+      "package": "@csstools/css-syntax-patches-for-csstree",
+      "version": "1.1.12",
+      "license": "MIT-0",
+      "developmentOnly": true,
+      "installedVersion": "1.1.12",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT-0",
+      "lockVersionBeforeAudit": "1.1.12"
+    },
+    {
+      "package": "@csstools/css-tokenizer",
+      "version": "4.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "4.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "4.0.0"
+    },
+    {
+      "package": "@exodus/bytes",
+      "version": "1.15.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "1.15.1",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "1.15.1"
+    },
+    {
+      "package": "bidi-js",
+      "version": "1.1.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "1.1.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "1.1.0"
+    },
+    {
+      "package": "css-tree",
+      "version": "3.2.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "3.2.1",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "3.2.1"
+    },
+    {
+      "package": "data-urls",
+      "version": "7.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "7.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "7.0.0"
+    },
+    {
+      "package": "data-urls/node_modules/whatwg-url",
+      "version": "16.0.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "16.0.1",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "16.0.1"
+    },
+    {
+      "package": "decimal.js",
+      "version": "10.6.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "10.6.0",
+      "rootNoticeFiles": [
+        "LICENCE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "10.7.1"
+    },
+    {
+      "package": "entities",
+      "version": "8.1.0",
+      "license": "BSD-2-Clause",
+      "developmentOnly": true,
+      "installedVersion": "8.1.0",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "BSD-2-Clause",
+      "lockVersionBeforeAudit": "8.1.0"
+    },
+    {
+      "package": "html-encoding-sniffer",
+      "version": "6.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "6.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "6.0.0"
+    },
+    {
+      "package": "is-potential-custom-element-name",
+      "version": "1.0.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "1.0.1",
+      "rootNoticeFiles": [
+        "LICENSE-MIT.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "1.0.1"
+    },
+    {
+      "package": "jsdom",
+      "version": "30.0.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "30.0.1",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "30.0.1"
+    },
+    {
+      "package": "lru-cache",
+      "version": "11.5.2",
+      "license": "BlueOak-1.0.0",
+      "developmentOnly": true,
+      "installedVersion": "11.5.2",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "BlueOak-1.0.0",
+      "lockVersionBeforeAudit": "11.5.2"
+    },
+    {
+      "package": "mdn-data",
+      "version": "2.27.1",
+      "license": "CC0-1.0",
+      "developmentOnly": true,
+      "installedVersion": "2.27.1",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "CC0-1.0",
+      "lockVersionBeforeAudit": "2.27.1"
+    },
+    {
+      "package": "parse5",
+      "version": "8.0.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "8.0.1",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "8.0.1"
+    },
+    {
+      "package": "punycode",
+      "version": "2.3.1",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "2.3.1",
+      "rootNoticeFiles": [
+        "LICENSE-MIT.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "2.3.1"
+    },
+    {
+      "package": "require-from-string",
+      "version": "2.0.2",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "2.0.2",
+      "rootNoticeFiles": [
+        "license"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "2.0.2"
+    },
+    {
+      "package": "saxes",
+      "version": "6.0.0",
+      "license": "ISC",
+      "developmentOnly": true,
+      "installedVersion": "6.0.0",
+      "rootNoticeFiles": [],
+      "installedLicense": "ISC",
+      "lockVersionBeforeAudit": "6.0.0"
+    },
+    {
+      "package": "source-map-js",
+      "version": "1.2.1",
+      "license": "BSD-3-Clause",
+      "developmentOnly": true,
+      "installedVersion": "1.2.1",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "BSD-3-Clause",
+      "lockVersionBeforeAudit": "1.2.1"
+    },
+    {
+      "package": "symbol-tree",
+      "version": "3.2.4",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "3.2.4",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "3.2.4"
+    },
+    {
+      "package": "tldts",
+      "version": "7.4.12",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "7.4.12",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "7.4.12"
+    },
+    {
+      "package": "tldts-core",
+      "version": "7.4.12",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "7.4.12",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "7.4.12"
+    },
+    {
+      "package": "tough-cookie",
+      "version": "6.0.2",
+      "license": "BSD-3-Clause",
+      "developmentOnly": true,
+      "installedVersion": "6.0.2",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "BSD-3-Clause",
+      "lockVersionBeforeAudit": "6.0.2"
+    },
+    {
+      "package": "tr46",
+      "version": "6.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "6.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "6.0.0"
+    },
+    {
+      "package": "undici",
+      "version": "8.10.2",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "8.10.2",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "8.10.2"
+    },
+    {
+      "package": "w3c-xmlserializer",
+      "version": "5.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "5.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "5.0.0"
+    },
+    {
+      "package": "webidl-conversions",
+      "version": "8.0.1",
+      "license": "BSD-2-Clause",
+      "developmentOnly": true,
+      "installedVersion": "8.0.1",
+      "rootNoticeFiles": [
+        "LICENSE.md"
+      ],
+      "installedLicense": "BSD-2-Clause",
+      "lockVersionBeforeAudit": "8.0.1"
+    },
+    {
+      "package": "whatwg-mimetype",
+      "version": "5.0.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "5.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "5.0.0"
+    },
+    {
+      "package": "whatwg-url",
+      "version": "17.1.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "17.1.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "17.1.0"
+    },
+    {
+      "package": "xml-name-validator",
+      "version": "5.0.0",
+      "license": "Apache-2.0",
+      "developmentOnly": true,
+      "installedVersion": "5.0.0",
+      "rootNoticeFiles": [
+        "LICENSE.txt"
+      ],
+      "installedLicense": "Apache-2.0",
+      "lockVersionBeforeAudit": "5.0.0"
+    },
+    {
+      "package": "xmlchars",
+      "version": "2.2.0",
+      "license": "MIT",
+      "developmentOnly": true,
+      "installedVersion": "2.2.0",
+      "rootNoticeFiles": [
+        "LICENSE"
+      ],
+      "installedLicense": "MIT",
+      "lockVersionBeforeAudit": "2.2.0"
+    }
+  ],
+  "separateBrowserTools": [
+    {
+      "package": "playwright",
+      "version": "1.63.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "package": "playwright-core",
+      "version": "1.63.0",
+      "license": "Apache-2.0"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/districts/office-v1.png",
+      "sha256": "5e120d5578daeec1b8fe4345f4b3ea14e34808fb7c1b1739e725dfbd41b09e2a"
+    },
+    {
+      "path": "assets/districts/residential-v1.png",
+      "sha256": "f988a9eaff4361117964659ccb25c7b7662af7e22d1e91c221bc9b50868b55a6"
+    },
+    {
+      "path": "assets/districts/station-v1.png",
+      "sha256": "33086233823112e0dd0fcc44256b7a58c9e78f6b5aad2bb09b2179d65839af33"
+    },
+    {
+      "path": "assets/districts/tourism-v1.png",
+      "sha256": "031740b81255bb6cc2e3072ae84f3814e456d730928260882eec21b1c7a8dfef"
+    },
+    {
+      "path": "src/assets/advisor/secretary-v1.png",
+      "sha256": "712e2708c7438bc82ec10b0e752d4320b8639c1a9b9294845ae235da1869bddf"
+    }
+  ],
+  "publicComparison": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "localScriptCount": 1,
+      "publicScriptCount": 2,
+      "originalScriptsUnchanged": true,
+      "additionalScripts": 1,
+      "additionalContainChallengePath": true,
+      "parsedDocumentMatchesAfterRemovingAddedScripts": true,
+      "requests": [
+        {
+          "type": "document",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/"
+        },
+        {
+          "type": "script",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        },
+        {
+          "type": "script",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        },
+        {
+          "type": "xhr",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        }
+      ]
+    },
+    {
+      "file": "art-lab.html",
+      "status": 200,
+      "localScriptCount": 1,
+      "publicScriptCount": 2,
+      "originalScriptsUnchanged": true,
+      "additionalScripts": 1,
+      "additionalContainChallengePath": true,
+      "parsedDocumentMatchesAfterRemovingAddedScripts": true,
+      "requests": [
+        {
+          "type": "document",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/art-lab.html"
+        },
+        {
+          "type": "document",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/art-lab"
+        },
+        {
+          "type": "script",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        },
+        {
+          "type": "script",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        },
+        {
+          "type": "xhr",
+          "host": "hankan-vending-tycoon.eym7443.chatgpt.site",
+          "path": "/cdn-cgi/challenge-platform/(dynamic)"
+        }
+      ]
+    }
+  ],
+  "unchangedBuildHashes": {
+    "dist/index.html": "f911cb270b7a8c810c0d340311ef34134301751597ca5d629887edc95b5c3370",
+    "dist/art-lab.html": "a69e3881cf6a41f67137ff0eca4bde0f071c41e1b8127257f921fd22972a249c"
+  }
+}

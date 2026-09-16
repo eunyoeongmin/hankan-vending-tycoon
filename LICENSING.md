@@ -34,6 +34,10 @@
 
 jsdom and its dependencies are development/test tools; Playwright is used separately for browser testing. Their original licenses remain applicable and are not replaced by 0BSD/CC0. The current standalone game does not bundle these tools. System font names are referenced, but font files are not redistributed. Linked reference games/materials and third-party text quoted in documentation are not relicensed by this project.
 
+2026-09-16 점검: 개발용 lockfile 의존성 38개와 별도 Playwright 사용을 확인했습니다. 공개 사이트 응답에는 호스팅의 `/cdn-cgi/challenge-platform/` 보안 코드가 추가됩니다. 이 코드는 프로젝트의 0BSD/CC0 적용 대상이 아닙니다. “외부 라이선스를 사용하지 않았다”거나 “제3자 권리 문제가 전혀 없다”는 뜻이 아닙니다. [검사 범위·발견·한계](docs/LICENSE_AUDIT_10.8.2.md), [의존성·소재 목록](docs/LICENSE_DEPENDENCIES_10.8.2.json).
+
+2026-09-16の確認：開発用lockfileの依存38件と、別途Playwrightの使用を確認しました。公開サイトの応答にはホスティング側の `/cdn-cgi/challenge-platform/` セキュリティコードが追加されます。このコードに本プロジェクトの0BSD/CC0は適用されません。外部ライセンスを使用していない、または第三者の権利に問題がないという保証ではありません。
+
 Project / プロジェクト / 프로젝트: https://github.com/eunyoeongmin/hankan-vending-tycoon
 0BSD: https://opensource.org/license/0bsd
 CC0: https://creativecommons.org/publicdomain/zero/1.0/
