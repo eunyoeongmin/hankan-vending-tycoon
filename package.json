@@ -1,6 +1,7 @@
 {
   "name": "hankan-enterprise",
-  "version": "10.8.1",
+  "version": "10.8.2",
+  "license": "0BSD",
   "private": true,
   "scripts": {
     "build": "python build.py",
@@ -11,6 +12,7 @@
     "test:scene": "node tests/run-scene-review.cjs",
     "test:audit-balance": "node tests/audit-balance.cjs",
     "test:strategies": "node tests/economy-strategies.cjs",
+    "test:license": "node tests/browser-license.cjs",
     "test:polish": "node tests/browser-advisor-window.cjs && node tests/browser-business-review.cjs && node tests/browser-continuing-guide.cjs && node tests/browser-goal-navigation.cjs"
   },
   "devDependencies": {

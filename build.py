@@ -1,5 +1,6 @@
 from pathlib import Path
 import base64
+import json
 root=Path(__file__).resolve().parent
 base=(root/'src/base.html').read_text(encoding='utf-8')
 engine=(root/'src/enterprise.js').read_text(encoding='utf-8')+'\n'+(root/'src/rivalry.js').read_text(encoding='utf-8')+'\n'+(root/'src/scenario.js').read_text(encoding='utf-8')
@@ -36,6 +37,7 @@ engine+='\n'+(root/'src/operating-advisor.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/business-review.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/continuing-guide.js').read_text(encoding='utf-8')
 engine+='\n'+(root/'src/advisor-window.js').read_text(encoding='utf-8')
+engine+='\n'+(root/'src/license-ui.js').read_text(encoding='utf-8').replace('__GAME_CODE_LICENSE__',json.dumps((root/'LICENSE').read_text(encoding='utf-8'))).replace('__GAME_ASSET_LICENSE__',json.dumps((root/'LICENSE-ASSETS.txt').read_text(encoding='utf-8')))
 css=(root/'src/enterprise.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/workspace.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/office.css').read_text(encoding='utf-8')
@@ -50,6 +52,7 @@ css+='\n'+(root/'src/goal-navigation.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/business-review.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/continuing-guide.css').read_text(encoding='utf-8')
 css+='\n'+(root/'src/advisor-window.css').read_text(encoding='utf-8')
+css+='\n'+(root/'src/license-ui.css').read_text(encoding='utf-8')
 marker="render();if(loadWarning)"
 assert base.count(marker)==1
 out=base.replace(marker,engine+'\n'+marker).replace('</style>',css+'\n</style>',1)
